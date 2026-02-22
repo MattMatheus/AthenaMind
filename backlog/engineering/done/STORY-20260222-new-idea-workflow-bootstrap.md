@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-new-idea-workflow-bootstrap
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: qa
+- `status`: done
 
 ## Problem Statement
 - Intake rules now exist, but engineering lacks lightweight automation/validation to prevent malformed story creation and lane crossover during fast backlog expansion.
