@@ -7,4 +7,4 @@ Ordered execution queue for engineering implementation.
 - If no engineering stories exist, launcher returns `no stories`.
 
 ## Active Sequence
-1. `STORY-20260222-new-idea-workflow-bootstrap.md`
+- (empty)
