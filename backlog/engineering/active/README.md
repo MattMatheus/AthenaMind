@@ -7,4 +7,4 @@ Ordered execution queue for engineering implementation.
 - If no engineering stories exist, launcher returns `no stories`.
 
 ## Active Sequence
-- (empty)
+1. `STORY-20260222-memory-cli-v1-write-retrieve-baseline.md`

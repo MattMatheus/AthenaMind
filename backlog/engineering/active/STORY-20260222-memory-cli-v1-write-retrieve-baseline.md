@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-cli-v1-write-retrieve-baseline
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: intake
+- `status`: active
 
 ## Problem Statement
 - We need the first functional memory interface that can write and retrieve prompts/instructions from repo-local files using semantic lookup, with review-controlled mutation workflows.
@@ -40,3 +40,4 @@
 - Use Markdown for human-readable prompt/instruction artifacts.
 - Keep code samples and executable patterns in actual code files, not memory prose artifacts.
 - Post-MVP roadmap items (API wrapper/UI/multi-backend) are intentionally out of v1 scope.
+- Execution gate: architecture decisions from `ARCH-20260222-file-memory-cli-v1-architecture` must be confirmed before implementation details are finalized.
