@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-semantic-retrieval-quality-gates
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: qa
 
 ## Decision Scope
 - Define measurable retrieval quality gates and acceptance criteria for semantic lookup behavior in file-memory CLI v1.

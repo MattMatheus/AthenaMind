@@ -78,8 +78,12 @@ Required behavior-level commands:
    - `source_path`
 
 ## Quality Bar (v1)
-- For common queries, first result should usually be useful.
+- Top-1 useful rate threshold: `>= 80%` on a fixed benchmark query set (minimum 50 queries).
 - When semantic confidence is low or ambiguous, fallback must produce deterministic and explainable output.
+- Fallback determinism must be 100% for repeated identical inputs on same corpus/config.
+- Response artifacts must always include `selection_mode`, `selected_id`, and `source_path`.
+- Full evaluation contract is defined in:
+  - `research/architecture/SEMANTIC_RETRIEVAL_QUALITY_GATES_V1.md`
 
 ## Mutation Governance (Pre-MVP)
 - Memory mutation is disallowed during autonomous agent execution cycles.
@@ -109,6 +113,8 @@ Work-system scripts are allowed for repository operations and testing, but produ
 - `research/decisions/ADR-0009-file-memory-cli-v1-architecture.md`
 - `research/decisions/ADR-0010-memory-schema-versioning-policy.md`
 - `research/decisions/ADR-0011-memory-mutation-review-workflow-contract.md`
+- `research/decisions/ADR-0012-semantic-retrieval-quality-gates-v1.md`
 - `research/architecture/MEMORY_SCHEMA_AND_VERSIONING_POLICY.md`
 - `research/architecture/MEMORY_MUTATION_REVIEW_WORKFLOW.md`
+- `research/architecture/SEMANTIC_RETRIEVAL_QUALITY_GATES_V1.md`
 - `research/planning/sessions/PLAN-20260222-idea-generation-session.md`
