@@ -64,8 +64,9 @@ checklist:
   2) implement required changes
   3) update tests
   4) run tests (must pass)
-  5) prepare handoff package
-  6) move story to backlog/qa
+  5) commit changes with story id in message
+  6) prepare handoff package
+  7) move story to backlog/qa
 EOF
     ;;
   qa)

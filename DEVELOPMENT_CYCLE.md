@@ -18,7 +18,7 @@ Quick launch helper:
 
 ## Canonical Flow
 1. PM ensures ranked stories exist in `backlog/active/`.
-2. Engineering executes top story and moves it to `backlog/qa/` with handoff package.
+2. Engineering executes top story, runs tests, commits with a story-linked message, and moves it to `backlog/qa/` with handoff package.
 3. QA validates and either:
    - moves story to `backlog/done/`, or
    - files prioritized bugs to `backlog/intake/` and returns story to `backlog/active/`.

@@ -14,8 +14,9 @@ Your task is to execute the top story in `backlog/active/`.
 2. Read, research, and implement. Surface questions if outcome is unclear.
 3. Update tests.
 4. Run tests. Tests must pass.
-5. Prepare handoff package.
-6. Move the story to `backlog/qa/`.
+5. Commit changes with an appropriate message that includes the story id.
+6. Prepare handoff package.
+7. Move the story to `backlog/qa/`.
 
 ## Handoff Package (Required)
 - What changed
@@ -28,6 +29,7 @@ Your task is to execute the top story in `backlog/active/`.
 
 ## Constraints
 - Do not skip tests.
+- Do not skip commit after passing tests.
 - Do not move story to done directly from active.
 - Respect accepted ADRs and memory-layer scope.
 - If a gap is discovered, log a new intake story before handoff.
