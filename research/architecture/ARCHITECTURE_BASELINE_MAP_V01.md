@@ -56,6 +56,16 @@ Provide one cross-reference map from architecture domains to governing ADRs and 
 - Notes:
   - Pre-MVP memory mutation requires reviewed workflows outside autonomous runs.
 
+## Planned vs Implemented Status Matrix
+
+| Baseline domain | Planned baseline | Implemented now | Open execution links |
+| --- | --- | --- | --- |
+| Product Scope and Principles | Memory-layer-only v0.1 scope and exclusions | Implemented via ADR set and baseline artifacts | None |
+| Success Metrics and Delivery Targets | KPI snapshot + release checkpoint evidence | Partially implemented (targets defined, runtime reporting in progress) | `backlog/engineering/active/STORY-20260222-kpi-snapshot-baseline-v01.md` |
+| Module Boundaries and Ownership | Phase boundary contract and enforceable constraints | Partially implemented (contract finalized, enforcement in progress) | `backlog/engineering/active/STORY-20260222-mvp-constraint-enforcement-v01.md` |
+| Memory Storage and Retrieval Stack | File-memory CLI v1 baseline with telemetry, v0.2 snapshot, v0.3 read gateway | Partially implemented (CLI baseline complete, telemetry and phase-next execution in progress) | `backlog/engineering/active/STORY-20260222-memory-cli-telemetry-contract-v01.md`, `backlog/engineering/active/STORY-20260222-memory-snapshot-mvp-implementation-v02.md`, `backlog/engineering/active/STORY-20260222-memory-api-read-gateway-v03.md` |
+| Governance, HITL, and Mutation Policy | Human-review mutation workflow + release checkpoint bundle | Partially implemented (workflow contract complete, checkpoint packaging in progress) | `backlog/engineering/active/STORY-20260222-release-checkpoint-bundle-v01.md` |
+
 ## Cross-Artifact Dependency Chain
 1. Foundation and scope ADRs define what can exist in v0.1.
 2. Module-boundary ADRs constrain ownership and enforcement points.
@@ -80,14 +90,22 @@ Provide one cross-reference map from architecture domains to governing ADRs and 
 3. Human-review mutation workflow contract:
    - `research/decisions/ADR-0011-memory-mutation-review-workflow-contract.md`
 
-## Open Architecture Work (Current Intake)
-1. `v0.1` phase-boundary and constraints hardening:
-   - `backlog/architecture/intake/ARCH-20260222-mvp-constraint-contract-hardening.md`
-   - `backlog/architecture/intake/ARCH-20260222-memory-telemetry-event-contract-v01.md`
-2. `v0.2` post-v0.1 snapshot architecture:
-   - `backlog/architecture/intake/ARCH-20260222-memory-snapshot-architecture-v02.md`
-3. `v0.3` API-wrapper contract:
-   - `backlog/architecture/intake/ARCH-20260222-memory-api-wrapper-contract-v03.md`
+## Open Architecture Work (Current Queue)
+1. Architecture intake currently has no open architecture stories:
+   - `backlog/architecture/active/README.md` (active sequence is empty)
+   - `backlog/architecture/intake/ARCH_STORY_TEMPLATE.md` (template only)
+2. Architecture definitions are complete for current v0.1-v0.3 planning set and now tracked through implementation stories:
+   - `backlog/architecture/done/ARCH-20260222-mvp-constraint-contract-hardening.md`
+   - `backlog/architecture/done/ARCH-20260222-memory-telemetry-event-contract-v01.md`
+   - `backlog/architecture/done/ARCH-20260222-memory-snapshot-architecture-v02.md`
+   - `backlog/architecture/done/ARCH-20260222-memory-api-wrapper-contract-v03.md`
+3. Remaining open work is implementation-side in engineering active queue:
+   - `backlog/engineering/active/STORY-20260222-memory-cli-telemetry-contract-v01.md`
+   - `backlog/engineering/active/STORY-20260222-mvp-constraint-enforcement-v01.md`
+   - `backlog/engineering/active/STORY-20260222-kpi-snapshot-baseline-v01.md`
+   - `backlog/engineering/active/STORY-20260222-release-checkpoint-bundle-v01.md`
+   - `backlog/engineering/active/STORY-20260222-memory-snapshot-mvp-implementation-v02.md`
+   - `backlog/engineering/active/STORY-20260222-memory-api-read-gateway-v03.md`
 
 ## Usage Guidance
 - PM and Engineering should treat this map as the architecture entrypoint for v0.1 scoping.

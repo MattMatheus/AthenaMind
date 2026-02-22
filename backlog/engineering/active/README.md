@@ -12,6 +12,5 @@ Ordered execution queue for engineering implementation.
 - STORY-20260222-kpi-snapshot-baseline-v01
 - STORY-20260222-dogfood-scenario-pack-v01
 - STORY-20260222-release-checkpoint-bundle-v01
-- STORY-20260222-architecture-baseline-map-drift-repair
 - STORY-20260222-memory-snapshot-mvp-implementation-v02
 - STORY-20260222-memory-api-read-gateway-v03
