@@ -8,4 +8,4 @@ Ordered execution queue for architecture stories.
 - Architecture outputs move through `backlog/architecture/qa` before `done`.
 
 ## Active Sequence
-- (empty)
+1. `ARCH-20260222-adr-intake-workflow-bootstrap.md`
