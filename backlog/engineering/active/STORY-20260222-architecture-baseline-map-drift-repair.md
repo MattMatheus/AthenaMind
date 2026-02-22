@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-architecture-baseline-map-drift-repair
 - `owner_persona`: Technical Writer - Clara.md
-- `status`: intake
+- `status`: active
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0007, ADR-0009, ADR-0010, ADR-0011, ADR-0012]

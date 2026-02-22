@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-snapshot-mvp-implementation-v02
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: active
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.2
 - `adr_refs`: [ADR-0007, ADR-0010, ADR-0011]

@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-api-read-gateway-v03
 - `owner_persona`: SRE - Nia.md
-- `status`: intake
+- `status`: active
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.3
 - `adr_refs`: [ADR-0005, ADR-0007, ADR-0009]

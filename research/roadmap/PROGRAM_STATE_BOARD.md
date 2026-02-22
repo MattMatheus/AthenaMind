@@ -6,8 +6,8 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 8
-- `engineering_active_count`: 0
+- `engineering_intake_count`: 0
+- `engineering_active_count`: 8
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 15
 - `architecture_intake_count`: 0
@@ -21,13 +21,14 @@
 - `v0.3`: not started
 
 ## Now
-- Run PM refinement to rank and promote refilled engineering intake into active.
-- Create first release checkpoint bundle for shipped v0.1 increments.
-- Publish first KPI snapshot and compare against ADR-0008 target bands.
+- Execute `STORY-20260222-memory-cli-telemetry-contract-v01` to establish KPI evidence events.
+- Execute `STORY-20260222-mvp-constraint-enforcement-v01` to enforce fail-closed v0.1 policy gates.
+- Execute `STORY-20260222-kpi-snapshot-baseline-v01` after telemetry/constraint signals are available.
 
 ## Next
-- Formalize first v0.1 release boundary after release bundle review.
-- Run recurring KPI snapshot cadence from `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.
+- Execute `STORY-20260222-dogfood-scenario-pack-v01` and promote follow-on fixes from scored outcomes.
+- Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize `done` versus `shipped`.
+- Sequence deferred roadmap work in active queue (`v0.2` snapshot MVP, `v0.3` API read gateway).
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.
