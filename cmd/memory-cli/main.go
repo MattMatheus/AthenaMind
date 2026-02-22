@@ -19,6 +19,8 @@ const (
 	supportedMajor = 1
 	supportedMinor = 0
 	defaultSchema  = "1.0"
+	eventSchema    = "1.0"
+	telemetryRel   = "telemetry/events.jsonl"
 
 	defaultEvaluationQuerySetPath = "cmd/memory-cli/testdata/eval-query-set-v1.json"
 	defaultEvaluationCorpusID     = "memory-corpus-v1"
@@ -150,6 +152,26 @@ type evaluationReport struct {
 	DeterministicReplay     []deterministicReplay `json:"deterministic_replay_proof"`
 }
 
+type telemetryEvent struct {
+	EventName      string `json:"event_name"`
+	EventVersion   string `json:"event_version"`
+	TimestampUTC   string `json:"timestamp_utc"`
+	SessionID      string `json:"session_id"`
+	TraceID        string `json:"trace_id"`
+	ScenarioID     string `json:"scenario_id"`
+	Operation      string `json:"operation"`
+	Result         string `json:"result"`
+	PolicyGate     string `json:"policy_gate"`
+	MemoryType     string `json:"memory_type"`
+	LatencyMS      int64  `json:"latency_ms"`
+	SelectedID     string `json:"selected_id,omitempty"`
+	SelectionMode  string `json:"selection_mode,omitempty"`
+	SourcePath     string `json:"source_path,omitempty"`
+	OperatorVerdict string `json:"operator_verdict"`
+	ErrorCode      string `json:"error_code,omitempty"`
+	Reason         string `json:"reason,omitempty"`
+}
+
 type writePolicyInput struct {
 	Stage        string
 	Reviewer     string
@@ -198,7 +220,7 @@ func main() {
 	}
 }
 
-func runWrite(args []string) error {
+func runWrite(args []string) (err error) {
 	fs := flag.NewFlagSet("write", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 
@@ -210,6 +232,11 @@ func runWrite(args []string) error {
 	body := fs.String("body", "", "entry body")
 	bodyFile := fs.String("body-file", "", "path to markdown body")
 	stage := fs.String("stage", "", "workflow stage: planning|architect|pm")
+	sessionID := fs.String("session-id", "session-local", "telemetry session identifier")
+	scenarioID := fs.String("scenario-id", "scenario-manual", "telemetry scenario identifier")
+	memoryType := fs.String("memory-type", "semantic", "telemetry memory type: procedural|state|semantic")
+	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
+	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
 	reviewer := fs.String("reviewer", "", "reviewer identity")
 	approved := fs.Bool("approved", false, "legacy flag: equivalent to --decision=approved")
 	decision := fs.String("decision", "", "review decision: approved|rejected")
@@ -222,6 +249,37 @@ func runWrite(args []string) error {
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
+	startedAt := time.Now().UTC()
+	traceID := fmt.Sprintf("trace-%d", startedAt.UnixNano())
+	defer func() {
+		result := "success"
+		errorCode := ""
+		reason := ""
+		if err != nil {
+			result = "fail"
+			errorCode = telemetryErrorCode(err)
+			reason = err.Error()
+		}
+		emitErr := emitTelemetry(*root, *telemetryFile, telemetryEvent{
+			EventName:       "memory.write",
+			EventVersion:    eventSchema,
+			TimestampUTC:    time.Now().UTC().Format(time.RFC3339),
+			SessionID:       normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:         traceID,
+			ScenarioID:      normalizeTelemetryValue(*scenarioID, "scenario-manual"),
+			Operation:       "write",
+			Result:          result,
+			PolicyGate:      "medium",
+			MemoryType:      normalizeMemoryType(*memoryType),
+			LatencyMS:       time.Since(startedAt).Milliseconds(),
+			OperatorVerdict: normalizeOperatorVerdict(*operatorVerdict),
+			ErrorCode:       errorCode,
+			Reason:          reason,
+		})
+		if err == nil && emitErr != nil {
+			err = emitErr
+		}
+	}()
 
 	policy, err := enforceWritePolicy(writePolicyInput{
 		Stage:        *stage,
@@ -368,29 +426,79 @@ func runWrite(args []string) error {
 	return nil
 }
 
-func runRetrieve(args []string) error {
+func runRetrieve(args []string) (err error) {
 	fs := flag.NewFlagSet("retrieve", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 
 	root := fs.String("root", "memory", "memory root path")
 	query := fs.String("query", "", "natural language query")
 	domain := fs.String("domain", "", "optional domain filter")
+	sessionID := fs.String("session-id", "session-local", "telemetry session identifier")
+	scenarioID := fs.String("scenario-id", "scenario-manual", "telemetry scenario identifier")
+	memoryType := fs.String("memory-type", "semantic", "telemetry memory type: procedural|state|semantic")
+	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
+	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
+	startedAt := time.Now().UTC()
+	traceID := fmt.Sprintf("trace-%d", startedAt.UnixNano())
+	telemetryResult := retrieveResult{
+		SelectedID:    "__none__",
+		SelectionMode: "fallback_path_priority",
+		SourcePath:    "__none__",
+	}
+	defer func() {
+		result := "success"
+		errorCode := ""
+		reason := telemetryResult.Reason
+		if err != nil {
+			result = "fail"
+			errorCode = telemetryErrorCode(err)
+			reason = err.Error()
+		}
+		emitErr := emitTelemetry(*root, *telemetryFile, telemetryEvent{
+			EventName:       "memory.retrieve",
+			EventVersion:    eventSchema,
+			TimestampUTC:    time.Now().UTC().Format(time.RFC3339),
+			SessionID:       normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:         traceID,
+			ScenarioID:      normalizeTelemetryValue(*scenarioID, "scenario-manual"),
+			Operation:       "retrieve",
+			Result:          result,
+			PolicyGate:      "none",
+			MemoryType:      normalizeMemoryType(*memoryType),
+			LatencyMS:       time.Since(startedAt).Milliseconds(),
+			SelectedID:      telemetryResult.SelectedID,
+			SelectionMode:   telemetryResult.SelectionMode,
+			SourcePath:      telemetryResult.SourcePath,
+			OperatorVerdict: normalizeOperatorVerdict(*operatorVerdict),
+			ErrorCode:       errorCode,
+			Reason:          reason,
+		})
+		if err == nil && emitErr != nil {
+			err = emitErr
+		}
+	}()
 
 	result, err := retrieve(*root, *query, *domain)
 	if err != nil {
 		return err
 	}
+	telemetryResult = result
 	return printResult(result)
 }
 
-func runEvaluate(args []string) error {
+func runEvaluate(args []string) (err error) {
 	fs := flag.NewFlagSet("evaluate", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 
 	root := fs.String("root", "memory", "memory root path")
+	sessionID := fs.String("session-id", "session-local", "telemetry session identifier")
+	scenarioID := fs.String("scenario-id", "scenario-manual", "telemetry scenario identifier")
+	memoryType := fs.String("memory-type", "semantic", "telemetry memory type: procedural|state|semantic")
+	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
+	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
 	queryFile := fs.String("query-file", defaultEvaluationQuerySetPath, "path to evaluation query set JSON")
 	corpusID := fs.String("corpus-id", defaultEvaluationCorpusID, "pinned corpus snapshot id")
 	querySetID := fs.String("query-set-id", defaultEvaluationQuerySetID, "pinned query set id")
@@ -398,6 +506,37 @@ func runEvaluate(args []string) error {
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
+	startedAt := time.Now().UTC()
+	traceID := fmt.Sprintf("trace-%d", startedAt.UnixNano())
+	defer func() {
+		result := "success"
+		errorCode := ""
+		reason := ""
+		if err != nil {
+			result = "fail"
+			errorCode = telemetryErrorCode(err)
+			reason = err.Error()
+		}
+		emitErr := emitTelemetry(*root, *telemetryFile, telemetryEvent{
+			EventName:       "memory.evaluate",
+			EventVersion:    eventSchema,
+			TimestampUTC:    time.Now().UTC().Format(time.RFC3339),
+			SessionID:       normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:         traceID,
+			ScenarioID:      normalizeTelemetryValue(*scenarioID, "scenario-manual"),
+			Operation:       "evaluate",
+			Result:          result,
+			PolicyGate:      "none",
+			MemoryType:      normalizeMemoryType(*memoryType),
+			LatencyMS:       time.Since(startedAt).Milliseconds(),
+			OperatorVerdict: normalizeOperatorVerdict(*operatorVerdict),
+			ErrorCode:       errorCode,
+			Reason:          reason,
+		})
+		if err == nil && emitErr != nil {
+			err = emitErr
+		}
+	}()
 
 	queries, err := loadEvaluationQueries(*queryFile)
 	if err != nil {
@@ -784,6 +923,69 @@ func printResult(r any) error {
 	}
 	fmt.Println(string(out))
 	return nil
+}
+
+func emitTelemetry(root, telemetryPath string, ev telemetryEvent) error {
+	path := strings.TrimSpace(telemetryPath)
+	if path == "" {
+		path = filepath.Join(root, filepath.FromSlash(telemetryRel))
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	data, err := json.Marshal(ev)
+	if err != nil {
+		return err
+	}
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if _, err := f.Write(append(data, '\n')); err != nil {
+		return err
+	}
+	return nil
+}
+
+func telemetryErrorCode(err error) string {
+	msg := strings.TrimSpace(err.Error())
+	if msg == "" {
+		return "ERR_UNKNOWN"
+	}
+	first := strings.Fields(msg)
+	code := strings.TrimSuffix(first[0], ":")
+	code = strings.TrimSpace(code)
+	if strings.HasPrefix(code, "ERR_") {
+		return code
+	}
+	return "ERR_COMMAND_FAILED"
+}
+
+func normalizeMemoryType(v string) string {
+	switch strings.ToLower(strings.TrimSpace(v)) {
+	case "procedural", "state", "semantic":
+		return strings.ToLower(strings.TrimSpace(v))
+	default:
+		return "semantic"
+	}
+}
+
+func normalizeOperatorVerdict(v string) string {
+	switch strings.ToLower(strings.TrimSpace(v)) {
+	case "correct", "partially_correct", "incorrect", "not_scored":
+		return strings.ToLower(strings.TrimSpace(v))
+	default:
+		return "not_scored"
+	}
+}
+
+func normalizeTelemetryValue(v, fallback string) string {
+	v = strings.TrimSpace(v)
+	if v == "" {
+		return fallback
+	}
+	return v
 }
 
 func loadCandidates(root string, entries []indexEntry, domain string) ([]candidate, error) {

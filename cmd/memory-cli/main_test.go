@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -439,4 +440,147 @@ func TestAPIRetrieveFallbackWhenGatewayUnavailable(t *testing.T) {
 	if got.SelectedID != want.SelectedID || got.SelectionMode != want.SelectionMode || got.SourcePath != want.SourcePath {
 		t.Fatalf("fallback output must match CLI retrieve semantics, got=%+v want=%+v", got, want)
 	}
+}
+
+func TestTelemetryEmissionForWriteRetrieveEvaluateAndFailure(t *testing.T) {
+	root := t.TempDir()
+	telemetryPath := filepath.Join(root, "events.jsonl")
+
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "telemetry-entry",
+		"--title", "Telemetry Entry",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "telemetry body",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed telemetry flow",
+		"--risk", "low",
+		"--notes", "approved",
+		"--session-id", "sess-1",
+		"--scenario-id", "scn-1",
+		"--memory-type", "procedural",
+		"--telemetry-file", telemetryPath,
+	}); err != nil {
+		t.Fatalf("runWrite failed: %v", err)
+	}
+
+	if err := runRetrieve([]string{
+		"--root", root,
+		"--query", "telemetry entry",
+		"--domain", "ops",
+		"--session-id", "sess-1",
+		"--scenario-id", "scn-1",
+		"--memory-type", "semantic",
+		"--telemetry-file", telemetryPath,
+	}); err != nil {
+		t.Fatalf("runRetrieve failed: %v", err)
+	}
+
+	querySetPath := filepath.Join(root, "queries.json")
+	querySet := []evaluationQuery{{
+		Query:      "telemetry-entry",
+		Domain:     "ops",
+		ExpectedID: "telemetry-entry",
+	}}
+	data, _ := json.Marshal(querySet)
+	if err := os.WriteFile(querySetPath, data, 0o644); err != nil {
+		t.Fatalf("write query set: %v", err)
+	}
+	if err := runEvaluate([]string{
+		"--root", root,
+		"--query-file", querySetPath,
+		"--session-id", "sess-1",
+		"--scenario-id", "scn-1",
+		"--memory-type", "state",
+		"--telemetry-file", telemetryPath,
+	}); err != nil {
+		t.Fatalf("runEvaluate failed: %v", err)
+	}
+
+	t.Setenv("AUTONOMOUS_RUN", "true")
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "blocked-telemetry",
+		"--title", "Blocked",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "blocked",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "blocked in autonomous mode",
+		"--risk", "low",
+		"--notes", "blocked",
+		"--session-id", "sess-2",
+		"--scenario-id", "scn-2",
+		"--memory-type", "procedural",
+		"--telemetry-file", telemetryPath,
+	}); err == nil {
+		t.Fatal("expected autonomous write to fail")
+	}
+
+	events := readTelemetryEvents(t, telemetryPath)
+	if len(events) != 4 {
+		t.Fatalf("expected 4 telemetry events, got %d", len(events))
+	}
+
+	seenFailure := false
+	seenRetrieve := false
+	for _, ev := range events {
+		if ev.EventName == "" || ev.EventVersion == "" || ev.TimestampUTC == "" || ev.SessionID == "" || ev.TraceID == "" || ev.ScenarioID == "" || ev.Operation == "" || ev.Result == "" || ev.PolicyGate == "" || ev.MemoryType == "" || ev.OperatorVerdict == "" {
+			t.Fatalf("telemetry event missing required fields: %+v", ev)
+		}
+		if ev.LatencyMS < 0 {
+			t.Fatalf("telemetry latency must be non-negative: %+v", ev)
+		}
+		if ev.Operation == "retrieve" {
+			seenRetrieve = true
+			if ev.SelectedID == "" || ev.SelectionMode == "" || ev.SourcePath == "" {
+				t.Fatalf("retrieve telemetry missing required retrieval fields: %+v", ev)
+			}
+		}
+		if ev.Result == "fail" {
+			seenFailure = true
+			if ev.ErrorCode == "" {
+				t.Fatalf("failed telemetry event must include error_code: %+v", ev)
+			}
+		}
+	}
+	if !seenRetrieve {
+		t.Fatal("expected at least one retrieve telemetry event")
+	}
+	if !seenFailure {
+		t.Fatal("expected at least one failed telemetry event")
+	}
+}
+
+func readTelemetryEvents(t *testing.T, path string) []telemetryEvent {
+	t.Helper()
+
+	file, err := os.Open(path)
+	if err != nil {
+		t.Fatalf("open telemetry file: %v", err)
+	}
+	defer file.Close()
+
+	events := []telemetryEvent{}
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Bytes()
+		if len(line) == 0 {
+			continue
+		}
+		var ev telemetryEvent
+		if err := json.Unmarshal(line, &ev); err != nil {
+			t.Fatalf("parse telemetry line: %v", err)
+		}
+		events = append(events, ev)
+	}
+	if err := scanner.Err(); err != nil {
+		t.Fatalf("scan telemetry file: %v", err)
+	}
+	return events
 }

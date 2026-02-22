@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 1
-- `engineering_active_count`: 4
+- `engineering_active_count`: 3
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 19
+- `engineering_done_story_count`: 20
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,9 +21,9 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `STORY-20260222-memory-cli-telemetry-contract-v01` to establish KPI evidence events.
 - Execute `STORY-20260222-mvp-constraint-enforcement-v01` to enforce fail-closed v0.1 policy gates.
 - Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize done-versus-shipped evidence.
+- Close QA for `STORY-20260222-memory-cli-telemetry-contract-v01` and use emitted events in KPI/reporting loops.
 
 ## Next
 - Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after core telemetry and KPI baseline stories land.

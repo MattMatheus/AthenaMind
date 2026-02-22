@@ -21,9 +21,9 @@
 3. Sequence deferred phase work (`v0.2` snapshot MVP, `v0.3` API read gateway) using checkpoint evidence.
 
 ## Progress Signals
-- Engineering done stories: `19`
+- Engineering done stories: `20`
 - Architecture done stories: `11`
-- Engineering active stories: `4`
+- Engineering active stories: `3`
 - Engineering intake stories: `1`
 
 ## Founder Checkpoints
