@@ -105,6 +105,18 @@ checklist:
   5) commit refinement outputs and state changes
 EOF
     ;;
+  planning)
+    cat <<EOF
+launch: prompts/active/planning-seed-prompt.md
+cycle: planning
+checklist:
+  1) run an interactive idea-generation session with the human operator
+  2) capture structured notes in research/planning/sessions using the planning template
+  3) convert session output into intake stories (engineering and/or architecture) using canonical templates
+  4) recommend next stage: architect (for decisions) and/or pm (for prioritization)
+  5) commit planning notes and created intake artifacts as: plan-<plan-id>
+EOF
+    ;;
   architect)
     top_arch_story="$(select_top_story_from_lane "$arch_active_dir" "$arch_active_readme" || true)"
     if [ -z "${top_arch_story:-}" ]; then
@@ -140,7 +152,7 @@ loop:
 EOF
     ;;
   *)
-    echo "usage: scripts/launch_stage.sh [engineering|qa|pm|architect|cycle]" >&2
+    echo "usage: scripts/launch_stage.sh [engineering|qa|pm|planning|architect|cycle]" >&2
     exit 1
     ;;
 esac

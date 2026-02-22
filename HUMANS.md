@@ -3,7 +3,7 @@
 Quick operator guide for founders and new helpers.
 
 ## Summary
-This repo runs a staged workflow: Architect (as needed) -> Engineering -> QA -> PM Refinement.
+This repo runs a staged workflow: Planning (as needed) -> Architect (as needed) -> Engineering -> QA -> PM Refinement.
 Use launcher commands to start each stage safely.
 
 ## 60-Second Start
@@ -14,6 +14,7 @@ Use launcher commands to start each stage safely.
 5. Repeat until engineering returns `no stories`.
 
 ## Stage Commands
+- Planning: `./scripts/launch_stage.sh planning`
 - Engineering: `./scripts/launch_stage.sh engineering`
 - Architect: `./scripts/launch_stage.sh architect`
 - QA: `./scripts/launch_stage.sh qa`
@@ -29,6 +30,10 @@ Use launcher commands to start each stage safely.
 - `backlog/architecture/`: separate architecture item type and lifecycle
 
 ## How Ideas Enter The System
+0. Optional planning session (recommended for ambiguous/new ideas):
+   - Run `./scripts/launch_stage.sh planning`.
+   - Capture session notes in `research/planning/sessions/` using `research/planning/PLANNING_SESSION_TEMPLATE.md`.
+   - Convert outputs into intake artifacts for engineering and/or architecture lanes.
 1. New product/engineering idea:
    - Create a story in `backlog/engineering/intake/` using `backlog/engineering/intake/STORY_TEMPLATE.md`.
 1a. New architecture/ADR idea:
@@ -40,6 +45,7 @@ Use launcher commands to start each stage safely.
 4. PM refinement then decides what moves into `backlog/engineering/active/` (or stays parked/deferred).
 
 ## Commit Rules
+- Planning: commit format must be `plan-<plan-id>`.
 - Engineering: include story id in commit message.
 - Architect: commit format must be `arch-<story-id>`.
 - QA: commit format must be `qa-<story-id>`.

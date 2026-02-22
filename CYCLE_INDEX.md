@@ -5,6 +5,7 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
 ## First 5 Minutes
 1. Confirm branch safety: run `git branch --show-current` and verify `dev`.
 2. Launch the stage you need:
+   - `scripts/launch_stage.sh planning`
    - `scripts/launch_stage.sh architect`
    - `scripts/launch_stage.sh engineering`
    - `scripts/launch_stage.sh qa`
@@ -27,6 +28,7 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
 - Stage launch script:
   - `scripts/launch_stage.sh`
 - Stage seed prompts:
+  - `prompts/active/planning-seed-prompt.md`
   - `prompts/active/architect-agent-seed-prompt.md`
   - `prompts/active/next-agent-seed-prompt.md`
   - `prompts/active/qa-agent-seed-prompt.md`

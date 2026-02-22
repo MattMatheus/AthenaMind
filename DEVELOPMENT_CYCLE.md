@@ -1,6 +1,7 @@
 # Development Cycle System
 
 ## Stage Launchers
+- Planning: `prompts/active/planning-seed-prompt.md`
 - Engineering: `prompts/active/next-agent-seed-prompt.md`
 - Architect: `prompts/active/architect-agent-seed-prompt.md`
 - QA: `prompts/active/qa-agent-seed-prompt.md`
@@ -8,6 +9,7 @@
 - Cycle Loop: `prompts/active/cycle-seed-prompt.md`
 
 Quick launch helper:
+- `scripts/launch_stage.sh planning`
 - `scripts/launch_stage.sh engineering`
 - `scripts/launch_stage.sh architect`
 - `scripts/launch_stage.sh qa`
@@ -27,6 +29,7 @@ Quick launch helper:
 - This is intentional to prevent accidental execution from the wrong branch.
 
 ## Canonical Flow
+0. Planning session (optional, recommended for new/ambiguous ideas) captures interactive notes and creates intake artifacts.
 1. PM ensures ranked stories exist in `backlog/engineering/active/`.
 2. Architect executes top architecture story in `backlog/architecture/active/`.
 3. Engineering executes top story, runs tests, commits with a story-linked message, and moves it to `backlog/engineering/qa/` with handoff package.
@@ -34,7 +37,7 @@ Quick launch helper:
    - moves story to `backlog/engineering/done/`, or
    - files prioritized bugs to `backlog/engineering/intake/` and returns story to `backlog/engineering/active/`.
    - QA then commits QA artifacts and backlog state transitions as `qa-<story-id>`.
-5. PM refines intake bugs, re-ranks active queue, and commits refinement/state updates.
+5. PM refines intake bugs/stories, re-ranks active queue, and commits refinement/state updates.
 6. Repeat until QA + Engineering are satisfied.
 
 ## Architecture Item Type
@@ -53,6 +56,10 @@ Quick launch helper:
 ## QA Commit Format
 - QA commits must use: `qa-<story-id>`.
 - Omit story title in QA commit messages to keep commit subjects short and uniform.
+
+## Planning Commit Format
+- Planning commits must use: `plan-<plan-id>`.
+- `plan-id` should match the planning session file id (`PLAN-YYYYMMDD-<slug>`).
 
 ## Work-System Doc Sync Rule
 - If any change modifies workflow behavior (stage flow, launch commands, commit conventions, state transitions, handoff requirements), update:

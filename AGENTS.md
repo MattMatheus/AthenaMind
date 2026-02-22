@@ -12,6 +12,7 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 4. Launch the requested stage with `scripts/launch_stage.sh <stage>`.
 
 ## Canonical Stage Prompts
+- Planning: `prompts/active/planning-seed-prompt.md`
 - Engineering: `prompts/active/next-agent-seed-prompt.md`
 - Architect: `prompts/active/architect-agent-seed-prompt.md`
 - QA: `prompts/active/qa-agent-seed-prompt.md`
@@ -31,6 +32,7 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 - Use `backlog/architecture/` for architecture item types (do not place architecture stories in `backlog/engineering/active/`).
 - Do not fabricate work when engineering reports `no stories`.
 - Commit after each stage transition.
+- Planning commit format: `plan-<plan-id>`.
 - Architect commit format: `arch-<story-id>`.
 - QA commit format: `qa-<story-id>`.
 

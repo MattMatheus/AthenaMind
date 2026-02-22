@@ -18,6 +18,17 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 4. Confirm active queue:
    - `backlog/engineering/active/README.md`
 
+## Planning Stage Loop (As Needed)
+1. Launch:
+   - `scripts/launch_stage.sh planning`
+2. Follow returned seed prompt:
+   - `prompts/active/planning-seed-prompt.md`
+3. Execute interactive planning session:
+   - capture notes in `research/planning/sessions/` using `research/planning/PLANNING_SESSION_TEMPLATE.md`
+   - convert ideas into engineering and/or architecture intake stories
+   - recommend next stage (`architect` and/or `pm`) based on decision needs
+   - commit planning notes and new intake artifacts as `plan-<plan-id>`
+
 ## Engineering Stage Loop
 1. Launch:
    - `scripts/launch_stage.sh engineering`
