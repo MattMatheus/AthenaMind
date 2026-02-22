@@ -47,6 +47,11 @@ Each memory entry must define:
 - `status`: `draft` or `approved`.
 - `body`: markdown content (for human-readable artifacts).
 
+Schema/versioning contract:
+- `index.yaml` and metadata files must include `schema_version`.
+- Version compatibility and migration behavior is defined in:
+  - `research/architecture/MEMORY_SCHEMA_AND_VERSIONING_POLICY.md`
+
 ## CLI Interaction Model (v1)
 Required behavior-level commands:
 - Binary requirement:
@@ -100,4 +105,6 @@ Work-system scripts are allowed for repository operations and testing, but produ
 ## References
 - `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
 - `research/decisions/ADR-0009-file-memory-cli-v1-architecture.md`
+- `research/decisions/ADR-0010-memory-schema-versioning-policy.md`
+- `research/architecture/MEMORY_SCHEMA_AND_VERSIONING_POLICY.md`
 - `research/planning/sessions/PLAN-20260222-idea-generation-session.md`
