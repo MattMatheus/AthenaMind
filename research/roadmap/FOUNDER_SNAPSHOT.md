@@ -21,9 +21,9 @@
 3. Sequence post-v0.1 deferred roadmap work using release-checkpoint evidence.
 
 ## Progress Signals
-- Engineering done stories: `21`
+- Engineering done stories: `22`
 - Architecture done stories: `11`
-- Engineering active stories: `2`
+- Engineering active stories: `1`
 - Engineering intake stories: `1`
 
 ## Founder Checkpoints

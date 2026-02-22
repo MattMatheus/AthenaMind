@@ -322,6 +322,9 @@ func runWrite(args []string) (err error) {
 			err = emitErr
 		}
 	}()
+	if err := enforceConstraintChecks("write", *sessionID, *scenarioID, traceID); err != nil {
+		return err
+	}
 
 	policy, err := enforceWritePolicy(writePolicyInput{
 		Stage:        *stage,
@@ -522,6 +525,9 @@ func runRetrieve(args []string) (err error) {
 			err = emitErr
 		}
 	}()
+	if err := enforceConstraintChecks("retrieve", *sessionID, *scenarioID, traceID); err != nil {
+		return err
+	}
 
 	result, err := retrieve(*root, *query, *domain)
 	if err != nil {
@@ -579,6 +585,9 @@ func runEvaluate(args []string) (err error) {
 			err = emitErr
 		}
 	}()
+	if err := enforceConstraintChecks("evaluate", *sessionID, *scenarioID, traceID); err != nil {
+		return err
+	}
 
 	queries, err := loadEvaluationQueries(*queryFile)
 	if err != nil {
@@ -836,6 +845,7 @@ func runSnapshotRestore(args []string) (err error) {
 }
 
 func retrieve(root, query, domain string) (retrieveResult, error) {
+	startedAt := time.Now()
 	if strings.TrimSpace(query) == "" {
 		return retrieveResult{}, errors.New("--query is required")
 	}
@@ -871,6 +881,20 @@ func retrieve(root, query, domain string) (retrieveResult, error) {
 	second := 0.0
 	if len(candidates) > 1 {
 		second = candidates[1].Score
+	}
+
+	if isLatencyDegraded(time.Since(startedAt).Milliseconds()) {
+		sort.SliceStable(candidates, func(i, j int) bool {
+			return candidates[i].Entry.Path < candidates[j].Entry.Path
+		})
+		chosen := candidates[0]
+		return retrieveResult{
+			SelectedID:    chosen.Entry.ID,
+			SelectionMode: "fallback_path_priority",
+			SourcePath:    chosen.Entry.Path,
+			Confidence:    chosen.Score,
+			Reason:        "latency degradation policy forced deterministic fallback",
+		}, nil
 	}
 
 	if isSemanticConfident(top.Score, second) {
@@ -1218,6 +1242,68 @@ func normalizeTelemetryValue(v, fallback string) string {
 		return fallback
 	}
 	return v
+}
+
+func enforceConstraintChecks(operation, sessionID, scenarioID, traceID string) error {
+	if err := enforceCostConstraint(operation); err != nil {
+		return err
+	}
+	if err := enforceTraceabilityConstraint(sessionID, scenarioID, traceID); err != nil {
+		return err
+	}
+	if err := enforceReliabilityConstraint(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func enforceCostConstraint(operation string) error {
+	maxPerRun := 0.50
+	if v := strings.TrimSpace(os.Getenv("MEMORY_CONSTRAINT_COST_MAX_PER_RUN_USD")); v != "" {
+		if _, err := fmt.Sscanf(v, "%f", &maxPerRun); err != nil {
+			return errors.New("ERR_CONSTRAINT_COST_CONFIG_INVALID: MEMORY_CONSTRAINT_COST_MAX_PER_RUN_USD must be numeric")
+		}
+	}
+	estimated := map[string]float64{
+		"write":    0.08,
+		"retrieve": 0.02,
+		"evaluate": 0.30,
+	}[operation]
+	if estimated > maxPerRun {
+		return fmt.Errorf("ERR_CONSTRAINT_COST_BUDGET_EXCEEDED: estimated_%s_cost_usd=%.2f exceeds max_per_run_usd=%.2f", operation, estimated, maxPerRun)
+	}
+	return nil
+}
+
+func enforceTraceabilityConstraint(sessionID, scenarioID, traceID string) error {
+	if isTrue(os.Getenv("MEMORY_CONSTRAINT_FORCE_TRACE_MISSING")) {
+		return errors.New("ERR_CONSTRAINT_TRACEABILITY_INCOMPLETE: trace policy forced missing required fields")
+	}
+	if strings.TrimSpace(sessionID) == "" || strings.TrimSpace(scenarioID) == "" || strings.TrimSpace(traceID) == "" {
+		return errors.New("ERR_CONSTRAINT_TRACEABILITY_INCOMPLETE: session_id, scenario_id, and trace_id are required")
+	}
+	return nil
+}
+
+func enforceReliabilityConstraint() error {
+	if isTrue(os.Getenv("MEMORY_CONSTRAINT_RELIABILITY_FREEZE")) {
+		return errors.New("ERR_CONSTRAINT_RELIABILITY_FREEZE_ACTIVE: autonomous promotion paths are frozen")
+	}
+	return nil
+}
+
+func isLatencyDegraded(elapsedMs int64) bool {
+	if isTrue(os.Getenv("MEMORY_CONSTRAINT_FORCE_LATENCY_DEGRADED")) {
+		return true
+	}
+	threshold := int64(700)
+	if v := strings.TrimSpace(os.Getenv("MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS")); v != "" {
+		var parsed int64
+		if _, err := fmt.Sscanf(v, "%d", &parsed); err == nil && parsed > 0 {
+			threshold = parsed
+		}
+	}
+	return elapsedMs > threshold
 }
 
 func createSnapshot(root, createdBy, reason string) (snapshotManifest, error) {

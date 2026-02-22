@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-mvp-constraint-enforcement-v01
 - `owner_persona`: SRE - Nia.md
-- `status`: active
+- `status`: qa
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0014, ADR-0006, ADR-0008]

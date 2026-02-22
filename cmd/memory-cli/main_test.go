@@ -791,3 +791,80 @@ func TestSnapshotAuditEventChain(t *testing.T) {
 		}
 	}
 }
+
+func TestConstraintCostFailClosed(t *testing.T) {
+	t.Setenv("MEMORY_CONSTRAINT_COST_MAX_PER_RUN_USD", "0.01")
+	root := t.TempDir()
+	err := runWrite([]string{
+		"--root", root,
+		"--id", "cost-blocked",
+		"--title", "Cost Blocked",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "blocked by cost",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "cost check",
+		"--risk", "low",
+		"--notes", "approved",
+	})
+	if err == nil || !strings.Contains(err.Error(), "ERR_CONSTRAINT_COST_BUDGET_EXCEEDED") {
+		t.Fatalf("expected cost constraint failure, got %v", err)
+	}
+}
+
+func TestConstraintTraceabilityFailClosed(t *testing.T) {
+	t.Setenv("MEMORY_CONSTRAINT_FORCE_TRACE_MISSING", "true")
+	root := t.TempDir()
+	err := runRetrieve([]string{
+		"--root", root,
+		"--query", "anything",
+	})
+	if err == nil || !strings.Contains(err.Error(), "ERR_CONSTRAINT_TRACEABILITY_INCOMPLETE") {
+		t.Fatalf("expected traceability constraint failure, got %v", err)
+	}
+}
+
+func TestConstraintReliabilityFreezeBlocks(t *testing.T) {
+	t.Setenv("MEMORY_CONSTRAINT_RELIABILITY_FREEZE", "true")
+	root := t.TempDir()
+	err := runEvaluate([]string{
+		"--root", root,
+		"--query-file", "cmd/memory-cli/testdata/eval-query-set-v1.json",
+	})
+	if err == nil || !strings.Contains(err.Error(), "ERR_CONSTRAINT_RELIABILITY_FREEZE_ACTIVE") {
+		t.Fatalf("expected reliability freeze constraint failure, got %v", err)
+	}
+}
+
+func TestConstraintLatencyDegradationForcesFallback(t *testing.T) {
+	t.Setenv("MEMORY_CONSTRAINT_FORCE_LATENCY_DEGRADED", "true")
+	root := t.TempDir()
+	for _, id := range []string{"alpha-lat", "beta-lat"} {
+		if err := runWrite([]string{
+			"--root", root,
+			"--id", id,
+			"--title", id,
+			"--type", "prompt",
+			"--domain", "ops",
+			"--body", "same body",
+			"--stage", "planning",
+			"--reviewer", "maya",
+			"--decision", "approved",
+			"--reason", "seed",
+			"--risk", "low",
+			"--notes", "approved",
+		}); err != nil {
+			t.Fatalf("seed write failed: %v", err)
+		}
+	}
+
+	result, err := retrieve(root, "alpha lat", "ops")
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if result.SelectionMode != "fallback_path_priority" {
+		t.Fatalf("expected fallback_path_priority under latency degradation, got %s", result.SelectionMode)
+	}
+}

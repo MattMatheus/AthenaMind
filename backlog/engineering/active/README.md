@@ -7,5 +7,4 @@ Ordered execution queue for engineering implementation.
 - If no engineering stories exist, launcher returns `no stories`.
 
 ## Active Sequence
-- STORY-20260222-mvp-constraint-enforcement-v01
 - STORY-20260222-release-checkpoint-bundle-v01
