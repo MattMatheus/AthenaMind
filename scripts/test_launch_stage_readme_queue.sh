@@ -4,18 +4,27 @@ set -euo pipefail
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 active_readme="$root_dir/backlog/active/README.md"
 launch_script="$root_dir/scripts/launch_stage.sh"
-expected_story="backlog/active/STORY-20260222-memory-snapshot-plan.md"
+story_a="$root_dir/backlog/active/STORY-TEST-README-ORDER-A.md"
+story_b="$root_dir/backlog/active/STORY-TEST-README-ORDER-B.md"
+expected_story="backlog/active/STORY-TEST-README-ORDER-B.md"
 
 tmp_dir="$(mktemp -d)"
 restore_readme() {
   if [[ -f "$tmp_dir/README.md.orig" ]]; then
     cp "$tmp_dir/README.md.orig" "$active_readme"
   fi
+  rm -f "$story_a" "$story_b"
   rm -rf "$tmp_dir"
 }
 trap restore_readme EXIT
 
 cp "$active_readme" "$tmp_dir/README.md.orig"
+cat >"$story_a" <<'EOF'
+# Temporary test story A
+EOF
+cat >"$story_b" <<'EOF'
+# Temporary test story B
+EOF
 
 cat >"$active_readme" <<'EOF'
 # Active Queue
@@ -23,8 +32,8 @@ cat >"$active_readme" <<'EOF'
 Ordered execution queue for engineering implementation.
 
 ## Active Sequence
-1. `STORY-20260222-memory-snapshot-plan.md`
-2. `BUG-20260222-launch-stage-readme-parse-fallback.md`
+1. `STORY-TEST-README-ORDER-B.md`
+2. `STORY-TEST-README-ORDER-A.md`
 EOF
 
 output="$("$launch_script" engineering)"
