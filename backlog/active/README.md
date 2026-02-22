@@ -9,5 +9,4 @@ Ordered execution queue for engineering implementation.
 - Product management is triggered only when active is empty.
 
 ## Active Sequence
-1. `BUG-20260222-launch-stage-readme-parse-fallback.md`
-2. `STORY-20260222-memory-snapshot-plan.md`
+1. `STORY-20260222-memory-snapshot-plan.md`

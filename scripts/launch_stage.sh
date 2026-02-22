@@ -21,7 +21,8 @@ fi
 select_top_active_story() {
   local from_readme
   if [ -f "$active_readme" ]; then
-    from_readme="$(sed -n 's/^[[:space:]]*[0-9]\+\.[[:space:]]*`\([^`]\+\)`.*/\1/p' "$active_readme" | head -n1 || true)"
+    # Use ERE syntax for portability across BSD/GNU sed when parsing queue numbering.
+    from_readme="$(sed -En 's/^[[:space:]]*[0-9]+\.[[:space:]]*`([^`]+)`.*/\1/p' "$active_readme" | head -n1 || true)"
     if [ -n "$from_readme" ]; then
       echo "$from_readme"
       return 0
@@ -46,7 +47,11 @@ case "$stage" in
     fi
 
     if [ "${top_story#/}" = "$top_story" ]; then
-      top_story="$root_dir/$top_story"
+      if [[ "$top_story" == */* ]]; then
+        top_story="$root_dir/$top_story"
+      else
+        top_story="$active_dir/$top_story"
+      fi
     fi
 
     if [ ! -f "$top_story" ]; then
