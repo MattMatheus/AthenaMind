@@ -84,6 +84,10 @@ Each memory-relevant session event should include:
 - `latency_ms`
 - `operator_verdict` (`correct|partially_correct|incorrect`)
 
+Canonical schema and validation rules:
+- `research/architecture/MEMORY_TELEMETRY_EVENT_CONTRACT_V01.md`
+- `research/decisions/ADR-0015-v01-memory-telemetry-event-contract.md`
+
 ## 80/20 Implementation Guidance
 - Start with manual scoring for `operator_verdict` before automation.
 - Instrument only KPI-required fields first; avoid broad telemetry expansion.

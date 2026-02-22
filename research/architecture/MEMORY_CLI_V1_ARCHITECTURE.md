@@ -114,7 +114,9 @@ Work-system scripts are allowed for repository operations and testing, but produ
 - `research/decisions/ADR-0010-memory-schema-versioning-policy.md`
 - `research/decisions/ADR-0011-memory-mutation-review-workflow-contract.md`
 - `research/decisions/ADR-0012-semantic-retrieval-quality-gates-v1.md`
+- `research/decisions/ADR-0015-v01-memory-telemetry-event-contract.md`
 - `research/architecture/MEMORY_SCHEMA_AND_VERSIONING_POLICY.md`
 - `research/architecture/MEMORY_MUTATION_REVIEW_WORKFLOW.md`
 - `research/architecture/SEMANTIC_RETRIEVAL_QUALITY_GATES_V1.md`
+- `research/architecture/MEMORY_TELEMETRY_EVENT_CONTRACT_V01.md`
 - `research/planning/sessions/PLAN-20260222-idea-generation-session.md`

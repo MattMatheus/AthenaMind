@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-memory-telemetry-event-contract-v01
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: qa
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0002, ADR-0006, ADR-0008, ADR-0012]
