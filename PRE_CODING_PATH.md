@@ -23,6 +23,10 @@ Outcome: explicit go/no-go decision for coding start.
 Stories:
 6. `backlog/active/STORY-20260222-coding-readiness-gate.md`
 
+Gate artifacts:
+- `research/roadmap/CODING_READINESS_GATE_CHECKLIST.md`
+- `research/roadmap/CODING_READINESS_DECISION_2026-02-22.md` (`NO-GO`, pending blockers)
+
 ## External Dependency
 - `backlog/done/STORY-20260222-phased-plan-v01-v03.md` is now closed through QA and no longer blocks pre-coding execution.
 

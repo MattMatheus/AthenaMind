@@ -14,4 +14,3 @@ Ordered execution queue for engineering implementation.
 3. `backlog/active/STORY-20260222-doc-test-harness-standardization.md`
 4. `backlog/active/STORY-20260222-founder-operator-workflow.md`
 5. `backlog/active/STORY-20260222-docs-navigation-hardening.md`
-6. `backlog/active/STORY-20260222-coding-readiness-gate.md`
