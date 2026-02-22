@@ -21,11 +21,11 @@ Use launcher commands to start each stage safely.
 - Continuous loop: `./scripts/launch_stage.sh cycle`
 
 ## Backlog State Model
-- `backlog/engineering/intake/`: raw new work (stories/bugs)
-- `backlog/engineering/active/`: ranked execution queue
-- `backlog/engineering/qa/`: awaiting QA decision
-- `backlog/engineering/done/`: accepted work
-- `backlog/blocked/`: waiting on dependency
+- `backlog/engineering/intake/`: raw new engineering work (stories/bugs)
+- `backlog/engineering/active/`: ranked engineering execution queue
+- `backlog/engineering/qa/`: engineering items awaiting QA decision
+- `backlog/engineering/done/`: accepted engineering work
+- `backlog/engineering/blocked/`: blocked engineering work
 - `backlog/architecture/`: separate architecture item type and lifecycle
 
 ## How Ideas Enter The System
