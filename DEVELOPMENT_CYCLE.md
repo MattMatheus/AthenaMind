@@ -1,5 +1,9 @@
 # Development Cycle System
 
+## Human Operator Entry Point
+- `HUMANS.md` is the canonical founder/operator navigation page.
+- It links to roadmap status, release checkpoints, and KPI tracking docs.
+
 ## Stage Launchers
 - Planning: `prompts/active/planning-seed-prompt.md`
 - Engineering: `prompts/active/next-agent-seed-prompt.md`

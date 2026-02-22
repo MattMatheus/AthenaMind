@@ -97,6 +97,7 @@ Each memory-relevant session event should include:
   - Validate any performance claims with local measurements before roadmap commitment.
 
 ## Immediate Next Actions
-1. Define the initial 3 to 5 scenarios and owners.
-2. Add telemetry fields to current memory CLI/session traces.
-3. Publish first KPI snapshot using `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.
+1. Apply baseline priorities from `research/roadmap/MEMORY_BEST_PRACTICES_RUBRIC_V01.md`.
+2. Define the initial 3 to 5 scenarios and owners.
+3. Add telemetry fields to current memory CLI/session traces.
+4. Publish first KPI snapshot using `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.

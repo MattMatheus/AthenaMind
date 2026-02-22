@@ -6,6 +6,37 @@ Quick operator guide for founders and new helpers.
 This repo runs a staged workflow: Planning (as needed) -> Architect (as needed) -> Engineering -> QA -> PM Refinement.
 Use launcher commands to start each stage safely.
 
+## Founder Control Center (Single Human Entry Point)
+Use this section as the unified "humans area." It points only to canonical docs and should be checked first.
+
+### Current Priorities (Canonical)
+- Founder one-screen snapshot:
+  - `research/roadmap/FOUNDER_SNAPSHOT.md`
+- Program control plane status and operator priorities:
+  - `research/roadmap/PROGRAM_STATE_BOARD.md`
+- Research roadmap status and upcoming research work:
+  - `research/roadmap/RESEARCH_BACKLOG.md`
+- Phase-level plan and milestone sequencing:
+  - `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
+- v0.1 goals and progress thresholds (green/yellow/red):
+  - `research/decisions/ADR-0008-v01-goals-and-scorecard-target-bands.md`
+- Living memory-technique baseline vs experiment rubric:
+  - `research/roadmap/MEMORY_BEST_PRACTICES_RUBRIC_V01.md`
+- Dogfooding and KPI operating loop:
+  - `research/roadmap/DOGFOODING_LOOP_AND_TELEMETRY_KPI_SET_V01.md`
+
+### Release and Ship Readiness
+- Stage exit gates (mandatory):
+  - `docs/process/STAGE_EXIT_GATES.md`
+- Release bundle policy/template (`done` != shipped):
+  - `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
+
+### Quick Weekly Founder Loop
+1. Check `research/roadmap/PROGRAM_STATE_BOARD.md` (`Now` and `Risks`).
+2. Check `research/roadmap/RESEARCH_BACKLOG.md` (`Now` and `Next`).
+3. Check KPI trend snapshot output from `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.
+4. Confirm release bundle status before declaring anything shipped.
+
 ## 60-Second Start
 1. Ensure branch is `dev`.
 2. Run `./scripts/launch_stage.sh engineering`.
