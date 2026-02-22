@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-founder-operator-workflow
 - `owner_persona`: Product Manager - Maya.md
-- `status`: qa
+- `status`: done
 
 ## Problem Statement
 A repeatable day-to-day operator workflow is needed so the system is used consistently inside Codex app sessions.

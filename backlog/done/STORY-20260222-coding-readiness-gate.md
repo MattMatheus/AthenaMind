@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-coding-readiness-gate
 - `owner_persona`: Product Manager - Maya.md
-- `status`: qa
+- `status`: done
 
 ## Problem Statement
 Before coding starts, we need one explicit go/no-go checkpoint to confirm process, QA, and test discipline are stable.

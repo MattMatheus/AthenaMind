@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-docs-navigation-hardening
 - `owner_persona`: Technical Writer - Clara.md
-- `status`: qa
+- `status`: done
 
 ## Problem Statement
 Cycle artifacts are now distributed across backlog, prompts, personas, and research docs; we need a single navigation entrypoint.
