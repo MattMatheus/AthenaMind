@@ -11,6 +11,7 @@
 ## Scope
 - In:
 - Implement CLI v1 baseline for memory write/retrieve operations using architecture-approved contracts.
+- Implement the production CLI in Go as a stable portable binary.
 - Implement file-backed storage and retrieval for prompt/instruction memory artifacts.
 - Use `/memory` as canonical storage root for memory artifacts.
 - Support semantic lookup with deterministic fallback path (`exact-key -> path-priority`) as defined by architecture.
@@ -43,3 +44,4 @@
 - Post-MVP roadmap items (API wrapper/UI/multi-backend) are intentionally out of v1 scope.
 - Execution gate: architecture decisions from `ARCH-20260222-file-memory-cli-v1-architecture` must be confirmed before implementation details are finalized.
 - Planning gate: choose and document a non-shell implementation stack before coding starts.
+- Work-system scripts remain allowed for operational automation (state moves/tests), but production memory runtime must ship as Go binary logic.

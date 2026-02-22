@@ -10,8 +10,10 @@ AthenaMind v0.1 is scoped to the memory layer and must deliver an initial workin
 Adopt a repo-local file-based memory architecture for v1 with these constraints:
 - Canonical memory root: `/memory` (repo root).
 - Interface: CLI-first contract (runtime/language implementation details remain open for engineering).
+- Interface: CLI-first contract implemented in Go as a stable portable binary.
 - v1 scope: write + retrieve only.
 - Memory mutation governance: updates are allowed only outside autonomous agent runs and require human review pre-MVP.
+- Scripts may be used for work-system automation tasks, but not as production runtime architecture for the memory system.
 - Artifact formats:
   - Markdown for human-readable prompt/instruction memory.
   - JSON/YAML for structured index/metadata where needed.
@@ -44,6 +46,8 @@ Deferred from v1:
   - Rejected due to unnecessary pre-MVP complexity and infrastructure coupling.
 - Option B: Deterministic lookup only (no semantic retrieval in v1)
   - Rejected because it weakens usability for natural-language memory access.
+- Option C: Shell-script-based production runtime
+  - Rejected due to portability, maintainability, and binary distribution requirements.
 
 ## Validation Plan
 - Architecture artifact must define:

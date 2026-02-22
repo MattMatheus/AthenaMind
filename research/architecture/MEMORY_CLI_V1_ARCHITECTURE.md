@@ -6,7 +6,7 @@ Define an implementation-ready architecture for a repo-local, file-based memory 
 ## Scope
 - In scope:
   - Repo-local memory storage rooted at `/memory`.
-  - CLI write/retrieve behavior.
+  - Go-based CLI write/retrieve behavior distributed as a stable portable binary.
   - Semantic retrieval pipeline with deterministic fallback.
   - Mutation governance for reviewed, out-of-run updates.
   - Non-shell primary implementation architecture.
@@ -49,6 +49,8 @@ Each memory entry must define:
 
 ## CLI Interaction Model (v1)
 Required behavior-level commands:
+- Binary requirement:
+  - Provide a stable portable Go binary as the production CLI interface.
 - Write:
   - Create or update memory entry by `id`.
   - Persist markdown artifact under canonical folder.
@@ -93,6 +95,7 @@ Required behavior-level commands:
 
 ## Roadmap Boundary
 Future phases can wrap CLI functionality behind an API contract and later add a UI, but v1 must not depend on those components.
+Work-system scripts are allowed for repository operations and testing, but production memory runtime behavior must remain in the Go CLI binary.
 
 ## References
 - `research/decisions/ADR-0007-memory-layer-scope-refinement.md`

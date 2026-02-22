@@ -26,7 +26,8 @@
 - Prefer common repo automation patterns (for example `AGENTS.md` directives at folder roots).
 - Canonical memory root is `/memory` at repo root.
 - Target architecture is explicitly **not** shell-script based.
-- CLI implementation language/runtime is TBD, but must be a non-shell primary architecture.
+- CLI implementation language/runtime is Go (`Go`), compiled as a stable portable binary.
+- Scripts are allowed for work-system automation tasks (for example stage launchers, file moves, doc checks), not as production runtime architecture.
 - Product/business:
 - Primary user remains founder-operator unless explicitly changed later.
 - Timeline/dependencies:
@@ -80,7 +81,6 @@
 ## Open Questions
 - What quality gates make a memory entry trusted/authoritative?
 - What review/approval workflow is required for memory mutations before MVP?
-- Which non-shell implementation stack should own v1 (`Go`, `Rust`, `Python`, other)?
 
 ## Scope Decision (Now vs Later)
 - Move forward now:
