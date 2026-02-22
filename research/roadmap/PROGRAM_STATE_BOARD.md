@@ -6,13 +6,13 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 7
+- `engineering_intake_count`: 8
 - `engineering_active_count`: 0
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 15
-- `architecture_intake_count`: 4
+- `architecture_intake_count`: 3
 - `architecture_active_count`: 0
-- `architecture_qa_count`: 2
+- `architecture_qa_count`: 4
 - `architecture_done_story_count`: 6
 
 ## Phase Status

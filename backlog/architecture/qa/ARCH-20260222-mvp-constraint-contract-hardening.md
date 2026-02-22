@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-mvp-constraint-contract-hardening
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: qa
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0004, ADR-0006, ADR-0008]
