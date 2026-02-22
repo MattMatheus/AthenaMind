@@ -7,4 +7,4 @@ Ordered execution queue for engineering implementation.
 - If no engineering stories exist, launcher returns `no stories`.
 
 ## Active Sequence
-- (empty)
+- `STORY-20260222-go-toolchain-availability.md`

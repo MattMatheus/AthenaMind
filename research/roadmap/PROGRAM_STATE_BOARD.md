@@ -6,8 +6,8 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 1
-- `engineering_active_count`: 0
+- `engineering_intake_count`: 0
+- `engineering_active_count`: 1
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 14
 - `architecture_intake_count`: 0
@@ -21,13 +21,13 @@
 - `v0.3`: not started
 
 ## Now
-- Run PM refinement for `backlog/engineering/intake/STORY-20260222-go-toolchain-availability.md`.
-- Refresh coding readiness artifacts to reflect post-blocker reality.
+- Execute `backlog/engineering/active/STORY-20260222-go-toolchain-availability.md`.
 - Create first release checkpoint bundle for shipped v0.1 increments.
+- Publish first KPI snapshot and compare against ADR-0008 target bands.
 
 ## Next
-- Define and run recurring KPI snapshots from `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.
-- Formalize first v0.1 release boundary after PM refinement and release bundle.
+- Formalize first v0.1 release boundary after release bundle review.
+- Run recurring KPI snapshot cadence from `work-system/metrics/KPI_SNAPSHOT_TEMPLATE.md`.
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.

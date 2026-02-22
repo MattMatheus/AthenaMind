@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-go-toolchain-availability
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: intake
+- `status`: active
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0009, ADR-0010, ADR-0011, ADR-0012]
@@ -32,7 +32,8 @@
 - No known regressions in touched scope
 
 ## Dependencies
-- `backlog/engineering/active/STORY-20260222-memory-cli-v1-write-retrieve-baseline.md`
+- Baseline dependency is already complete:
+  - `backlog/engineering/done/STORY-20260222-memory-cli-v1-write-retrieve-baseline.md`
 
 ## Notes
 - This is a workflow/tooling readiness dependency discovered during implementation, not a product feature change.
