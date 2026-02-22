@@ -10,6 +10,12 @@ Quick launch helper:
 - `scripts/launch_stage.sh qa`
 - `scripts/launch_stage.sh pm`
 
+## Branch Safety Rule
+- All stage launches require the current git branch to be `dev`.
+- If branch is not `dev`, launcher aborts with:
+  - `abort: active branch is '<branch>'; expected 'dev'`
+- This is intentional to prevent accidental execution from the wrong branch.
+
 ## Canonical Flow
 1. PM ensures ranked stories exist in `backlog/active/`.
 2. Engineering executes top story and moves it to `backlog/qa/` with handoff package.
