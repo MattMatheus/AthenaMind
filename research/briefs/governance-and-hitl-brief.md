@@ -2,7 +2,7 @@
 
 ## Source Inputs
 - `README.md` (vision prompt)
-- `research/ingest/pillars.md`
+- `research/ingest/archive/pillars.md`
 - `research/architecture/MODULE_BOUNDARIES_V01.md`
 - `research/architecture/MVP_CONSTRAINTS_V01.md`
 - `research/references/external-sources-2026-02-22-governance.md`

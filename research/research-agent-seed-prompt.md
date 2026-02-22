@@ -2,11 +2,11 @@
 
 # Next Research Agent Directive
 
-Your task is to begin the next research cycle by executing the top item in the active research backlog.
+Your task is to begin the next research cycle by executing the top item in the active research ingest.
 
 ## Primary Task
 
-- **Backlog Item:** `research/roadmap/RESEARCH_BACKLOG.md` -> `Now` item 1: Dogfooding loop design and telemetry KPI set.
+- **Backlog Item:** `research/roadmap/RESEARCH_BACKLOG.md` -> `Now` item 1: Program state consistency and release-checkpoint adoption.
 
 ## Scope Guardrail (Mandatory)
 

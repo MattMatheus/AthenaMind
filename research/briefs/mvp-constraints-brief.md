@@ -1,7 +1,7 @@
 # Research Brief: MVP Constraints (Cost, Latency, Traceability, Reliability)
 
 ## Source Inputs
-- `research/ingest/pillars.md`
+- `research/ingest/archive/pillars.md`
 - `README.md` (vision prompt)
 - `research/decisions/ADR-0002-north-star-and-success-metrics.md`
 - `research/architecture/MODULE_BOUNDARIES_V01.md`

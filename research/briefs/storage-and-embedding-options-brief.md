@@ -2,7 +2,7 @@
 
 ## Source Inputs
 - `README.md` (vision prompt)
-- `research/ingest/pillars.md`
+- `research/ingest/archive/pillars.md`
 - `research/architecture/MODULE_BOUNDARIES_V01.md`
 - `research/decisions/ADR-0001-three-pillar-foundation.md`
 - `research/references/external-sources-2026-02-22-storage-embedding.md`

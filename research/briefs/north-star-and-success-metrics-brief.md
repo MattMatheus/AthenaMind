@@ -1,7 +1,7 @@
 # Research Brief: North Star and Success Metrics
 
 ## Source Inputs
-- `research/ingest/pillars.md`
+- `research/ingest/archive/pillars.md`
 - `research/architecture/FOUNDATION_PILLARS.md`
 - `research/decisions/ADR-0001-three-pillar-foundation.md`
 

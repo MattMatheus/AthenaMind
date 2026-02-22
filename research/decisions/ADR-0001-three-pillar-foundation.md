@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-The pivot requires a durable architecture that separates long-term instructions, persistent semantic/state memory, and short-term execution context. The `ingest/pillars.md` note defines this model and emphasizes secure sandboxed execution, repository-local directives, and semantic code navigation.
+The pivot requires a durable architecture that separates long-term instructions, persistent semantic/state memory, and short-term execution context. The `research/ingest/archive/pillars.md` note defines this model and emphasizes secure sandboxed execution, repository-local directives, and semantic code navigation.
 
 ## Decision
 AthenaMind will adopt the following foundational architecture:

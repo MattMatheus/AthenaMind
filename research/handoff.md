@@ -1,30 +1,42 @@
 # Research Handoff
 
 ## What was produced
-- Competitive positioning and differentiation memo:
-  - `research/competitive/COMPETITIVE_POSITIONING_AND_DIFFERENTIATION_MEMO_2026-02-22.md`
-- Backlog progression update:
+- Dogfooding loop and telemetry KPI design artifact:
+  - `research/roadmap/DOGFOODING_LOOP_AND_TELEMETRY_KPI_SET_V01.md`
+- Product + engineering session note for memory-best-practices ingest review:
+  - `research/planning/sessions/PLAN-20260222-memory-best-practices-review.md`
+- Pillars ingest coverage audit and archival disposition:
+  - `research/references/PILLARS_INGEST_COVERAGE_AUDIT_2026-02-22.md`
+- Backlog and seed-prompt progression updates:
   - `research/roadmap/RESEARCH_BACKLOG.md`
-- Research seed prompt progression update:
   - `research/research-agent-seed-prompt.md`
+- Archived ingest item:
+  - `research/ingest/archive/pillars.md`
 
 ## Why those outputs matter now
-- The project now has a clear market-facing position that is consistent with accepted memory-layer scope and governance constraints.
-- Differentiation is documented in execution terms (policy, audit, retrieval precision, local-first strategy), which can guide both roadmap sequencing and GTM narrative.
-- The research queue is now advanced to the next high-leverage item.
+- Product and engineering now have a shared, scope-safe operating loop for validating memory value in v0.1.
+- KPI definitions provide immediate measurement targets for continuity, trust, governance, and cost.
+- The ingest queue is cleaned up: pillars content is preserved in canonical artifacts and no longer competes with active research attention.
+- The next research cycle is now pointed at program-state and release-checkpoint consistency, reducing process risk.
 
 ## Validation performed
-- Traceability check against accepted context:
-  - `ADR-0001` through `ADR-0007`, `ADR-0008`, and `research/product/VISION_WORKSHOP_2026-02-22.md`.
-- Scope guardrail check:
-  - memo explicitly excludes runtime execution orchestration and container lifecycle ownership for v0.1.
-- Roadmap consistency check:
-  - positioning implications align with `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`.
+- Traceability review against canonical context:
+  - `research/decisions/ADR-0001-three-pillar-foundation.md`
+  - `research/decisions/ADR-0002-north-star-and-success-metrics.md`
+  - `research/decisions/ADR-0006-governance-and-hitl-policy.md`
+  - `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
+  - `research/decisions/ADR-0008-v01-goals-and-scorecard-target-bands.md`
+  - `research/product/VISION_WORKSHOP_2026-02-22.md`
+- Scope guardrail validation:
+  - removed runtime/pod ownership from v0.1 recommendations; retained memory-layer-only actions.
+- Backlog progression validation:
+  - completed item moved from `Now` to `Completed`; next cycle item promoted.
 
 ## Open questions for next cycle
-- Which competitor set should be designated as canonical for source-validated comparison in the next pass?
-- What minimum evidence threshold should convert assumption-based differentiation claims into validated claims?
-- Which KPI definitions should be locked first for dogfooding loops (continuity success, rework reduction, trusted autonomy, or trace completeness)?
+- Which release-checkpoint artifacts must be mandatory before moving additional work from done -> shipped?
+- What is the minimum sample size for first KPI snapshot trend interpretation to avoid false confidence?
+- Which telemetry fields can be sourced immediately from existing traces vs requiring schema changes?
+- Which claims in `research/ingest/memory-best-practices.md` should be prioritized for external primary-source verification first?
 
 ## Recommended next backlog item
-- Dogfooding loop design and telemetry KPI set.
+- Program state consistency and release-checkpoint adoption.
