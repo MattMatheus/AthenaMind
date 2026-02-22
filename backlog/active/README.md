@@ -10,4 +10,3 @@ Ordered execution queue for engineering implementation.
 
 ## Active Sequence
 1. `backlog/active/STORY-20260222-state-transition-checklist.md`
-2. `backlog/active/STORY-20260222-qa-regression-rubric.md`
