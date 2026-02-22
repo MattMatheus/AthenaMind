@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-architecture-baseline-consolidation
 - `owner_persona`: Software Architect - Ada.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 Architecture decisions and design artifacts are spread across multiple ADR and research files. We need one consolidated architecture baseline map so engineering and PM can scope work against a stable reference.
