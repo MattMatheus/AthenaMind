@@ -5,7 +5,7 @@
 - `priority`: P2
 - `reported_by`: QA Engineer - Iris
 - `source_story`: backlog/active/STORY-20260222-doc-test-harness-standardization.md
-- `status`: intake
+- `status`: active
 
 ## Priority Definitions
 - `P0`: release-blocking, data loss/corruption, security-critical

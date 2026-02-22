@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-snapshot-plan
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: active
 
 ## Problem Statement
 Snapshot capability is a planned anti-rot feature; a scoped design artifact is needed so it can be scheduled after core v0.1 functionality.
