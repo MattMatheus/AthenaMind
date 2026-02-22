@@ -13,3 +13,7 @@ Dedicated backlog lane for architecture decision and design artifacts.
 
 ## Core Flow
 `intake -> ready -> active -> qa -> done`
+
+## Refinement Standard
+- Use `INTAKE_REFINEMENT_GUIDE.md` before promoting intake items to `ready`.
+- Keep architecture decision work in this lane; implementation work belongs in `backlog/engineering/`.

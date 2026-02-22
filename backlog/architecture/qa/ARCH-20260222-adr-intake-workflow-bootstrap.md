@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-adr-intake-workflow-bootstrap
 - `owner_persona`: Software Architect - Ada.md
-- `status`: active
+- `status`: qa
 
 ## Decision Scope
 - Define the standard intake quality bar for architecture/ADR ideas before they are promoted to `ready`.
