@@ -11,7 +11,7 @@
 - Scope guardrail: memory-layer only (no runtime/pod ownership)
 
 ## This Week: Now
-1. Execute `backlog/engineering/active/STORY-20260222-go-toolchain-availability.md`.
+1. Run PM refinement because engineering active queue is currently empty.
 2. Create first release checkpoint bundle before declaring shipped scope.
 3. Publish first KPI snapshot and interpret trend vs ADR-0008 target bands.
 
@@ -21,9 +21,9 @@
 3. Verify external claims from `research/ingest/memory-best-practices.md` with primary sources and local measurements.
 
 ## Progress Signals
-- Engineering done stories: `14`
+- Engineering done stories: `15`
 - Architecture done stories: `6`
-- Engineering active stories: `1`
+- Engineering active stories: `0`
 - Engineering intake stories: `0`
 
 ## Founder Checkpoints

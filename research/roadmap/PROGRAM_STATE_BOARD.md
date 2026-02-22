@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 1
+- `engineering_active_count`: 0
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 14
+- `engineering_done_story_count`: 15
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,7 +21,7 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `backlog/engineering/active/STORY-20260222-go-toolchain-availability.md`.
+- Run PM refinement (active queue is empty) and promote next intake work.
 - Create first release checkpoint bundle for shipped v0.1 increments.
 - Publish first KPI snapshot and compare against ADR-0008 target bands.
 
