@@ -9,4 +9,4 @@ Ordered execution queue for engineering implementation.
 - Product management is triggered only when active is empty.
 
 ## Active Sequence
-1. `STORY-20260222-memory-snapshot-plan.md`
+- (empty)
