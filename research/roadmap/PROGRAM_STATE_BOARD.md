@@ -12,8 +12,8 @@
 - `engineering_done_story_count`: 15
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
-- `architecture_qa_count`: 4
-- `architecture_done_story_count`: 9
+- `architecture_qa_count`: 2
+- `architecture_done_story_count`: 10
 
 ## Phase Status
 - `v0.1`: in-progress (core memory CLI baseline and governance gates implemented)
