@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Obsidian workspace and transient state
+.obsidian/
+.trash/
+
+# Common editor/project cache artifacts
+*.swp
+*.swo
