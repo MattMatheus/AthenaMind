@@ -6,8 +6,8 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 1
-- `engineering_active_count`: 0
+- `engineering_intake_count`: 0
+- `engineering_active_count`: 3
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 23
 - `architecture_intake_count`: 0
@@ -21,18 +21,19 @@
 - `v0.3`: not started
 
 ## Now
-- Run PM refinement because engineering active queue is empty.
-- Release checkpoint bundle published with explicit `hold`; resolve hold conditions before any ship decision.
-- Promote next intake item only after PM refinement confirms priority and dependency ordering.
+- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` to improve semantic precision and trace completeness from baseline.
+- Keep release decision at `hold` until post-hardening KPI delta evidence is published and checkpoint risks are re-evaluated.
+- Run queued release-control stories in order: semantic hardening -> KPI delta snapshot -> release checkpoint refresh.
 
 ## Next
-- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after PM refinement reprioritization.
-- Sequence deferred roadmap work with explicit checkpoint gating.
-- Re-run KPI delta snapshot after the next release-bound cycle.
+- If hardening and KPI evidence clear thresholds, update release bundle decision from `hold` to explicit `ship` with rationale.
+- Sequence deferred roadmap work only after v0.1 release checkpoint decision is finalized.
+- Rebaseline founder snapshot signals against the refreshed release bundle.
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.
 - `done` volume can create false confidence without release checkpoint evidence.
+- Release bundle scope/evidence can go stale if checkpoint-refresh control-plane story is skipped.
 
 ## Evidence Links
 - Phase plan: `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
