@@ -13,6 +13,15 @@ Use launcher commands to start each stage safely.
 4. Move completed work to QA (`backlog/engineering/qa/`), then run QA stage.
 5. Repeat until engineering returns `no stories`.
 
+## PM Intake Validation
+- Before moving items from intake to active, run:
+  - `./scripts/validate_intake_items.sh`
+- If validation fails:
+  - fix missing metadata or invalid status values,
+  - move misfiled `ARCH-*` items to `backlog/architecture/intake/`,
+  - move misfiled `STORY-*`/`BUG-*` items to `backlog/engineering/intake/`,
+  - rerun validation until it passes.
+
 ## Stage Commands
 - Planning: `./scripts/launch_stage.sh planning`
 - Engineering: `./scripts/launch_stage.sh engineering`

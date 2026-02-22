@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-schema-validation-and-compatibility
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 - Architecture now defines required schema/versioning rules for memory artifacts, but the CLI baseline story does not yet implement compatibility checks or deterministic error handling for version drift.

@@ -18,6 +18,16 @@ Use this checklist before promoting an item from `backlog/architecture/intake/` 
 - Move work to engineering lane when the primary output is implementation code, runtime behavior changes, tests, or deployment changes.
 - If an architecture item identifies implementation tasks, keep those tasks out of the architecture story and file them as engineering intake stories.
 
+## Validation Failure Handling (PM Refinement)
+Before promoting items to active queues, run:
+- `scripts/validate_intake_items.sh`
+
+If validation fails:
+1. Fix missing metadata fields or invalid status values in the affected intake file.
+2. Move misfiled `ARCH-*` stories from engineering intake to architecture intake.
+3. Move misfiled `STORY-*` or `BUG-*` items from architecture intake to engineering intake.
+4. Re-run validation until it passes, then proceed with ranking/promotion.
+
 ## Required Output Package for Architect Stage
 1. Decision record updates (new ADR or ADR revision).
 2. Architecture artifact updates (maps, standards, contracts, or design docs).

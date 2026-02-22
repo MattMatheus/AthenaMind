@@ -40,6 +40,10 @@ Quick launch helper:
 5. PM refines intake bugs/stories, re-ranks active queue, and commits refinement/state updates.
 6. Repeat until QA + Engineering are satisfied.
 
+PM intake validation requirement:
+- Run `scripts/validate_intake_items.sh` before promoting intake items to active queues.
+- Validation failures must be fixed (metadata/status) and lane crossover must be corrected before ranking.
+
 ## Architecture Item Type
 - Architecture work uses a separate lane: `backlog/architecture/`.
 - Architecture lifecycle: `backlog/architecture/intake -> ready -> active -> qa -> done`.
