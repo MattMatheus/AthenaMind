@@ -11,6 +11,7 @@ Your task is to validate the top story in `backlog/qa/`.
 4. Decide result:
    - If defects exist: move story back to `backlog/active/`.
    - If quality bar is met: move story to `backlog/done/`.
+5. Commit QA artifacts and backlog state changes with an appropriate message that includes the story id.
 
 ## QA Output Requirements
 - Explicit pass/fail verdict
@@ -20,3 +21,4 @@ Your task is to validate the top story in `backlog/qa/`.
 ## Constraints
 - No silent failures.
 - No direct reprioritization; PM handles refinement/ranking.
+- Do not skip commit after QA decision.

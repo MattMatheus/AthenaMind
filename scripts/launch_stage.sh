@@ -70,10 +70,28 @@ checklist:
 EOF
     ;;
   qa)
-    echo "launch: prompts/active/qa-agent-seed-prompt.md"
+    cat <<EOF
+launch: prompts/active/qa-agent-seed-prompt.md
+cycle: qa
+checklist:
+  1) review story in backlog/qa against acceptance criteria
+  2) validate tests/regression risk
+  3) file defects in backlog/intake with P0-P3 if found
+  4) move story to backlog/done or backlog/active
+  5) commit QA artifacts and state changes with story id in message
+EOF
     ;;
   pm)
-    echo "launch: prompts/active/pm-refinement-seed-prompt.md"
+    cat <<EOF
+launch: prompts/active/pm-refinement-seed-prompt.md
+cycle: pm
+checklist:
+  1) review/refine items from backlog/intake
+  2) rank and move selected items to backlog/active
+  3) update backlog/active/README.md sequence
+  4) update engineering directive only if needed
+  5) commit refinement outputs and state changes
+EOF
     ;;
   *)
     echo "usage: scripts/launch_stage.sh [engineering|qa|pm]" >&2

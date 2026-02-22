@@ -22,7 +22,8 @@ Quick launch helper:
 3. QA validates and either:
    - moves story to `backlog/done/`, or
    - files prioritized bugs to `backlog/intake/` and returns story to `backlog/active/`.
-4. PM refines intake bugs and re-ranks active queue.
+   - QA then commits QA artifacts and backlog state transitions with a story-linked message.
+4. PM refines intake bugs, re-ranks active queue, and commits refinement/state updates.
 5. Repeat until QA + Engineering are satisfied.
 
 ## Empty Backlog Rule
