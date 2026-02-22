@@ -2,6 +2,7 @@
 
 ## Completed
 - Define memory system north star and success metrics.
+- Freeze v0.1 goals and scorecard target bands (`ADR-0008`).
 - Map 3-pillar architecture into concrete module boundaries.
 - Define MVP constraints (cost, latency, traceability, reliability).
 - Evaluate storage/embedding options for local-first mode.

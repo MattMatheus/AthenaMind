@@ -24,8 +24,10 @@ Your task is to execute the top story in `backlog/active/`.
 - Test run results
 - Open risks/questions
 - Recommended QA focus areas
+- New gaps discovered during implementation (as intake story paths in `backlog/intake/`)
 
 ## Constraints
 - Do not skip tests.
 - Do not move story to done directly from active.
 - Respect accepted ADRs and memory-layer scope.
+- If a gap is discovered, log a new intake story before handoff.

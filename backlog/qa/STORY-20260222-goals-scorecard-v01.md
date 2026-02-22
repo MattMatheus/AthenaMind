@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-goals-scorecard-v01
 - `owner_persona`: Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 The system needs explicit v0.1 goal targets so sprint planning can prioritize by measurable outcomes instead of intuition.
