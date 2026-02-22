@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-file-memory-cli-v1-architecture
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: active
 
 ## Decision Scope
 - Define architecture for a repo-local, file-based memory layer accessed through a CLI executable, with v1 scope limited to write/retrieve flows.
