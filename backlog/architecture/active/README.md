@@ -8,5 +8,4 @@ Ordered execution queue for architecture stories.
 - Architecture outputs move through `backlog/architecture/qa` before `done`.
 
 ## Active Sequence
-1. `backlog/architecture/active/ARCH-20260222-file-memory-cli-v1-architecture.md`
-2. `backlog/architecture/active/ARCH-20260222-architecture-baseline-consolidation.md`
+1. `backlog/architecture/active/ARCH-20260222-architecture-baseline-consolidation.md`
