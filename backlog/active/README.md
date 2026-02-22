@@ -12,4 +12,3 @@ Ordered execution queue for engineering implementation.
 1. `backlog/active/STORY-20260222-state-transition-checklist.md`
 2. `backlog/active/STORY-20260222-qa-regression-rubric.md`
 3. `backlog/active/STORY-20260222-founder-operator-workflow.md`
-4. `backlog/active/STORY-20260222-docs-navigation-hardening.md`
