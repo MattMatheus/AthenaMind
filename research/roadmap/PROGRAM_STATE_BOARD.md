@@ -12,8 +12,8 @@
 - `engineering_done_story_count`: 15
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
-- `architecture_qa_count`: 2
-- `architecture_done_story_count`: 10
+- `architecture_qa_count`: 0
+- `architecture_done_story_count`: 11
 
 ## Phase Status
 - `v0.1`: in-progress (core memory CLI baseline and governance gates implemented)
@@ -21,7 +21,6 @@
 - `v0.3`: not started
 
 ## Now
-- Run architecture QA on `ARCH-20260222-phase-boundary-rebaseline-v01-v03`.
 - Run PM refinement to rank and promote refilled engineering intake into active.
 - Create first release checkpoint bundle for shipped v0.1 increments.
 - Publish first KPI snapshot and compare against ADR-0008 target bands.
