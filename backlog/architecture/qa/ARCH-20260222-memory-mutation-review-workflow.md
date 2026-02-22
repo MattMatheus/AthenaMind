@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-memory-mutation-review-workflow
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: qa
 
 ## Decision Scope
 - Define end-to-end review workflow and approval contract for memory mutations outside autonomous runs.

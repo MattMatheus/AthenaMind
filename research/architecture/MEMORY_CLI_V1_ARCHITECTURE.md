@@ -89,6 +89,8 @@ Required behavior-level commands:
   - PM refinement stage.
 - All mutations require human review before acceptance.
 - Governance state for entries should be represented in metadata (`draft` vs `approved`).
+- Approval/rejection workflow and audit artifact requirements are defined in:
+  - `research/architecture/MEMORY_MUTATION_REVIEW_WORKFLOW.md`
 
 ## Risks and Mitigations
 - Risk: semantic retrieval drift produces inconsistent answers.
@@ -106,5 +108,7 @@ Work-system scripts are allowed for repository operations and testing, but produ
 - `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
 - `research/decisions/ADR-0009-file-memory-cli-v1-architecture.md`
 - `research/decisions/ADR-0010-memory-schema-versioning-policy.md`
+- `research/decisions/ADR-0011-memory-mutation-review-workflow-contract.md`
 - `research/architecture/MEMORY_SCHEMA_AND_VERSIONING_POLICY.md`
+- `research/architecture/MEMORY_MUTATION_REVIEW_WORKFLOW.md`
 - `research/planning/sessions/PLAN-20260222-idea-generation-session.md`
