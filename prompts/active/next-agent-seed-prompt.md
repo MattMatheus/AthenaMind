@@ -13,7 +13,7 @@ Your task is to execute the top story in `backlog/active/`.
 1. Take the top story from `backlog/active/`.
 2. Read, research, and implement. Surface questions if outcome is unclear.
 3. Update tests.
-4. Run tests. Tests must pass.
+4. Run tests with the canonical docs command (`scripts/run_doc_tests.sh`) plus any story-specific test commands. Tests must pass.
 5. Commit changes with an appropriate message that includes the story id.
 6. Prepare handoff package.
 7. Move the story to `backlog/qa/`.
@@ -29,6 +29,7 @@ Your task is to execute the top story in `backlog/active/`.
 
 ## Constraints
 - Do not skip tests.
+- Use `scripts/run_doc_tests.sh` as the default docs validation entrypoint.
 - Do not skip commit after passing tests.
 - Do not move story to done directly from active.
 - Respect accepted ADRs and memory-layer scope.

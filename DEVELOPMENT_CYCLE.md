@@ -10,6 +10,12 @@ Quick launch helper:
 - `scripts/launch_stage.sh qa`
 - `scripts/launch_stage.sh pm`
 
+## Doc Validation Standard
+- Canonical docs validation command: `scripts/run_doc_tests.sh`
+- Story-specific doc tests live under `scripts/test_*.sh`.
+- Shared assertion helpers live under `scripts/lib/doc_test_harness.sh`.
+- Standard and template: `research/roadmap/DOC_TEST_HARNESS_STANDARD.md`.
+
 ## Branch Safety Rule
 - All stage launches require the current git branch to be `dev`.
 - If branch is not `dev`, launcher aborts with:
