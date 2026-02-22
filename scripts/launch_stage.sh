@@ -78,7 +78,7 @@ checklist:
   2) validate tests/regression risk
   3) file defects in backlog/intake with P0-P3 if found
   4) move story to backlog/done or backlog/active
-  5) commit QA artifacts and state changes with story id in message
+  5) commit QA artifacts and state changes as: qa-<story-id>
 EOF
     ;;
   pm)
@@ -93,8 +93,21 @@ checklist:
   5) commit refinement outputs and state changes
 EOF
     ;;
+  cycle)
+    cat <<EOF
+launch: prompts/active/cycle-seed-prompt.md
+cycle: engineering+qa loop
+loop:
+  - run: scripts/launch_stage.sh engineering
+  - if output is "no stories": stop
+  - execute engineering story cycle
+  - run: scripts/launch_stage.sh qa
+  - execute QA cycle
+  - repeat until active backlog is drained
+EOF
+    ;;
   *)
-    echo "usage: scripts/launch_stage.sh [engineering|qa|pm]" >&2
+    echo "usage: scripts/launch_stage.sh [engineering|qa|pm|cycle]" >&2
     exit 1
     ;;
 esac
