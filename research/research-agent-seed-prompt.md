@@ -6,7 +6,7 @@ Your task is to begin the next research cycle by executing the top item in the a
 
 ## Primary Task
 
-- **Backlog Item:** `research/roadmap/RESEARCH_BACKLOG.md` -> `Now` item 1: Create phased implementation plan (v0.1 -> v0.3).
+- **Backlog Item:** `research/roadmap/RESEARCH_BACKLOG.md` -> `Now` item 1: Dogfooding loop design and telemetry KPI set.
 
 ## Scope Guardrail (Mandatory)
 

@@ -9,12 +9,12 @@
 - Define governance and human-in-the-loop controls.
 - Re-baseline scope to memory-layer-only for v0.1.
 - Create phased implementation plan (v0.1 -> v0.3): `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
+- Competitive positioning and differentiation memo: `research/competitive/COMPETITIVE_POSITIONING_AND_DIFFERENTIATION_MEMO_2026-02-22.md`
 
 ## Now
-- Competitive positioning and differentiation memo.
+- Dogfooding loop design and telemetry KPI set.
 
 ## Next
-- Dogfooding loop design and telemetry KPI set.
 - Formalize state-transition checklist for active -> qa -> done flow.
 
 ## Later
