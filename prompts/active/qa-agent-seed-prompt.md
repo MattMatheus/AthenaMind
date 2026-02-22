@@ -12,6 +12,7 @@ Your task is to validate the top story in `backlog/qa/`.
 4. Decide result:
    - If defects exist: move story back to `backlog/active/`.
    - If quality bar is met: move story to `backlog/done/`.
+   - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` for transition artifact gates.
 5. Commit QA artifacts and backlog state changes with an appropriate message that includes the story id.
 
 ## QA Output Requirements

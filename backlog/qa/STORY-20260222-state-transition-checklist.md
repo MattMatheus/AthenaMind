@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-state-transition-checklist
 - `owner_persona`: QA Engineer - Iris.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 Story movement across `active`, `qa`, `done`, and `blocked` needs checklist gates to avoid inconsistent transitions.

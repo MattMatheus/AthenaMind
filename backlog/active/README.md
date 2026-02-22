@@ -9,4 +9,4 @@ Ordered execution queue for engineering implementation.
 - Product management is triggered only when active is empty.
 
 ## Active Sequence
-1. `backlog/active/STORY-20260222-state-transition-checklist.md`
+- (empty)

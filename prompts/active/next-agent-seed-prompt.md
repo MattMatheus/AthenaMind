@@ -12,6 +12,7 @@ Your task is to execute the top story in `backlog/active/`.
 ## Implementation Cycle (Mandatory)
 1. Take the top story from `backlog/active/`.
 2. Read, research, and implement. Surface questions if outcome is unclear.
+   - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` before moving story state.
 3. Update tests.
 4. Run tests with the canonical docs command (`scripts/run_doc_tests.sh`) plus any story-specific test commands. Tests must pass.
 5. Commit changes with an appropriate message that includes the story id.
