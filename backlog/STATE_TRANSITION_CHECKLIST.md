@@ -8,7 +8,6 @@ Required artifacts:
 - updated story file in `backlog/qa/` with `status: qa`
 - handoff package at `backlog/qa/HANDOFF-<story>.md`
 - passing test output for required commands
-- commit including story id
 
 Approval:
 - Engineering operator executing the story
@@ -21,7 +20,6 @@ Required artifacts:
 - QA result artifact with explicit pass verdict at `backlog/done/QA-RESULT-<story>.md`
 - evidence that acceptance criteria are satisfied
 - regression risk check result
-- commit including story id
 
 Approval:
 - QA operator for current cycle
@@ -35,7 +33,6 @@ Required artifacts:
 - each bug includes priority (`P0-P3`) and required evidence
 - QA result or notes include fail verdict and linked bug path(s)
 - story moved back to `backlog/active/`
-- commit including story id
 
 Approval:
 - QA operator for current cycle
@@ -43,7 +40,19 @@ Approval:
 Gate decision:
 - Required when any blocking acceptance criteria or regression defect exists.
 
+## Cycle Closure (Observer + Commit)
+Required artifacts:
+- observer report at `work-system/observer/OBSERVER-REPORT-<cycle-id>.md`
+- cycle commit with message `cycle-<cycle-id>` containing observer report and cycle outputs
+
+Approval:
+- current cycle operator
+
+Gate decision:
+- Allow cycle closure only after observer report is generated.
+
 ## Operational Rules
 - Never move directly `active -> done`.
 - Never move state forward with failing tests.
 - Keep queue order in `backlog/active/README.md` aligned after every transition.
+- Do not commit intermediate stage transitions; commit once per completed cycle.

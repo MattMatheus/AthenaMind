@@ -31,11 +31,13 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - capture notes in `research/planning/sessions/` using `research/planning/PLANNING_SESSION_TEMPLATE.md`
    - convert ideas into engineering and/or architecture intake stories
    - recommend next stage (`architect` and/or `pm`) based on decision needs
-   - commit planning notes and new intake artifacts as `plan-<plan-id>`
    - mark planning session `status: finalized` after intake artifacts are linked
+4. Close planning cycle:
+   - run `scripts/run_observer_cycle.sh --cycle-id <plan-id>`
+   - commit once: `cycle-<cycle-id>`
 
-## Engineering Stage Loop
-1. Launch:
+## Engineering + QA Cycle Loop
+1. Launch engineering:
    - `scripts/launch_stage.sh engineering`
 2. Follow returned seed prompt:
    - `prompts/active/next-agent-seed-prompt.md`
@@ -43,8 +45,19 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - implement required artifacts
    - update tests
    - run `scripts/run_doc_tests.sh` plus any story-specific tests
-   - commit with story id
    - move story from `backlog/engineering/active/` to `backlog/engineering/qa/` with handoff package
+   - do not commit yet
+4. Launch QA:
+   - `scripts/launch_stage.sh qa`
+5. Follow returned seed prompt:
+   - `prompts/active/qa-agent-seed-prompt.md`
+6. For top `backlog/engineering/qa/` story:
+   - validate acceptance criteria and regression risk
+   - if defects exist, file bug(s) in `backlog/engineering/intake/` and return story to `backlog/engineering/active/`
+   - if quality bar is met, move story to `backlog/engineering/done/`
+7. Close cycle:
+   - run `scripts/run_observer_cycle.sh --cycle-id <story-id>`
+   - commit once: `cycle-<cycle-id>`
 
 ## Architect Stage Loop (As Needed)
 1. Launch:
@@ -54,19 +67,10 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 3. Execute top architecture story:
    - update ADRs/architecture docs
    - run docs validation tests
-   - commit as `arch-<story-id>`
    - move story from `backlog/architecture/active/` to `backlog/architecture/qa/`
-
-## QA Stage Loop
-1. Launch:
-   - `scripts/launch_stage.sh qa`
-2. Follow returned seed prompt:
-   - `prompts/active/qa-agent-seed-prompt.md`
-3. For top `backlog/engineering/qa/` story:
-   - validate acceptance criteria and regression risk
-   - if defects exist, file bug(s) in `backlog/engineering/intake/` and return story to `backlog/engineering/active/`
-   - if quality bar is met, move story to `backlog/engineering/done/`
-   - commit QA artifacts and state transitions as `qa-<story-id>`
+4. Close architecture cycle:
+   - run `scripts/run_observer_cycle.sh --cycle-id <arch-story-id>`
+   - commit once: `cycle-<cycle-id>`
 
 ## PM Refinement Loop
 1. Launch:
@@ -76,6 +80,9 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 3. Refine intake and re-rank active queue in `backlog/engineering/active/README.md`.
 4. Update `research/roadmap/PROGRAM_STATE_BOARD.md` counts and Now/Next priorities.
 5. Ensure intake/active stories have traceability metadata (`idea_id`, `phase`, `adr_refs`, metric).
+6. Close PM cycle:
+   - run `scripts/run_observer_cycle.sh --cycle-id PM-<date>-<slug>`
+   - commit once: `cycle-<cycle-id>`
 
 ## If X Then Y Rules
 - If engineering launch returns `no stories`:
@@ -98,7 +105,8 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 
 ## Shutdown Routine
 1. Confirm no partial state transitions remain.
-2. Ensure latest cycle changes are committed with story-linked messages.
-3. Leave next actionable queue visible in `backlog/engineering/active/README.md`.
-4. Capture any new ideas/defects in `backlog/engineering/intake/` before ending session.
-5. If items should be considered shipped, produce a release bundle from `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`.
+2. Confirm observer report exists for each completed cycle in this session.
+3. Ensure latest cycle changes are committed with `cycle-<cycle-id>` messages.
+4. Leave next actionable queue visible in `backlog/engineering/active/README.md`.
+5. Capture any new ideas/defects in `backlog/engineering/intake/` before ending session.
+6. If items should be considered shipped, produce a release bundle from `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`.

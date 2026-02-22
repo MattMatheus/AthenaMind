@@ -14,7 +14,10 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
 4. Run docs validation command before handoff/decision points:
    - `scripts/run_doc_tests.sh`
 5. Apply backlog state movement only through the canonical flow (`engineering/active -> engineering/qa -> engineering/done`, with intake/active loop for defects).
-6. Apply stage gates:
+6. Close each cycle with Observer + single commit:
+   - `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
+   - `git commit -m "cycle-<cycle-id>"`
+7. Apply stage and cycle gates:
    - `docs/process/STAGE_EXIT_GATES.md`
 
 ## Branch Rule and Empty Active Behavior
@@ -29,6 +32,8 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
   - `DEVELOPMENT_CYCLE.md`
 - Stage launch script:
   - `scripts/launch_stage.sh`
+- Observer script:
+  - `scripts/run_observer_cycle.sh`
 - Stage seed prompts:
   - `prompts/active/planning-seed-prompt.md`
   - `prompts/active/architect-agent-seed-prompt.md`
@@ -53,6 +58,9 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
 - Program control plane:
   - `research/roadmap/PROGRAM_STATE_BOARD.md`
   - `docs/process/PROGRAM_OPERATING_SYSTEM.md`
+- Observer artifacts:
+  - `work-system/observer/README.md`
+  - `work-system/observer/OBSERVER_REPORT_TEMPLATE.md`
 - Release checkpoint template:
   - `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
 - Personas directory and role index:

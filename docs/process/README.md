@@ -8,6 +8,7 @@ Documentation for how the team improves and governs the work system.
 - QA standards
 - retros and process experiments
 - stage launch model (planning, architect, engineering, QA, PM, cycle)
+- observer and cycle-commit policy
 - stage exit gates and shipped checkpoint policy
 - program operating system and control-plane rules
 

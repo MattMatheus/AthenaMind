@@ -76,9 +76,9 @@ checklist:
   2) implement required changes
   3) update tests
   4) run tests (must pass)
-  5) commit changes with story id in message
-  6) prepare handoff package
-  7) move story to backlog/engineering/qa
+  5) prepare handoff package
+  6) move story to backlog/engineering/qa
+  7) do not commit yet (cycle-level commit after observer step)
 EOF
     ;;
   qa)
@@ -90,7 +90,8 @@ checklist:
   2) validate tests/regression risk
   3) file defects in backlog/engineering/intake with P0-P3 if found
   4) move story to backlog/engineering/done or backlog/engineering/active
-  5) commit QA artifacts and state changes as: qa-<story-id>
+  5) run observer: scripts/run_observer_cycle.sh --cycle-id <story-id>
+  6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
     ;;
   pm)
@@ -102,7 +103,8 @@ checklist:
   2) rank and move selected items to backlog/engineering/active
   3) update backlog/engineering/active/README.md sequence
   4) update engineering directive only if needed
-  5) commit refinement outputs and state changes
+  5) run observer: scripts/run_observer_cycle.sh --cycle-id PM-<date>-<slug>
+  6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
     ;;
   planning)
@@ -114,7 +116,8 @@ checklist:
   2) capture structured notes in research/planning/sessions using the planning template
   3) convert session output into intake stories (engineering and/or architecture) using canonical templates
   4) recommend next stage: architect (for decisions) and/or pm (for prioritization)
-  5) commit planning notes and created intake artifacts as: plan-<plan-id>
+  5) run observer: scripts/run_observer_cycle.sh --cycle-id <plan-id>
+  6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
     ;;
   architect)
@@ -133,9 +136,9 @@ checklist:
   1) read story and clarify architecture decision scope
   2) update ADRs/architecture artifacts
   3) run docs validation tests
-  4) commit changes as: arch-<story-id>
-  5) prepare handoff package
-  6) move story to backlog/architecture/qa
+  4) prepare handoff package
+  5) move story to backlog/architecture/qa
+  6) do not commit yet (cycle-level commit after observer step)
 EOF
     ;;
   cycle)
@@ -148,6 +151,8 @@ loop:
   - execute engineering story cycle
   - run: scripts/launch_stage.sh qa
   - execute QA cycle
+  - run observer: scripts/run_observer_cycle.sh --cycle-id <story-id>
+  - commit once: cycle-<cycle-id>
   - repeat until active backlog is drained
 EOF
     ;;

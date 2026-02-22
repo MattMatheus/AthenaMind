@@ -8,16 +8,16 @@ All must pass:
 2. Session `status` is `finalized`.
 3. Intake artifacts are created in correct lanes.
 4. Next-stage recommendation is explicit (`architect` or `pm`).
-5. Planning commit uses `plan-<plan-id>`.
+5. Planning outputs are ready for observer capture in cycle closure.
 
 ## Architect Exit Gate
 All must pass:
 1. Architecture story has explicit scope and accepted output package.
-2. ADR/artifact updates are committed.
+2. ADR/artifact updates are complete.
 3. Follow-on implementation story paths are listed in handoff.
 4. Validation commands are recorded and passing.
 5. Story transitions `active -> qa` only (never directly to `done`).
-6. Commit uses `arch-<story-id>`.
+6. Outputs are ready for observer capture in cycle closure.
 
 ## PM Refinement Exit Gate
 All must pass:
@@ -35,7 +35,7 @@ All must pass:
 4. Handoff package is complete and includes risks/questions.
 5. New gaps are recorded as intake artifacts before handoff.
 6. Story transitions `active -> qa`.
-7. Commit message includes story id.
+7. No stage-level commit is made before observer step.
 
 ## QA Exit Gate
 All must pass for `PASS`:
@@ -45,7 +45,15 @@ All must pass for `PASS`:
 4. Artifact gate passes (handoff present).
 5. QA result artifact exists in `backlog/engineering/done/QA-RESULT-<story>.md`.
 6. State transition is explicit (`qa -> done` or `qa -> active` with bugs).
-7. Commit uses `qa-<story-id>`.
+7. No stage-level commit is made before observer step.
+
+## Cycle Closure Gate (Observer + Commit)
+A cycle is closed only when all pass:
+1. Observer report exists at `work-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
+2. Observer report includes a diff inventory and workflow-sync checklist.
+3. Required sync targets were updated when workflow behavior changed (`HUMANS.md`, `AGENTS.md`, `DEVELOPMENT_CYCLE.md`, prompts/gates as needed).
+4. Exactly one cycle commit is created with subject `cycle-<cycle-id>`.
+5. Cycle commit includes observer report and all cycle artifacts (handoff/QA/program-state updates as applicable).
 
 ## Shipped Gate (Release Checkpoint)
 `done` is not automatically `shipped`.

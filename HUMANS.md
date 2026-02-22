@@ -6,6 +6,11 @@ Quick operator guide for founders and new helpers.
 This repo runs a staged workflow: Planning (as needed) -> Architect (as needed) -> Engineering -> QA -> PM Refinement.
 Use launcher commands to start each stage safely.
 
+Commit policy is cycle-based:
+- Do not commit at intermediate stage transitions.
+- Run Observer after each completed cycle.
+- Commit once per cycle with message format: `cycle-<cycle-id>`.
+
 ## Founder Control Center (Single Human Entry Point)
 Use this section as the unified "humans area." It points only to canonical docs and should be checked first.
 
@@ -30,6 +35,8 @@ Use this section as the unified "humans area." It points only to canonical docs 
   - `docs/process/STAGE_EXIT_GATES.md`
 - Release bundle policy/template (`done` != shipped):
   - `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
+- Observer policy and artifacts:
+  - `work-system/observer/README.md`
 
 ### Quick Weekly Founder Loop
 1. Check `research/roadmap/PROGRAM_STATE_BOARD.md` (`Now` and `Risks`).
@@ -42,7 +49,9 @@ Use this section as the unified "humans area." It points only to canonical docs 
 2. Run `./scripts/launch_stage.sh engineering`.
 3. Follow the returned story and checklist.
 4. Move completed work to QA (`backlog/engineering/qa/`), then run QA stage.
-5. Repeat until engineering returns `no stories`.
+5. Run Observer (`scripts/run_observer_cycle.sh --cycle-id <story-id>`).
+6. Commit once for the cycle (`cycle-<cycle-id>`).
+7. Repeat until engineering returns `no stories`.
 
 ## PM Intake Validation
 - Before moving items from intake to active, run:
@@ -69,6 +78,7 @@ Use this section as the unified "humans area." It points only to canonical docs 
 - QA: `./scripts/launch_stage.sh qa`
 - PM: `./scripts/launch_stage.sh pm`
 - Continuous loop: `./scripts/launch_stage.sh cycle`
+- Observer: `./scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
 
 ## Backlog State Model
 - `backlog/engineering/intake/`: raw new engineering work (stories/bugs)
@@ -94,11 +104,10 @@ Use this section as the unified "humans area." It points only to canonical docs 
 4. PM refinement then decides what moves into `backlog/engineering/active/` (or stays parked/deferred).
 
 ## Commit Rules
-- Planning: commit format must be `plan-<plan-id>`.
-- Engineering: include story id in commit message.
-- Architect: commit format must be `arch-<story-id>`.
-- QA: commit format must be `qa-<story-id>`.
-- PM: commit refinement/state changes after queue updates.
+- Use one commit per completed cycle with format: `cycle-<cycle-id>`.
+- Do not commit during intermediate stage transitions (`active -> qa`, `qa -> done`, etc.).
+- Run Observer first and include `work-system/observer/OBSERVER-REPORT-<cycle-id>.md` in the cycle commit.
+- Include all cycle artifacts in the same commit (handoff, QA result, queue/program updates).
 
 ## If You Forgot What To Do
 1. Read `DEVELOPMENT_CYCLE.md`.

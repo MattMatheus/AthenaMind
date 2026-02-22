@@ -19,6 +19,7 @@ Quick launch helper:
 - `scripts/launch_stage.sh qa`
 - `scripts/launch_stage.sh pm`
 - `scripts/launch_stage.sh cycle`
+- `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
 
 ## Doc Validation Standard
 - Canonical docs validation command: `scripts/run_doc_tests.sh`
@@ -36,14 +37,15 @@ Quick launch helper:
 0. Planning session (optional, recommended for new/ambiguous ideas) captures interactive notes and creates intake artifacts.
 1. PM ensures ranked stories exist in `backlog/engineering/active/`.
 2. Architect executes top architecture story in `backlog/architecture/active/`.
-3. Engineering executes top story, runs tests, commits with a story-linked message, and moves it to `backlog/engineering/qa/` with handoff package.
+3. Engineering executes top story, runs tests, prepares handoff package, and moves story to `backlog/engineering/qa/`.
 4. QA validates and either:
    - moves story to `backlog/engineering/done/`, or
    - files prioritized bugs to `backlog/engineering/intake/` and returns story to `backlog/engineering/active/`.
-   - QA then commits QA artifacts and backlog state transitions as `qa-<story-id>`.
-5. PM refines intake bugs/stories, re-ranks active queue, and commits refinement/state updates.
-6. Repeat until QA + Engineering are satisfied.
-7. Shipping checkpoint (separate from `done`):
+5. Observer runs at cycle boundary, captures deterministic diff/memory deltas, and writes `work-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
+6. Commit once for the full cycle using `cycle-<cycle-id>`.
+7. PM refines intake bugs/stories, re-ranks active queue, and updates control-plane artifacts.
+8. Repeat until QA + Engineering are satisfied.
+9. Shipping checkpoint (separate from `done`):
    - PM/operator prepares release bundle and explicit ship/hold decision.
 
 PM intake validation requirement:
@@ -58,7 +60,7 @@ Program board requirement:
 - PM refinement must update `research/roadmap/PROGRAM_STATE_BOARD.md` with queue counts and Now/Next priorities.
 
 Stage exit gates:
-- Use `docs/process/STAGE_EXIT_GATES.md` as mandatory acceptance gate for stage transitions.
+- Use `docs/process/STAGE_EXIT_GATES.md` as mandatory acceptance gate for stage transitions and cycle closure.
 
 No-time-estimate rule:
 - Pipeline sequencing is value/risk/dependency based; do not require duration estimates in stage artifacts.
@@ -74,15 +76,15 @@ No-time-estimate rule:
   - Run engineering stage.
   - If result is `no stories`, stop.
   - Run QA stage for completed story.
-  - Repeat until active queue is drained.
+  - Run observer and generate cycle report.
+  - Commit once for that cycle.
+  - Repeat until active backlog is drained.
 
-## QA Commit Format
-- QA commits must use: `qa-<story-id>`.
-- Omit story title in QA commit messages to keep commit subjects short and uniform.
-
-## Planning Commit Format
-- Planning commits must use: `plan-<plan-id>`.
-- `plan-id` should match the planning session file id (`PLAN-YYYYMMDD-<slug>`).
+## Commit Convention
+- Commit exactly once per completed cycle.
+- Commit format: `cycle-<cycle-id>`.
+- Include observer report and all cycle artifacts in the same commit.
+- Do not commit intermediate stage transitions.
 
 ## Work-System Doc Sync Rule
 - If any change modifies workflow behavior (stage flow, launch commands, commit conventions, state transitions, handoff requirements), update:

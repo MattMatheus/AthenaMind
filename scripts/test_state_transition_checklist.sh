@@ -15,11 +15,13 @@ doc_assert_exists "$checklist" "State transition checklist exists"
 doc_assert_contains "$checklist" "active -> qa" "Checklist defines active to qa transition"
 doc_assert_contains "$checklist" "qa -> done" "Checklist defines qa to done transition"
 doc_assert_contains "$checklist" "qa -> active" "Checklist defines qa to active failure path"
+doc_assert_contains "$checklist" "Cycle Closure (Observer + Commit)" "Checklist defines cycle closure transition"
 doc_assert_contains "$checklist" "Required artifacts" "Checklist defines artifact requirements"
 doc_assert_contains "$checklist" "Approval" "Checklist defines approval ownership"
 
 doc_assert_contains "$eng_prompt" "STATE_TRANSITION_CHECKLIST.md" "Engineering prompt references checklist"
 doc_assert_contains "$qa_prompt" "STATE_TRANSITION_CHECKLIST.md" "QA prompt references checklist"
 doc_assert_contains "$pm_prompt" "STATE_TRANSITION_CHECKLIST.md" "PM prompt references checklist"
+doc_assert_contains "$qa_prompt" "run_observer_cycle.sh" "QA prompt includes observer command"
 
 doc_test_finish

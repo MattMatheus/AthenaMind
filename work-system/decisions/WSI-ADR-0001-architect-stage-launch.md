@@ -15,8 +15,8 @@ Selection rule:
 - Launcher selects the top active story owned by `Software Architect - Ada.md`.
 - If none exist, return `no stories`.
 
-Commit rule:
-- Architect commits must use `arch-<story-id>`.
+Commit rule (superseded by cycle-commit policy):
+- Architect stage outputs are committed at cycle boundary using `cycle-<cycle-id>` after observer report generation.
 
 ## Consequences
 - Positive:
@@ -28,4 +28,4 @@ Commit rule:
 ## Validation Plan
 - Verify launcher returns architect prompt + story when architecture-owned stories exist.
 - Verify launcher returns `no stories` when none exist.
-- Verify docs/guides include architect stage and commit rule.
+- Verify docs/guides include architect stage and cycle-commit/observer policy.

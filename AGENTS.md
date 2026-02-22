@@ -24,6 +24,7 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 - Product/architecture decisions: `research/decisions/`
 - Architecture backlog lane: `backlog/architecture/README.md`
 - Process-improvement system: `work-system/README.md`
+- Observer artifacts: `work-system/observer/README.md`
 - Wiki docs root: `docs/INDEX.md`
 
 ## Mandatory Behavioral Rules
@@ -31,10 +32,10 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 - Respect backlog state model and do not skip stages.
 - Use `backlog/architecture/` for architecture item types (do not place architecture stories in `backlog/engineering/active/`).
 - Do not fabricate work when engineering reports `no stories`.
-- Commit after each stage transition.
-- Planning commit format: `plan-<plan-id>`.
-- Architect commit format: `arch-<story-id>`.
-- QA commit format: `qa-<story-id>`.
+- Do not commit during intermediate stage transitions.
+- Run observer after each completed cycle using `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`.
+- Commit once per cycle with format `cycle-<cycle-id>`.
+- Include observer report artifact in the cycle commit (`work-system/observer/OBSERVER-REPORT-<cycle-id>.md`).
 - Apply stage exits from `docs/process/STAGE_EXIT_GATES.md`.
 - Keep `research/roadmap/PROGRAM_STATE_BOARD.md` in sync during PM refinement.
 - Treat `done` as QA-complete, not automatically shipped; use release checkpoint bundles.

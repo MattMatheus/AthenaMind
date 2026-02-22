@@ -13,9 +13,12 @@ fi
 watched=(
   "DEVELOPMENT_CYCLE.md"
   "scripts/launch_stage.sh"
+  "scripts/run_observer_cycle.sh"
   "work-system/README.md"
+  "work-system/observer/README.md"
   "docs/process/STAGE_EXIT_GATES.md"
   "docs/process/PROGRAM_OPERATING_SYSTEM.md"
+  "docs/process/README.md"
   "backlog/engineering/intake/STORY_TEMPLATE.md"
   "backlog/engineering/intake/BUG_TEMPLATE.md"
   "backlog/architecture/intake/ARCH_STORY_TEMPLATE.md"

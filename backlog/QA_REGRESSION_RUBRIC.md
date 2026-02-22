@@ -15,6 +15,8 @@ A story is `PASS` only if all gates below pass.
    - No known regressions in touched scope.
 4. Artifact gate:
    - Required handoff package exists for the story.
+5. Cycle-closure readiness gate:
+   - QA output is ready for observer reporting and single cycle commit.
 
 If any gate fails, result is `FAIL`.
 
@@ -48,6 +50,7 @@ Every filed bug must include:
   - handoff/QA artifacts present
 - Transition:
   - move to `backlog/done/`
+  - run observer and close cycle with `cycle-<cycle-id>` commit
 
 ### Example FAIL
 - Story: `backlog/qa/STORY-YYYYMMDD-example-fail.md`
@@ -59,3 +62,4 @@ Every filed bug must include:
   - create `backlog/intake/BUG-YYYYMMDD-<slug>.md` with `P0-P3` priority and required evidence
 - Transition:
   - move story back to `backlog/active/` with linked bug path(s)
+  - run observer and close cycle with `cycle-<cycle-id>` commit

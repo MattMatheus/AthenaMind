@@ -15,7 +15,10 @@ Your task is to run an interactive idea-generation session with the human operat
    - `architect` when architecture decisions are required first.
    - `pm` when intake is ready for refinement and ranking.
 6. Set planning session status to `finalized` once intake artifacts are created and linked.
-7. Commit planning notes and any created intake artifacts as: `plan-<plan-id>`.
+7. Run observer and capture cycle delta:
+   - `scripts/run_observer_cycle.sh --cycle-id <plan-id>`
+8. Commit once for this cycle:
+   - `cycle-<cycle-id>`
 
 ## Session Output Requirements
 - Problem framing and target outcomes
@@ -29,3 +32,4 @@ Your task is to run an interactive idea-generation session with the human operat
 - Do not implement production changes in planning mode.
 - Do not skip writing session notes.
 - Do not place architecture decision work in engineering intake.
+- Do not commit before observer report is generated.
