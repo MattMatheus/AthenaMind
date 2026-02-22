@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-qa-regression-rubric
 - `owner_persona`: QA Engineer - Iris.md
-- `status`: intake
+- `status`: active
 
 ## Problem Statement
 QA decisions need a standardized pass/fail rubric so story outcomes and bug priorities are consistent across cycles.

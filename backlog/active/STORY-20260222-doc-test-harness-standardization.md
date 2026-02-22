@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-doc-test-harness-standardization
 - `owner_persona`: SDET - Theo.md
-- `status`: intake
+- `status`: active
 
 ## Problem Statement
 Engineering stories in this repo are primarily documentation and decision artifacts, but there is no shared test harness pattern to validate required references and acceptance gates consistently across stories.
