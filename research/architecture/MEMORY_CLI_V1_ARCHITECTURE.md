@@ -9,10 +9,12 @@ Define an implementation-ready architecture for a repo-local, file-based memory 
   - CLI write/retrieve behavior.
   - Semantic retrieval pipeline with deterministic fallback.
   - Mutation governance for reviewed, out-of-run updates.
+  - Non-shell primary implementation architecture.
 - Out of scope:
   - Centralized memory API/service.
   - Multi-backend abstraction layers beyond files.
   - UI layer for memory inspection.
+  - Shell-script-only runtime architecture.
 
 ## Canonical Layout
 ```text

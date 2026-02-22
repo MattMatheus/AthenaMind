@@ -15,6 +15,7 @@
 - Use `/memory` as canonical storage root for memory artifacts.
 - Support semantic lookup with deterministic fallback path (`exact-key -> path-priority`) as defined by architecture.
 - Enforce/update workflow so memory mutation occurs only outside autonomous agent runs and is reviewable.
+- Implement using a non-shell primary architecture (shell scripts may be test/dev helpers only).
 - Out:
 - Centralized memory API service.
 - Multi-backend layer integrations beyond file-based storage.
@@ -41,3 +42,4 @@
 - Keep code samples and executable patterns in actual code files, not memory prose artifacts.
 - Post-MVP roadmap items (API wrapper/UI/multi-backend) are intentionally out of v1 scope.
 - Execution gate: architecture decisions from `ARCH-20260222-file-memory-cli-v1-architecture` must be confirmed before implementation details are finalized.
+- Planning gate: choose and document a non-shell implementation stack before coding starts.
