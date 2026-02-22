@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
@@ -62,6 +65,25 @@ type retrieveResult struct {
 	SourcePath    string  `json:"source_path"`
 	Confidence    float64 `json:"confidence"`
 	Reason        string  `json:"reason"`
+}
+
+type apiRetrieveRequest struct {
+	Query     string `json:"query"`
+	Domain    string `json:"domain,omitempty"`
+	SessionID string `json:"session_id"`
+}
+
+type apiRetrieveResponse struct {
+	SelectedID      string  `json:"selected_id"`
+	SelectionMode   string  `json:"selection_mode"`
+	SourcePath      string  `json:"source_path"`
+	Confidence      float64 `json:"confidence"`
+	Reason          string  `json:"reason"`
+	TraceID         string  `json:"trace_id"`
+	FallbackUsed    bool    `json:"fallback_used"`
+	FallbackCode    string  `json:"fallback_code,omitempty"`
+	FallbackReason  string  `json:"fallback_reason,omitempty"`
+	GatewayEndpoint string  `json:"gateway_endpoint,omitempty"`
 }
 
 type candidate struct {
@@ -161,6 +183,10 @@ func main() {
 		err = runWrite(os.Args[2:])
 	case "retrieve":
 		err = runRetrieve(os.Args[2:])
+	case "serve-read-gateway":
+		err = runServeReadGateway(os.Args[2:])
+	case "api-retrieve":
+		err = runAPIRetrieve(os.Args[2:])
 	case "evaluate":
 		err = runEvaluate(os.Args[2:])
 	default:
@@ -391,6 +417,53 @@ func runEvaluate(args []string) error {
 	return nil
 }
 
+func runServeReadGateway(args []string) error {
+	fs := flag.NewFlagSet("serve-read-gateway", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	addr := fs.String("addr", "127.0.0.1:8788", "listen address")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/memory/retrieve", readGatewayHandler(*root))
+	return http.ListenAndServe(*addr, mux)
+}
+
+func runAPIRetrieve(args []string) error {
+	fs := flag.NewFlagSet("api-retrieve", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	query := fs.String("query", "", "natural language query")
+	domain := fs.String("domain", "", "optional domain filter")
+	sessionID := fs.String("session-id", "", "session identifier")
+	gatewayURL := fs.String("gateway-url", "", "optional API gateway base URL")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if strings.TrimSpace(*query) == "" {
+		return errors.New("--query is required")
+	}
+	if strings.TrimSpace(*sessionID) == "" {
+		return errors.New("--session-id is required")
+	}
+
+	traceID := fmt.Sprintf("trace-%d", time.Now().UTC().UnixNano())
+	req := apiRetrieveRequest{
+		Query:     *query,
+		Domain:    *domain,
+		SessionID: *sessionID,
+	}
+	resp, err := apiRetrieveWithFallback(*root, strings.TrimSpace(*gatewayURL), req, traceID, http.DefaultClient)
+	if err != nil {
+		return err
+	}
+	return printResult(resp)
+}
+
 func retrieve(root, query, domain string) (retrieveResult, error) {
 	if strings.TrimSpace(query) == "" {
 		return retrieveResult{}, errors.New("--query is required")
@@ -462,6 +535,125 @@ func retrieve(root, query, domain string) (retrieveResult, error) {
 		Confidence:    chosen.Score,
 		Reason:        "semantic confidence gate failed; deterministic path-priority fallback used",
 	}, nil
+}
+
+func readGatewayHandler(root string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		var req apiRetrieveRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "ERR_API_INPUT_INVALID: invalid JSON payload", http.StatusBadRequest)
+			return
+		}
+		if strings.TrimSpace(req.Query) == "" || strings.TrimSpace(req.SessionID) == "" {
+			http.Error(w, "ERR_API_INPUT_INVALID: query and session_id are required", http.StatusBadRequest)
+			return
+		}
+
+		result, err := retrieve(root, req.Query, req.Domain)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		traceID := fmt.Sprintf("%s:%d", strings.TrimSpace(req.SessionID), time.Now().UTC().UnixNano())
+		resp := apiRetrieveResponse{
+			SelectedID:    result.SelectedID,
+			SelectionMode: result.SelectionMode,
+			SourcePath:    result.SourcePath,
+			Confidence:    result.Confidence,
+			Reason:        result.Reason,
+			TraceID:       traceID,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(resp)
+	})
+}
+
+func apiRetrieveWithFallback(root, gatewayURL string, req apiRetrieveRequest, traceID string, client *http.Client) (apiRetrieveResponse, error) {
+	if strings.TrimSpace(gatewayURL) != "" {
+		resp, err := gatewayRetrieve(gatewayURL, req, client)
+		if err == nil {
+			local, localErr := retrieve(root, req.Query, req.Domain)
+			if localErr != nil {
+				return apiRetrieveResponse{}, localErr
+			}
+			if resp.SelectedID != local.SelectedID || resp.SelectionMode != local.SelectionMode || resp.SourcePath != local.SourcePath {
+				return apiRetrieveResponse{}, errors.New("ERR_API_CLI_PARITY_MISMATCH: gateway response diverged from CLI retrieve contract")
+			}
+			if strings.TrimSpace(resp.TraceID) == "" {
+				resp.TraceID = traceID
+			}
+			resp.GatewayEndpoint = gatewayURL
+			return resp, nil
+		}
+		local, localErr := retrieve(root, req.Query, req.Domain)
+		if localErr != nil {
+			return apiRetrieveResponse{}, localErr
+		}
+		return apiRetrieveResponse{
+			SelectedID:      local.SelectedID,
+			SelectionMode:   local.SelectionMode,
+			SourcePath:      local.SourcePath,
+			Confidence:      local.Confidence,
+			Reason:          local.Reason,
+			TraceID:         traceID,
+			FallbackUsed:    true,
+			FallbackCode:    "ERR_API_WRAPPER_UNAVAILABLE",
+			FallbackReason:  err.Error(),
+			GatewayEndpoint: gatewayURL,
+		}, nil
+	}
+
+	local, err := retrieve(root, req.Query, req.Domain)
+	if err != nil {
+		return apiRetrieveResponse{}, err
+	}
+	return apiRetrieveResponse{
+		SelectedID:    local.SelectedID,
+		SelectionMode: local.SelectionMode,
+		SourcePath:    local.SourcePath,
+		Confidence:    local.Confidence,
+		Reason:        local.Reason,
+		TraceID:       traceID,
+	}, nil
+}
+
+func gatewayRetrieve(gatewayURL string, req apiRetrieveRequest, client *http.Client) (apiRetrieveResponse, error) {
+	body, err := json.Marshal(req)
+	if err != nil {
+		return apiRetrieveResponse{}, err
+	}
+	endpoint := strings.TrimRight(gatewayURL, "/") + "/memory/retrieve"
+	httpReq, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(body))
+	if err != nil {
+		return apiRetrieveResponse{}, err
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(httpReq)
+	if err != nil {
+		return apiRetrieveResponse{}, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		data, _ := io.ReadAll(resp.Body)
+		return apiRetrieveResponse{}, fmt.Errorf("gateway status %d: %s", resp.StatusCode, strings.TrimSpace(string(data)))
+	}
+
+	var out apiRetrieveResponse
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return apiRetrieveResponse{}, err
+	}
+	if out.SelectedID == "" || out.SelectionMode == "" || out.SourcePath == "" {
+		return apiRetrieveResponse{}, errors.New("ERR_API_INPUT_INVALID: gateway response missing required retrieval fields")
+	}
+	return out, nil
 }
 
 func evaluateRetrieval(root string, queries []evaluationQuery, corpusID, querySetID, configID string) (evaluationReport, error) {
@@ -585,7 +777,7 @@ func loadEvaluationQueries(path string) ([]evaluationQuery, error) {
 	return queries, nil
 }
 
-func printResult(r retrieveResult) error {
+func printResult(r any) error {
 	out, err := json.MarshalIndent(r, "", "  ")
 	if err != nil {
 		return err

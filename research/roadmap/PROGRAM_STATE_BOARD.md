@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 1
-- `engineering_active_count`: 5
+- `engineering_active_count`: 4
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 18
+- `engineering_done_story_count`: 19
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -23,12 +23,12 @@
 ## Now
 - Execute `STORY-20260222-memory-cli-telemetry-contract-v01` to establish KPI evidence events.
 - Execute `STORY-20260222-mvp-constraint-enforcement-v01` to enforce fail-closed v0.1 policy gates.
-- Execute `STORY-20260222-kpi-snapshot-baseline-v01` after telemetry/constraint signals are available.
+- Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize done-versus-shipped evidence.
 
 ## Next
 - Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after core telemetry and KPI baseline stories land.
-- Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize `done` versus `shipped`.
-- Sequence deferred roadmap work in active queue (`v0.2` snapshot MVP, `v0.3` API read gateway).
+- Feed API read-gateway parity evidence into release checkpoint bundle coverage.
+- Sequence deferred roadmap work in active queue (`v0.2` snapshot MVP).
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.

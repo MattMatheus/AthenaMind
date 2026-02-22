@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
@@ -342,5 +344,99 @@ func TestSemanticConfidenceGate(t *testing.T) {
 	}
 	if !isSemanticConfident(0.90, 0.60) {
 		t.Fatal("expected clear top score to pass confidence gate")
+	}
+}
+
+func TestAPIRetrieveParityWithCLI(t *testing.T) {
+	root := t.TempDir()
+	err := runWrite([]string{
+		"--root", root,
+		"--id", "api-parity-entry",
+		"--title", "API Parity Entry",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "Retrieve this entry for parity testing",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed parity scenario",
+		"--risk", "low",
+		"--notes", "approved",
+	})
+	if err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	server := httptest.NewServer(readGatewayHandler(root))
+	defer server.Close()
+
+	req := apiRetrieveRequest{
+		Query:     "api parity entry",
+		Domain:    "ops",
+		SessionID: "session-parity",
+	}
+	got, err := apiRetrieveWithFallback(root, server.URL, req, "trace-parity", server.Client())
+	if err != nil {
+		t.Fatalf("api retrieve with gateway failed: %v", err)
+	}
+	want, err := retrieve(root, req.Query, req.Domain)
+	if err != nil {
+		t.Fatalf("cli retrieve failed: %v", err)
+	}
+
+	if got.SelectedID != want.SelectedID || got.SelectionMode != want.SelectionMode || got.SourcePath != want.SourcePath {
+		t.Fatalf("expected parity with CLI, got=%+v want=%+v", got, want)
+	}
+	if got.FallbackUsed {
+		t.Fatal("did not expect fallback for healthy gateway path")
+	}
+	if got.TraceID == "" {
+		t.Fatal("expected trace_id in gateway response")
+	}
+}
+
+func TestAPIRetrieveFallbackWhenGatewayUnavailable(t *testing.T) {
+	root := t.TempDir()
+	err := runWrite([]string{
+		"--root", root,
+		"--id", "api-fallback-entry",
+		"--title", "API Fallback Entry",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "Retrieve this entry through fallback path",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed fallback scenario",
+		"--risk", "low",
+		"--notes", "approved",
+	})
+	if err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	client := &http.Client{Timeout: 200 * time.Millisecond}
+	req := apiRetrieveRequest{
+		Query:     "api fallback entry",
+		Domain:    "ops",
+		SessionID: "session-fallback",
+	}
+	got, err := apiRetrieveWithFallback(root, "http://127.0.0.1:1", req, "trace-fallback", client)
+	if err != nil {
+		t.Fatalf("api retrieve fallback failed: %v", err)
+	}
+	want, err := retrieve(root, req.Query, req.Domain)
+	if err != nil {
+		t.Fatalf("cli retrieve failed: %v", err)
+	}
+
+	if !got.FallbackUsed {
+		t.Fatal("expected fallback to be used when gateway is unavailable")
+	}
+	if got.FallbackCode != "ERR_API_WRAPPER_UNAVAILABLE" {
+		t.Fatalf("expected fallback code ERR_API_WRAPPER_UNAVAILABLE, got %s", got.FallbackCode)
+	}
+	if got.SelectedID != want.SelectedID || got.SelectionMode != want.SelectionMode || got.SourcePath != want.SourcePath {
+		t.Fatalf("fallback output must match CLI retrieve semantics, got=%+v want=%+v", got, want)
 	}
 }

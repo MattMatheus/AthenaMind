@@ -11,4 +11,3 @@ Ordered execution queue for engineering implementation.
 - STORY-20260222-mvp-constraint-enforcement-v01
 - STORY-20260222-release-checkpoint-bundle-v01
 - STORY-20260222-memory-snapshot-mvp-implementation-v02
-- STORY-20260222-memory-api-read-gateway-v03
