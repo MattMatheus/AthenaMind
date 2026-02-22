@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 1
-- `engineering_active_count`: 1
+- `engineering_active_count`: 0
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 22
+- `engineering_done_story_count`: 23
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,14 +21,14 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `STORY-20260222-mvp-constraint-enforcement-v01` to enforce fail-closed v0.1 policy gates.
-- Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize done-versus-shipped evidence.
-- Consolidate telemetry/snapshot/API evidence into release-checkpoint readiness artifacts.
+- Run PM refinement because engineering active queue is empty.
+- Release checkpoint bundle published with explicit `hold`; resolve hold conditions before any ship decision.
+- Promote next intake item only after PM refinement confirms priority and dependency ordering.
 
 ## Next
-- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after core telemetry and KPI baseline stories land.
-- Feed API read-gateway parity evidence into release checkpoint bundle coverage.
-- Sequence remaining deferred roadmap work once active queue reaches zero.
+- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after PM refinement reprioritization.
+- Sequence deferred roadmap work with explicit checkpoint gating.
+- Re-run KPI delta snapshot after the next release-bound cycle.
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.
@@ -39,3 +39,4 @@
 - Readiness decision: `research/roadmap/CODING_READINESS_DECISION_2026-02-22.md`
 - Exit gates: `docs/process/STAGE_EXIT_GATES.md`
 - KPI baseline snapshot: `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+- Release checkpoint bundle: `work-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`

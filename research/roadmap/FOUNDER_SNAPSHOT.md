@@ -11,19 +11,19 @@
 - Scope guardrail: memory-layer only (no runtime/pod ownership)
 
 ## This Week: Now
-1. Execute `STORY-20260222-mvp-constraint-enforcement-v01` to harden fail-closed v0.1 governance gates.
-2. Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize done-vs-shipped evidence with current telemetry/API/snapshot artifacts.
+1. Run PM refinement now that engineering active queue is empty.
+2. Keep release decision at `hold` until checkpoint risks are reduced.
 3. Publish follow-up KPI delta snapshot against `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`.
 
 ## Next Up
-1. Promote `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake once active queue clears.
-2. Run PM refinement when engineering active queue reaches zero.
-3. Sequence post-v0.1 deferred roadmap work using release-checkpoint evidence.
+1. Promote `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after PM refinement ranking.
+2. Sequence post-v0.1 deferred roadmap work using release-checkpoint evidence.
+3. Rebaseline KPI trend expectations after the next release-bound cycle.
 
 ## Progress Signals
-- Engineering done stories: `22`
+- Engineering done stories: `23`
 - Architecture done stories: `11`
-- Engineering active stories: `1`
+- Engineering active stories: `0`
 - Engineering intake stories: `1`
 
 ## Founder Checkpoints
