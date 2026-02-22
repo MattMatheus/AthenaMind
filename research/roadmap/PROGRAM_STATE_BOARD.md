@@ -10,9 +10,9 @@
 - `engineering_active_count`: 0
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 15
-- `architecture_intake_count`: 2
+- `architecture_intake_count`: 1
 - `architecture_active_count`: 0
-- `architecture_qa_count`: 6
+- `architecture_qa_count`: 8
 - `architecture_done_story_count`: 6
 
 ## Phase Status
