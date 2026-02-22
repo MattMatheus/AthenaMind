@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-phase-boundary-rebaseline-v01-v03
 - `owner_persona`: Software Architect - Ada.md
-- `status`: intake
+- `status`: qa
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0003, ADR-0007, ADR-0008]

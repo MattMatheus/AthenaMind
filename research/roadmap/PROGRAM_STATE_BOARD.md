@@ -6,13 +6,13 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 0
+- `engineering_intake_count`: 7
 - `engineering_active_count`: 0
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 15
-- `architecture_intake_count`: 0
+- `architecture_intake_count`: 4
 - `architecture_active_count`: 0
-- `architecture_qa_count`: 0
+- `architecture_qa_count`: 2
 - `architecture_done_story_count`: 6
 
 ## Phase Status
@@ -21,7 +21,8 @@
 - `v0.3`: not started
 
 ## Now
-- Run PM refinement (active queue is empty) and promote next intake work.
+- Run architecture QA on `ARCH-20260222-phase-boundary-rebaseline-v01-v03`.
+- Run PM refinement to rank and promote refilled engineering intake into active.
 - Create first release checkpoint bundle for shipped v0.1 increments.
 - Publish first KPI snapshot and compare against ADR-0008 target bands.
 

@@ -114,3 +114,20 @@ Does not own:
 - Each module has a single owner and test boundary.
 - Each cross-module call is interface-defined.
 - End-to-end run can produce a complete recall/write audit chain.
+
+## Phase Boundary Contract (v0.1-v0.3)
+Use this as the canonical allocation map for backlog sequencing.
+
+| Module | Phase Allocation | Ownership Note |
+| --- | --- | --- |
+| `procedural-memory` | `v0.1` now | Core memory-layer module; required for directive continuity. |
+| `state-memory` | `v0.1` now | Core memory-layer module; owns state persistence and schema checks. |
+| `semantic-memory` | `v0.1` now, `v0.2` next | v0.1 baseline retrieval; v0.2 quality/latency maturity work. |
+| `memory-governance` | `v0.1` now, `v0.2` next | v0.1 review-first gates; v0.2 policy hardening and throughput tuning. |
+| `audit-telemetry` | `v0.1` now, `v0.2` next | v0.1 minimum trace/KPI fields; v0.2 richer scoring and diagnostics. |
+| `semantic-navigation` | `v0.2` next | Deferred until v0.1 reliability evidence is stable. |
+| `orchestrator-api` | `v0.3` later | Memory API wrapper path; must preserve CLI-local fallback and reversibility. |
+| `workspace-runtime` | external integration surface | Out of AthenaMind core ownership for v0.1; do not assign runtime ownership in v0.1 outputs. |
+
+Decision reference:
+- `research/decisions/ADR-0013-phase-boundary-contract-v01-v03.md`

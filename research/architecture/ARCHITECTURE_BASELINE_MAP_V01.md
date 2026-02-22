@@ -62,13 +62,32 @@ Provide one cross-reference map from architecture domains to governing ADRs and 
 3. Constraints architecture binds design to measurable controls.
 4. Memory CLI v1 architecture operationalizes file-memory interfaces for near-term implementation.
 
-## Unresolved Gaps (Captured as Intake)
-1. Retrieval quality evaluation and acceptance gates for semantic lookup:
-   - `backlog/architecture/intake/ARCH-20260222-semantic-retrieval-quality-gates.md`
-2. `/memory` schema and index evolution/versioning policy:
-   - `backlog/architecture/intake/ARCH-20260222-memory-schema-versioning-policy.md`
-3. Human-review workflow contract for memory mutation approvals:
-   - `backlog/architecture/intake/ARCH-20260222-memory-mutation-review-workflow.md`
+## Phase Boundary Contract (Current)
+- Canonical allocation and ownership contract:
+  - `research/decisions/ADR-0013-phase-boundary-contract-v01-v03.md`
+  - `research/architecture/MODULE_BOUNDARIES_V01.md` section `Phase Boundary Contract (v0.1-v0.3)`
+- Summary:
+  - `v0.1`: memory-layer reliability + governance in local-first mode.
+  - `v0.2`: semantic quality maturity + telemetry depth.
+  - `v0.3`: optional API-wrapper/cloud-ready extensions with CLI fallback.
+  - `workspace-runtime`: external integration surface, not v0.1 core ownership.
+
+## Resolved v0.1 Architecture Gaps
+1. Retrieval quality evaluation and acceptance gates:
+   - `research/decisions/ADR-0012-semantic-retrieval-quality-gates-v1.md`
+2. `/memory` schema and version compatibility policy:
+   - `research/decisions/ADR-0010-memory-schema-versioning-policy.md`
+3. Human-review mutation workflow contract:
+   - `research/decisions/ADR-0011-memory-mutation-review-workflow-contract.md`
+
+## Open Architecture Work (Current Intake)
+1. `v0.1` phase-boundary and constraints hardening:
+   - `backlog/architecture/intake/ARCH-20260222-mvp-constraint-contract-hardening.md`
+   - `backlog/architecture/intake/ARCH-20260222-memory-telemetry-event-contract-v01.md`
+2. `v0.2` post-v0.1 snapshot architecture:
+   - `backlog/architecture/intake/ARCH-20260222-memory-snapshot-architecture-v02.md`
+3. `v0.3` API-wrapper contract:
+   - `backlog/architecture/intake/ARCH-20260222-memory-api-wrapper-contract-v03.md`
 
 ## Usage Guidance
 - PM and Engineering should treat this map as the architecture entrypoint for v0.1 scoping.
