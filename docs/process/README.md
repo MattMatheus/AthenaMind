@@ -7,3 +7,4 @@ Documentation for how the team improves and governs the work system.
 - process backlog flow
 - QA standards
 - retros and process experiments
+- stage launch model (architect, engineering, QA, PM, cycle)

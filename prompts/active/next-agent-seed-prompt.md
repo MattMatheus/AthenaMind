@@ -2,22 +2,22 @@
 
 # Next Agent Directive (Engineering)
 
-Your task is to execute the top story in `backlog/active/`.
+Your task is to execute the top story in `backlog/engineering/active/`.
 
 ## Launch Rule
-- If `backlog/active/` has no story files, report exactly: `no stories`.
+- If `backlog/engineering/active/` has no story files, report exactly: `no stories`.
 - Do not fabricate work when active is empty.
 - Product management should run only when active is empty.
 
 ## Implementation Cycle (Mandatory)
-1. Take the top story from `backlog/active/`.
+1. Take the top story from `backlog/engineering/active/`.
 2. Read, research, and implement. Surface questions if outcome is unclear.
    - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` before moving story state.
 3. Update tests.
 4. Run tests with the canonical docs command (`scripts/run_doc_tests.sh`) plus any story-specific test commands. Tests must pass.
 5. Commit changes with an appropriate message that includes the story id.
 6. Prepare handoff package.
-7. Move the story to `backlog/qa/`.
+7. Move the story to `backlog/engineering/qa/`.
 
 ## Handoff Package (Required)
 - What changed
@@ -26,7 +26,7 @@ Your task is to execute the top story in `backlog/active/`.
 - Test run results
 - Open risks/questions
 - Recommended QA focus areas
-- New gaps discovered during implementation (as intake story paths in `backlog/intake/`)
+- New gaps discovered during implementation (as intake story paths in `backlog/engineering/intake/`)
 
 ## Constraints
 - Do not skip tests.

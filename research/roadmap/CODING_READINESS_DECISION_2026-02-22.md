@@ -10,16 +10,16 @@ The readiness gate checklist was applied and found incomplete prerequisite execu
 - Checklist artifact: `research/roadmap/CODING_READINESS_GATE_CHECKLIST.md`
 - Pre-coding path reference: `PRE_CODING_PATH.md`
 - Current done set confirms only part of the path is complete.
-- `backlog/qa/` currently has no pre-coding stories awaiting QA completion.
+- `backlog/engineering/qa/` currently has no pre-coding stories awaiting QA completion.
 
 ## Blockers (Converted and Ranked in Backlog)
 The following blockers are already represented as ranked active stories and remain the required path to readiness:
-1. `backlog/active/STORY-20260222-state-transition-checklist.md`
-2. `backlog/active/STORY-20260222-qa-regression-rubric.md`
-3. `backlog/active/STORY-20260222-doc-test-harness-standardization.md`
-4. `backlog/active/STORY-20260222-founder-operator-workflow.md`
-5. `backlog/active/STORY-20260222-docs-navigation-hardening.md`
+1. `backlog/engineering/active/STORY-20260222-state-transition-checklist.md`
+2. `backlog/engineering/active/STORY-20260222-qa-regression-rubric.md`
+3. `backlog/engineering/active/STORY-20260222-doc-test-harness-standardization.md`
+4. `backlog/engineering/active/STORY-20260222-founder-operator-workflow.md`
+5. `backlog/engineering/active/STORY-20260222-docs-navigation-hardening.md`
 
 ## Release/Gate Guidance
-- Re-run this readiness gate after the blocker stories above are closed through QA and moved to `backlog/done/`.
+- Re-run this readiness gate after the blocker stories above are closed through QA and moved to `backlog/engineering/done/`.
 - If the blocker set changes, update this decision with a new dated revision.

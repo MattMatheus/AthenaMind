@@ -2,11 +2,11 @@
 set -euo pipefail
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-active_readme="$root_dir/backlog/active/README.md"
+active_readme="$root_dir/backlog/engineering/active/README.md"
 launch_script="$root_dir/scripts/launch_stage.sh"
-story_a="$root_dir/backlog/active/STORY-TEST-README-ORDER-A.md"
-story_b="$root_dir/backlog/active/STORY-TEST-README-ORDER-B.md"
-expected_story="backlog/active/STORY-TEST-README-ORDER-B.md"
+story_a="$root_dir/backlog/engineering/active/STORY-TEST-README-ORDER-A.md"
+story_b="$root_dir/backlog/engineering/active/STORY-TEST-README-ORDER-B.md"
+expected_story="backlog/engineering/active/STORY-TEST-README-ORDER-B.md"
 
 tmp_dir="$(mktemp -d)"
 restore_readme() {

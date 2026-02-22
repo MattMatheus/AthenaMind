@@ -16,7 +16,7 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 3. Run baseline docs checks:
    - `scripts/run_doc_tests.sh`
 4. Confirm active queue:
-   - `backlog/active/README.md`
+   - `backlog/engineering/active/README.md`
 
 ## Engineering Stage Loop
 1. Launch:
@@ -28,39 +28,50 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - update tests
    - run `scripts/run_doc_tests.sh` plus any story-specific tests
    - commit with story id
-   - move story from `backlog/active/` to `backlog/qa/` with handoff package
+   - move story from `backlog/engineering/active/` to `backlog/engineering/qa/` with handoff package
+
+## Architect Stage Loop (As Needed)
+1. Launch:
+   - `scripts/launch_stage.sh architect`
+2. Follow returned seed prompt:
+   - `prompts/active/architect-agent-seed-prompt.md`
+3. Execute top architecture story:
+   - update ADRs/architecture docs
+   - run docs validation tests
+   - commit as `arch-<story-id>`
+   - move story from `backlog/architecture/active/` to `backlog/architecture/qa/`
 
 ## QA Stage Loop
 1. Launch:
    - `scripts/launch_stage.sh qa`
 2. Follow returned seed prompt:
    - `prompts/active/qa-agent-seed-prompt.md`
-3. For top `backlog/qa/` story:
+3. For top `backlog/engineering/qa/` story:
    - validate acceptance criteria and regression risk
-   - if defects exist, file bug(s) in `backlog/intake/` and return story to `backlog/active/`
-   - if quality bar is met, move story to `backlog/done/`
-   - commit QA artifacts and state transitions with story id
+   - if defects exist, file bug(s) in `backlog/engineering/intake/` and return story to `backlog/engineering/active/`
+   - if quality bar is met, move story to `backlog/engineering/done/`
+   - commit QA artifacts and state transitions as `qa-<story-id>`
 
 ## PM Refinement Loop
 1. Launch:
    - `scripts/launch_stage.sh pm`
 2. Follow returned seed prompt:
    - `prompts/active/pm-refinement-seed-prompt.md`
-3. Refine intake and re-rank active queue in `backlog/active/README.md`.
+3. Refine intake and re-rank active queue in `backlog/engineering/active/README.md`.
 
 ## If X Then Y Rules
 - If engineering launch returns `no stories`:
   - Do not fabricate work.
   - Run PM refinement to move/refine intake items into active.
 - If QA finds blocking defects:
-  - File `P0-P3` bugs via `backlog/intake/BUG_TEMPLATE.md`.
-  - Move story back to `backlog/active/`.
+  - File `P0-P3` bugs via `backlog/engineering/intake/BUG_TEMPLATE.md`.
+  - Move story back to `backlog/engineering/active/`.
   - Prioritize bug resolution before further promotion.
 - If tests fail:
   - Do not move state forward.
   - Fix failures first, then re-run test commands.
 - If a process gap is discovered mid-story:
-  - Add intake story via `backlog/intake/STORY_TEMPLATE.md` before handoff.
+  - Add intake story via `backlog/engineering/intake/STORY_TEMPLATE.md` before handoff.
 
 ## Escalation Rules
 - Use command escalation when required by execution environment policy.
@@ -70,5 +81,5 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 ## Shutdown Routine
 1. Confirm no partial state transitions remain.
 2. Ensure latest cycle changes are committed with story-linked messages.
-3. Leave next actionable queue visible in `backlog/active/README.md`.
-4. Capture any new ideas/defects in `backlog/intake/` before ending session.
+3. Leave next actionable queue visible in `backlog/engineering/active/README.md`.
+4. Capture any new ideas/defects in `backlog/engineering/intake/` before ending session.

@@ -10,7 +10,7 @@ path_doc="$root_dir/PRE_CODING_PATH.md"
 assert_story_tracked() {
   local story="$1"
   local label="$2"
-  if [[ -f "$root_dir/backlog/active/$story" || -f "$root_dir/backlog/qa/$story" || -f "$root_dir/backlog/done/$story" ]]; then
+  if [[ -f "$root_dir/backlog/engineering/active/$story" || -f "$root_dir/backlog/engineering/qa/$story" || -f "$root_dir/backlog/engineering/done/$story" ]]; then
     echo "PASS: $label"
   else
     echo "FAIL: $label"

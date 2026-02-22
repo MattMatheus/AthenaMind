@@ -15,6 +15,7 @@ watched=(
   "scripts/launch_stage.sh"
   "work-system/README.md"
   "prompts/active/next-agent-seed-prompt.md"
+  "prompts/active/architect-agent-seed-prompt.md"
   "prompts/active/qa-agent-seed-prompt.md"
   "prompts/active/pm-refinement-seed-prompt.md"
   "prompts/active/cycle-seed-prompt.md"

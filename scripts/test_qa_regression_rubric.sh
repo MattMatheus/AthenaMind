@@ -5,7 +5,7 @@ root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root_dir/scripts/lib/doc_test_harness.sh"
 
 rubric="$root_dir/backlog/QA_REGRESSION_RUBRIC.md"
-bug_template="$root_dir/backlog/intake/BUG_TEMPLATE.md"
+bug_template="$root_dir/backlog/engineering/intake/BUG_TEMPLATE.md"
 qa_prompt="$root_dir/prompts/active/qa-agent-seed-prompt.md"
 
 doc_test_init

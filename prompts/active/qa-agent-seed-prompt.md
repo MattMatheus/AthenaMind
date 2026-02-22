@@ -2,16 +2,16 @@
 
 # QA Agent Directive
 
-Your task is to validate the top story in `backlog/qa/`.
+Your task is to validate the top story in `backlog/engineering/qa/`.
 
 ## QA Cycle (Mandatory)
 1. Perform code/documentation review against acceptance criteria.
 2. Validate tests and regression risk.
    - Apply `backlog/QA_REGRESSION_RUBRIC.md` for deterministic pass/fail and severity mapping.
-3. File defects in `backlog/intake/` using `BUG_TEMPLATE.md` with priority `P0-P3`.
+3. File defects in `backlog/engineering/intake/` using `BUG_TEMPLATE.md` with priority `P0-P3`.
 4. Decide result:
-   - If defects exist: move story back to `backlog/active/`.
-   - If quality bar is met: move story to `backlog/done/`.
+   - If defects exist: move story back to `backlog/engineering/active/`.
+   - If quality bar is met: move story to `backlog/engineering/done/`.
    - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` for transition artifact gates.
 5. Commit QA artifacts and backlog state changes with commit format: `qa-<story-id>`.
 

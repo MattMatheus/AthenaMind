@@ -1,12 +1,7 @@
-# Active Queue
+# Deprecated Lane
 
-Ordered execution queue for engineering implementation.
+This directory is deprecated.
 
-## Rules
-- Top entry is the next story to execute.
-- Exactly one story should be in active execution at a time.
-- If no stories exist, implementation agents must report `no stories` and stop.
-- Product management is triggered only when active is empty.
-
-## Active Sequence
-- (empty)
+Use:
+- 	t`backlog/engineering/active/` for engineering items
+- 	t`backlog/architecture/active/` for architecture items
