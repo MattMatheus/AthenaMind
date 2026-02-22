@@ -6,10 +6,10 @@
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
-- `engineering_intake_count`: 0
-- `engineering_active_count`: 8
+- `engineering_intake_count`: 1
+- `engineering_active_count`: 6
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 15
+- `engineering_done_story_count`: 17
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -26,7 +26,7 @@
 - Execute `STORY-20260222-kpi-snapshot-baseline-v01` after telemetry/constraint signals are available.
 
 ## Next
-- Execute `STORY-20260222-dogfood-scenario-pack-v01` and promote follow-on fixes from scored outcomes.
+- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake after core telemetry and KPI baseline stories land.
 - Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize `done` versus `shipped`.
 - Sequence deferred roadmap work in active queue (`v0.2` snapshot MVP, `v0.3` API read gateway).
 
