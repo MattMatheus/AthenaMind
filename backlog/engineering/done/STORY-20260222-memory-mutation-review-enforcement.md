@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-mutation-review-enforcement
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: qa
+- `status`: done
 
 ## Problem Statement
 - Governance policy and workflow contracts are defined, but engineering must enforce required mutation-review evidence and rejection handling in implementation workflows.
