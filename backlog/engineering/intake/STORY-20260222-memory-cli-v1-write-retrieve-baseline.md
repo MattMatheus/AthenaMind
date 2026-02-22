@@ -12,7 +12,8 @@
 - In:
 - Implement CLI v1 baseline for memory write/retrieve operations using architecture-approved contracts.
 - Implement file-backed storage and retrieval for prompt/instruction memory artifacts.
-- Support semantic lookup with deterministic fallback path as defined by architecture.
+- Use `/memory` as canonical storage root for memory artifacts.
+- Support semantic lookup with deterministic fallback path (`exact-key -> path-priority`) as defined by architecture.
 - Enforce/update workflow so memory mutation occurs only outside autonomous agent runs and is reviewable.
 - Out:
 - Centralized memory API service.
@@ -23,7 +24,8 @@
 ## Acceptance Criteria
 1. CLI supports create/update and retrieve flows for memory entries in the approved file layout.
 2. Retrieval supports semantic lookup and returns deterministic fallback results when semantic confidence is insufficient or ambiguous.
-3. Memory updates are constrained to reviewed workflows and do not occur during normal autonomous agent execution cycles.
+3. Retrieval meets v1 quality bar: first result is usually useful for common queries while fallback output is predictable.
+4. Memory updates are constrained to reviewed workflows and do not occur during normal autonomous agent execution cycles.
 
 ## QA Checks
 - Test coverage updated

@@ -24,6 +24,7 @@
 - Memory artifacts must be human-readable Markdown or machine-compliant JSON/YAML.
 - Code snippets are allowed as artifacts where useful.
 - Prefer common repo automation patterns (for example `AGENTS.md` directives at folder roots).
+- Canonical memory root is `/memory` at repo root.
 - Product/business:
 - Primary user remains founder-operator unless explicitly changed later.
 - Timeline/dependencies:
@@ -75,8 +76,6 @@
 - PM should refine and sequence engineering work immediately after architecture scope is accepted.
 
 ## Open Questions
-- What retrieval quality bar is required for semantic lookup in v1 (precision/recall expectations)?
-- What are the canonical file locations for memory artifacts?
 - What quality gates make a memory entry trusted/authoritative?
 - What review/approval workflow is required for memory mutations before MVP?
 
@@ -85,6 +84,8 @@
 - Repo-local file-based memory layer with CLI interface.
 - V1 capability: write + retrieve only (no runtime auto-apply mutation).
 - Semantic lookup support with a clear file-layout convention to reduce agent navigation drift.
+- Deterministic fallback order: exact-key lookup first, then path-priority lookup.
+- V1 retrieval quality bar: first result is usually useful for common queries, with fallback always returning predictable output.
 - Human-readable Markdown for prompt/instruction artifacts; code stays in code files.
 - Memory mutation restricted to reviewed workflows outside agent runs.
 - Ideas bin (later):
