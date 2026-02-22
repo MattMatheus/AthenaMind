@@ -35,7 +35,7 @@
 - No known regressions in touched scope
 
 ## Dependencies
-- `backlog/architecture/intake/ARCH-20260222-file-memory-cli-v1-architecture.md`
+- `backlog/architecture/done/ARCH-20260222-file-memory-cli-v1-architecture.md`
 - `research/planning/sessions/PLAN-20260222-idea-generation-session.md`
 
 ## Notes
