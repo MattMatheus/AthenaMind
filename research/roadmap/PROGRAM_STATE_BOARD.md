@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 1
-- `engineering_active_count`: 6
+- `engineering_active_count`: 5
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 17
+- `engineering_done_story_count`: 18
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -38,3 +38,4 @@
 - Phase plan: `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
 - Readiness decision: `research/roadmap/CODING_READINESS_DECISION_2026-02-22.md`
 - Exit gates: `docs/process/STAGE_EXIT_GATES.md`
+- KPI baseline snapshot: `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`

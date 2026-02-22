@@ -9,7 +9,6 @@ Ordered execution queue for engineering implementation.
 ## Active Sequence
 - STORY-20260222-memory-cli-telemetry-contract-v01
 - STORY-20260222-mvp-constraint-enforcement-v01
-- STORY-20260222-kpi-snapshot-baseline-v01
 - STORY-20260222-release-checkpoint-bundle-v01
 - STORY-20260222-memory-snapshot-mvp-implementation-v02
 - STORY-20260222-memory-api-read-gateway-v03
