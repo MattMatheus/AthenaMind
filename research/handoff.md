@@ -21,6 +21,7 @@
 
 ## Validation performed
 - Traceability review against canonical context:
+  - `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
   - `research/decisions/ADR-0001-three-pillar-foundation.md`
   - `research/decisions/ADR-0002-north-star-and-success-metrics.md`
   - `research/decisions/ADR-0006-governance-and-hitl-policy.md`

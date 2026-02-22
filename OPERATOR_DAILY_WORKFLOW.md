@@ -15,9 +15,11 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - Read `DEVELOPMENT_CYCLE.md`
 3. Run baseline docs checks:
    - `scripts/run_doc_tests.sh`
-4. Confirm active queue:
+4. Run Go toolchain preflight for memory CLI work:
+   - `scripts/check_go_toolchain.sh`
+5. Confirm active queue:
    - `backlog/engineering/active/README.md`
-5. Confirm program board context:
+6. Confirm program board context:
    - `research/roadmap/PROGRAM_STATE_BOARD.md`
 
 ## Planning Stage Loop (As Needed)
