@@ -46,6 +46,12 @@ Quick launch helper:
 - QA commits must use: `qa-<story-id>`.
 - Omit story title in QA commit messages to keep commit subjects short and uniform.
 
+## Work-System Doc Sync Rule
+- If any change modifies workflow behavior (stage flow, launch commands, commit conventions, state transitions, handoff requirements), update:
+  - `HUMANS.md`
+  - `AGENTS.md`
+  - relevant prompt files under `prompts/active/`
+
 ## Empty Backlog Rule
 - If engineering launch is attempted with empty `backlog/active/`, agent must report:
   - `no stories`
