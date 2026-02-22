@@ -9,4 +9,3 @@ Ordered execution queue for engineering implementation.
 ## Active Sequence
 - STORY-20260222-mvp-constraint-enforcement-v01
 - STORY-20260222-release-checkpoint-bundle-v01
-- STORY-20260222-memory-snapshot-mvp-implementation-v02

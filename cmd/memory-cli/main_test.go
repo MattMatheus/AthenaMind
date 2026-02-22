@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -583,4 +584,210 @@ func readTelemetryEvents(t *testing.T, path string) []telemetryEvent {
 		t.Fatalf("scan telemetry file: %v", err)
 	}
 	return events
+}
+
+func TestSnapshotCreateListRestoreLifecycle(t *testing.T) {
+	root := t.TempDir()
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "snap-base",
+		"--title", "Snapshot Base",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "base",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	if err := runSnapshotCreate([]string{
+		"--root", root,
+		"--created-by", "tester",
+		"--reason", "checkpoint",
+		"--session-id", "sess-snap",
+	}); err != nil {
+		t.Fatalf("snapshot create failed: %v", err)
+	}
+
+	rows, err := listSnapshots(root)
+	if err != nil {
+		t.Fatalf("snapshot list failed: %v", err)
+	}
+	if len(rows) != 1 {
+		t.Fatalf("expected 1 snapshot, got %d", len(rows))
+	}
+	snapshotID := rows[0].SnapshotID
+
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "snap-new",
+		"--title", "Snapshot New",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "new data",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "mutate",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("second write failed: %v", err)
+	}
+	idx, err := loadIndex(root)
+	if err != nil {
+		t.Fatalf("load index after mutation: %v", err)
+	}
+	if len(idx.Entries) != 2 {
+		t.Fatalf("expected 2 entries after mutation, got %d", len(idx.Entries))
+	}
+
+	if err := runSnapshotRestore([]string{
+		"--root", root,
+		"--snapshot-id", snapshotID,
+		"--session-id", "sess-snap",
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "rollback",
+		"--risk", "low",
+		"--notes", "approved restore",
+	}); err != nil {
+		t.Fatalf("snapshot restore failed: %v", err)
+	}
+
+	idx, err = loadIndex(root)
+	if err != nil {
+		t.Fatalf("load index after restore: %v", err)
+	}
+	if len(idx.Entries) != 1 {
+		t.Fatalf("expected 1 entry after restore, got %d", len(idx.Entries))
+	}
+}
+
+func TestSnapshotRestoreRejectsIncompatibleManifest(t *testing.T) {
+	root := t.TempDir()
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "snap-compat",
+		"--title", "Snapshot Compat",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "compat",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+	if err := runSnapshotCreate([]string{
+		"--root", root,
+		"--created-by", "tester",
+		"--reason", "checkpoint",
+	}); err != nil {
+		t.Fatalf("snapshot create failed: %v", err)
+	}
+	rows, err := listSnapshots(root)
+	if err != nil || len(rows) != 1 {
+		t.Fatalf("snapshot list failed: %v len=%d", err, len(rows))
+	}
+	manifestPath := filepath.Join(root, "snapshots", rows[0].SnapshotID, "manifest.json")
+	m, err := loadSnapshotManifest(root, rows[0].SnapshotID)
+	if err != nil {
+		t.Fatalf("load manifest: %v", err)
+	}
+	m.SchemaVersion = "2.0"
+	data, _ := json.MarshalIndent(m, "", "  ")
+	if err := os.WriteFile(manifestPath, append(data, '\n'), 0o644); err != nil {
+		t.Fatalf("write manifest: %v", err)
+	}
+
+	err = runSnapshotRestore([]string{
+		"--root", root,
+		"--snapshot-id", rows[0].SnapshotID,
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "restore",
+		"--risk", "low",
+		"--notes", "approved",
+	})
+	if err == nil || !strings.Contains(err.Error(), "ERR_SNAPSHOT_COMPATIBILITY_BLOCKED") {
+		t.Fatalf("expected compatibility blocked error, got %v", err)
+	}
+}
+
+func TestSnapshotAuditEventChain(t *testing.T) {
+	root := t.TempDir()
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "snap-audit",
+		"--title", "Snapshot Audit",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "audit",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+	if err := runSnapshotCreate([]string{
+		"--root", root,
+		"--created-by", "tester",
+		"--reason", "checkpoint",
+		"--session-id", "sess-audit",
+	}); err != nil {
+		t.Fatalf("snapshot create failed: %v", err)
+	}
+	rows, _ := listSnapshots(root)
+	if err := runSnapshotRestore([]string{
+		"--root", root,
+		"--snapshot-id", rows[0].SnapshotID,
+		"--session-id", "sess-audit",
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "restore",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("snapshot restore failed: %v", err)
+	}
+
+	matches, err := filepath.Glob(filepath.Join(root, "audits", "*.json"))
+	if err != nil {
+		t.Fatalf("glob audits failed: %v", err)
+	}
+	found := map[string]bool{}
+	for _, p := range matches {
+		data, _ := os.ReadFile(p)
+		var ev snapshotAuditEvent
+		if json.Unmarshal(data, &ev) == nil && ev.EventName != "" {
+			found[ev.EventName] = true
+		}
+	}
+	required := []string{
+		"snapshot.create.requested",
+		"snapshot.create.completed",
+		"snapshot.restore.requested",
+		"snapshot.restore.policy_decision",
+		"snapshot.restore.completed",
+	}
+	for _, name := range required {
+		if !found[name] {
+			t.Fatalf("missing required snapshot audit event: %s", name)
+		}
+	}
 }

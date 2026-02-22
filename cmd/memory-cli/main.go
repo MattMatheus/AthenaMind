@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/json"
+	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
@@ -172,6 +174,44 @@ type telemetryEvent struct {
 	Reason         string `json:"reason,omitempty"`
 }
 
+type snapshotChecksum struct {
+	Path   string `json:"path"`
+	SHA256 string `json:"sha256"`
+}
+
+type snapshotManifest struct {
+	SnapshotID    string             `json:"snapshot_id"`
+	CreatedAt     string             `json:"created_at"`
+	CreatedBy     string             `json:"created_by"`
+	SchemaVersion string             `json:"schema_version"`
+	IndexVersion  string             `json:"index_version"`
+	Scope         string             `json:"scope"`
+	Reason        string             `json:"reason"`
+	Checksums     []snapshotChecksum `json:"checksums"`
+	PayloadRefs   []string           `json:"payload_refs"`
+}
+
+type snapshotListRow struct {
+	SnapshotID    string `json:"snapshot_id"`
+	CreatedAt     string `json:"created_at"`
+	CreatedBy     string `json:"created_by"`
+	SchemaVersion string `json:"schema_version"`
+	IndexVersion  string `json:"index_version"`
+	Scope         string `json:"scope"`
+	Reason        string `json:"reason"`
+}
+
+type snapshotAuditEvent struct {
+	EventName   string `json:"event_name"`
+	SnapshotID  string `json:"snapshot_id"`
+	SessionID   string `json:"session_id"`
+	TraceID     string `json:"trace_id"`
+	Result      string `json:"result"`
+	Timestamp   string `json:"timestamp_utc"`
+	ErrorCode   string `json:"error_code,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
 type writePolicyInput struct {
 	Stage        string
 	Reviewer     string
@@ -205,6 +245,8 @@ func main() {
 		err = runWrite(os.Args[2:])
 	case "retrieve":
 		err = runRetrieve(os.Args[2:])
+	case "snapshot":
+		err = runSnapshot(os.Args[2:])
 	case "serve-read-gateway":
 		err = runServeReadGateway(os.Args[2:])
 	case "api-retrieve":
@@ -603,6 +645,196 @@ func runAPIRetrieve(args []string) error {
 	return printResult(resp)
 }
 
+func runSnapshot(args []string) error {
+	if len(args) == 0 {
+		return errors.New("usage: memory-cli snapshot <create|list|restore> [flags]")
+	}
+	switch args[0] {
+	case "create":
+		return runSnapshotCreate(args[1:])
+	case "list":
+		return runSnapshotList(args[1:])
+	case "restore":
+		return runSnapshotRestore(args[1:])
+	default:
+		return fmt.Errorf("unknown snapshot subcommand: %s", args[0])
+	}
+}
+
+func runSnapshotCreate(args []string) (err error) {
+	fs := flag.NewFlagSet("snapshot create", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	createdBy := fs.String("created-by", "", "snapshot actor")
+	reason := fs.String("reason", "", "snapshot rationale")
+	scope := fs.String("scope", "full", "snapshot scope")
+	sessionID := fs.String("session-id", "session-local", "session identifier")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if strings.TrimSpace(*createdBy) == "" {
+		return errors.New("--created-by is required")
+	}
+	if strings.TrimSpace(*reason) == "" {
+		return errors.New("--reason is required")
+	}
+	if strings.TrimSpace(*scope) != "full" {
+		return errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: only scope=full is supported in v0.2 MVP")
+	}
+
+	traceID := fmt.Sprintf("trace-%d", time.Now().UTC().UnixNano())
+	_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+		EventName:  "snapshot.create.requested",
+		SnapshotID: "pending",
+		SessionID:  normalizeTelemetryValue(*sessionID, "session-local"),
+		TraceID:    traceID,
+		Result:     "success",
+		Timestamp:  time.Now().UTC().Format(time.RFC3339),
+	})
+
+	manifest, err := createSnapshot(*root, *createdBy, *reason)
+	if err != nil {
+		_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+			EventName:   "snapshot.create.completed",
+			SnapshotID:  "pending",
+			SessionID:   normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:     traceID,
+			Result:      "fail",
+			Timestamp:   time.Now().UTC().Format(time.RFC3339),
+			ErrorCode:   telemetryErrorCode(err),
+			Description: err.Error(),
+		})
+		return err
+	}
+	_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+		EventName:  "snapshot.create.completed",
+		SnapshotID: manifest.SnapshotID,
+		SessionID:  normalizeTelemetryValue(*sessionID, "session-local"),
+		TraceID:    traceID,
+		Result:     "success",
+		Timestamp:  time.Now().UTC().Format(time.RFC3339),
+	})
+	return printResult(manifest)
+}
+
+func runSnapshotList(args []string) error {
+	fs := flag.NewFlagSet("snapshot list", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "memory", "memory root path")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	rows, err := listSnapshots(*root)
+	if err != nil {
+		return err
+	}
+	return printResult(rows)
+}
+
+func runSnapshotRestore(args []string) (err error) {
+	fs := flag.NewFlagSet("snapshot restore", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	snapshotID := fs.String("snapshot-id", "", "snapshot id")
+	sessionID := fs.String("session-id", "session-local", "session identifier")
+	stage := fs.String("stage", "pm", "policy stage: planning|architect|pm")
+	reviewer := fs.String("reviewer", "", "reviewer identity")
+	approved := fs.Bool("approved", false, "legacy flag: equivalent to --decision=approved")
+	decision := fs.String("decision", "", "review decision: approved|rejected")
+	notes := fs.String("notes", "", "decision notes")
+	reason := fs.String("reason", "", "reason for restore")
+	risk := fs.String("risk", "", "risk and mitigation note")
+	reworkNotes := fs.String("rework-notes", "", "required when --decision=rejected")
+	reReviewedBy := fs.String("re-reviewed-by", "", "required when --decision=rejected")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if strings.TrimSpace(*snapshotID) == "" {
+		return errors.New("--snapshot-id is required")
+	}
+
+	traceID := fmt.Sprintf("trace-%d", time.Now().UTC().UnixNano())
+	_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+		EventName:  "snapshot.restore.requested",
+		SnapshotID: *snapshotID,
+		SessionID:  normalizeTelemetryValue(*sessionID, "session-local"),
+		TraceID:    traceID,
+		Result:     "success",
+		Timestamp:  time.Now().UTC().Format(time.RFC3339),
+	})
+
+	policy, policyErr := enforceWritePolicy(writePolicyInput{
+		Stage:        *stage,
+		Reviewer:     *reviewer,
+		ApprovedFlag: *approved,
+		Decision:     *decision,
+		Notes:        *notes,
+		Reason:       *reason,
+		Risk:         *risk,
+		ReworkNotes:  *reworkNotes,
+		ReReviewedBy: *reReviewedBy,
+	})
+	if policyErr != nil {
+		err = fmt.Errorf("ERR_SNAPSHOT_RESTORE_POLICY_BLOCKED: %w", policyErr)
+		_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+			EventName:   "snapshot.restore.policy_decision",
+			SnapshotID:  *snapshotID,
+			SessionID:   normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:     traceID,
+			Result:      "fail",
+			Timestamp:   time.Now().UTC().Format(time.RFC3339),
+			ErrorCode:   telemetryErrorCode(err),
+			Description: err.Error(),
+		})
+		_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+			EventName:   "snapshot.restore.failed",
+			SnapshotID:  *snapshotID,
+			SessionID:   normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:     traceID,
+			Result:      "fail",
+			Timestamp:   time.Now().UTC().Format(time.RFC3339),
+			ErrorCode:   telemetryErrorCode(err),
+			Description: err.Error(),
+		})
+		return err
+	}
+	_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+		EventName:   "snapshot.restore.policy_decision",
+		SnapshotID:  *snapshotID,
+		SessionID:   normalizeTelemetryValue(*sessionID, "session-local"),
+		TraceID:     traceID,
+		Result:      "success",
+		Timestamp:   time.Now().UTC().Format(time.RFC3339),
+		Description: policy.Decision,
+	})
+
+	if err := restoreSnapshot(*root, *snapshotID); err != nil {
+		_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+			EventName:   "snapshot.restore.failed",
+			SnapshotID:  *snapshotID,
+			SessionID:   normalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:     traceID,
+			Result:      "fail",
+			Timestamp:   time.Now().UTC().Format(time.RFC3339),
+			ErrorCode:   telemetryErrorCode(err),
+			Description: err.Error(),
+		})
+		return err
+	}
+	_ = writeSnapshotAudit(*root, snapshotAuditEvent{
+		EventName:  "snapshot.restore.completed",
+		SnapshotID: *snapshotID,
+		SessionID:  normalizeTelemetryValue(*sessionID, "session-local"),
+		TraceID:    traceID,
+		Result:     "success",
+		Timestamp:  time.Now().UTC().Format(time.RFC3339),
+	})
+
+	return nil
+}
+
 func retrieve(root, query, domain string) (retrieveResult, error) {
 	if strings.TrimSpace(query) == "" {
 		return retrieveResult{}, errors.New("--query is required")
@@ -986,6 +1218,238 @@ func normalizeTelemetryValue(v, fallback string) string {
 		return fallback
 	}
 	return v
+}
+
+func createSnapshot(root, createdBy, reason string) (snapshotManifest, error) {
+	idx, err := loadIndex(root)
+	if err != nil {
+		return snapshotManifest{}, err
+	}
+
+	now := time.Now().UTC()
+	snapshotID := fmt.Sprintf("snapshot-%d", now.UnixNano())
+	baseDir := filepath.Join(root, "snapshots", snapshotID)
+	payloadDir := filepath.Join(baseDir, "payload")
+
+	refs := collectSnapshotRefs(idx)
+	if len(refs) == 0 {
+		return snapshotManifest{}, errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: no payload references found for snapshot")
+	}
+
+	checksums := make([]snapshotChecksum, 0, len(refs))
+	for _, rel := range refs {
+		src := filepath.Join(root, filepath.FromSlash(rel))
+		dst := filepath.Join(payloadDir, filepath.FromSlash(rel))
+		if err := copyFile(src, dst); err != nil {
+			return snapshotManifest{}, err
+		}
+		sum, err := fileSHA256(dst)
+		if err != nil {
+			return snapshotManifest{}, err
+		}
+		checksums = append(checksums, snapshotChecksum{Path: rel, SHA256: sum})
+	}
+
+	manifest := snapshotManifest{
+		SnapshotID:    snapshotID,
+		CreatedAt:     now.Format(time.RFC3339),
+		CreatedBy:     strings.TrimSpace(createdBy),
+		SchemaVersion: defaultSchema,
+		IndexVersion:  idx.SchemaVersion,
+		Scope:         "full",
+		Reason:        strings.TrimSpace(reason),
+		Checksums:     checksums,
+		PayloadRefs:   refs,
+	}
+	if err := validateSnapshotManifest(manifest); err != nil {
+		return snapshotManifest{}, err
+	}
+	if err := writeJSONAsYAML(filepath.Join(baseDir, "manifest.json"), manifest); err != nil {
+		return snapshotManifest{}, err
+	}
+	return manifest, nil
+}
+
+func listSnapshots(root string) ([]snapshotListRow, error) {
+	snapRoot := filepath.Join(root, "snapshots")
+	if _, err := os.Stat(snapRoot); errors.Is(err, os.ErrNotExist) {
+		return []snapshotListRow{}, nil
+	}
+
+	entries, err := os.ReadDir(snapRoot)
+	if err != nil {
+		return nil, err
+	}
+	rows := make([]snapshotListRow, 0, len(entries))
+	for _, ent := range entries {
+		if !ent.IsDir() {
+			continue
+		}
+		manifest, err := loadSnapshotManifest(root, ent.Name())
+		if err != nil {
+			return nil, err
+		}
+		rows = append(rows, snapshotListRow{
+			SnapshotID:    manifest.SnapshotID,
+			CreatedAt:     manifest.CreatedAt,
+			CreatedBy:     manifest.CreatedBy,
+			SchemaVersion: manifest.SchemaVersion,
+			IndexVersion:  manifest.IndexVersion,
+			Scope:         manifest.Scope,
+			Reason:        manifest.Reason,
+		})
+	}
+	sort.Slice(rows, func(i, j int) bool { return rows[i].CreatedAt > rows[j].CreatedAt })
+	return rows, nil
+}
+
+func restoreSnapshot(root, snapshotID string) error {
+	manifest, err := loadSnapshotManifest(root, snapshotID)
+	if err != nil {
+		return err
+	}
+	if err := checkSnapshotCompatibility(root, manifest); err != nil {
+		return err
+	}
+	if err := verifySnapshotChecksums(root, manifest); err != nil {
+		return err
+	}
+
+	// restore as forward revision by replacing active payload paths while preserving audits/snapshots history
+	for _, rel := range manifest.PayloadRefs {
+		src := filepath.Join(root, "snapshots", snapshotID, "payload", filepath.FromSlash(rel))
+		dst := filepath.Join(root, filepath.FromSlash(rel))
+		if err := copyFile(src, dst); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func loadSnapshotManifest(root, snapshotID string) (snapshotManifest, error) {
+	path := filepath.Join(root, "snapshots", snapshotID, "manifest.json")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return snapshotManifest{}, errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: snapshot manifest not found")
+		}
+		return snapshotManifest{}, err
+	}
+	var m snapshotManifest
+	if err := json.Unmarshal(data, &m); err != nil {
+		return snapshotManifest{}, errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: cannot parse manifest")
+	}
+	if err := validateSnapshotManifest(m); err != nil {
+		return snapshotManifest{}, err
+	}
+	return m, nil
+}
+
+func validateSnapshotManifest(m snapshotManifest) error {
+	if strings.TrimSpace(m.SnapshotID) == "" || strings.TrimSpace(m.CreatedAt) == "" || strings.TrimSpace(m.CreatedBy) == "" ||
+		strings.TrimSpace(m.SchemaVersion) == "" || strings.TrimSpace(m.IndexVersion) == "" || strings.TrimSpace(m.Scope) == "" || strings.TrimSpace(m.Reason) == "" {
+		return errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: missing required manifest fields")
+	}
+	if m.Scope != "full" {
+		return errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: unsupported snapshot scope")
+	}
+	if _, err := time.Parse(time.RFC3339, m.CreatedAt); err != nil {
+		return errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: created_at must be RFC3339")
+	}
+	if len(m.PayloadRefs) == 0 || len(m.Checksums) == 0 {
+		return errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: payload references and checksums are required")
+	}
+	return nil
+}
+
+func checkSnapshotCompatibility(root string, m snapshotManifest) error {
+	if err := validateSchemaVersion(m.SchemaVersion); err != nil {
+		return fmt.Errorf("ERR_SNAPSHOT_COMPATIBILITY_BLOCKED: %w", err)
+	}
+	if err := validateSchemaVersion(m.IndexVersion); err != nil {
+		return fmt.Errorf("ERR_SNAPSHOT_COMPATIBILITY_BLOCKED: %w", err)
+	}
+	cur, err := loadIndex(root)
+	if err != nil {
+		return err
+	}
+	snapMajor, _, err := parseMajorMinor(m.IndexVersion)
+	if err != nil {
+		return fmt.Errorf("ERR_SNAPSHOT_COMPATIBILITY_BLOCKED: %w", err)
+	}
+	curMajor, _, err := parseMajorMinor(cur.SchemaVersion)
+	if err != nil {
+		return fmt.Errorf("ERR_SNAPSHOT_COMPATIBILITY_BLOCKED: %w", err)
+	}
+	if snapMajor != curMajor {
+		return errors.New("ERR_SNAPSHOT_COMPATIBILITY_BLOCKED: snapshot index major version does not match current index major")
+	}
+	return nil
+}
+
+func verifySnapshotChecksums(root string, m snapshotManifest) error {
+	expected := map[string]string{}
+	for _, c := range m.Checksums {
+		expected[c.Path] = c.SHA256
+	}
+	for _, rel := range m.PayloadRefs {
+		sum, err := fileSHA256(filepath.Join(root, "snapshots", m.SnapshotID, "payload", filepath.FromSlash(rel)))
+		if err != nil {
+			return fmt.Errorf("ERR_SNAPSHOT_INTEGRITY_CHECK_FAILED: %w", err)
+		}
+		if expected[rel] == "" || expected[rel] != sum {
+			return errors.New("ERR_SNAPSHOT_INTEGRITY_CHECK_FAILED: checksum mismatch")
+		}
+	}
+	return nil
+}
+
+func collectSnapshotRefs(idx indexFile) []string {
+	refs := []string{"index.yaml"}
+	for _, e := range idx.Entries {
+		refs = append(refs, e.Path, e.MetadataPath)
+	}
+	seen := map[string]struct{}{}
+	out := make([]string, 0, len(refs))
+	for _, r := range refs {
+		r = filepath.ToSlash(strings.TrimSpace(r))
+		if r == "" {
+			continue
+		}
+		if _, ok := seen[r]; ok {
+			continue
+		}
+		seen[r] = struct{}{}
+		out = append(out, r)
+	}
+	sort.Strings(out)
+	return out
+}
+
+func writeSnapshotAudit(root string, ev snapshotAuditEvent) error {
+	name := strings.ReplaceAll(ev.EventName, ".", "-")
+	path := filepath.Join(root, "audits", fmt.Sprintf("%s-%d.json", name, time.Now().UTC().UnixNano()))
+	return writeJSONAsYAML(path, ev)
+}
+
+func copyFile(src, dst string) error {
+	data, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(dst, data, 0o644)
+}
+
+func fileSHA256(path string) (string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:]), nil
 }
 
 func loadCandidates(root string, entries []indexEntry, domain string) ([]candidate, error) {

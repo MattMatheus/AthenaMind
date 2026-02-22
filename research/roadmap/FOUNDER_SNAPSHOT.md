@@ -11,19 +11,19 @@
 - Scope guardrail: memory-layer only (no runtime/pod ownership)
 
 ## This Week: Now
-1. Execute `STORY-20260222-memory-cli-telemetry-contract-v01` to complete deterministic KPI event emission.
-2. Execute `STORY-20260222-mvp-constraint-enforcement-v01` to harden fail-closed v0.1 governance gates.
-3. Use `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md` as baseline and publish a follow-up KPI delta snapshot after telemetry story completion.
+1. Execute `STORY-20260222-mvp-constraint-enforcement-v01` to harden fail-closed v0.1 governance gates.
+2. Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize done-vs-shipped evidence with current telemetry/API/snapshot artifacts.
+3. Publish follow-up KPI delta snapshot against `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`.
 
 ## Next Up
-1. Execute `STORY-20260222-release-checkpoint-bundle-v01` to formalize `done` versus `shipped`.
-2. Promote `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake once telemetry baseline is stable.
-3. Sequence deferred phase work (`v0.2` snapshot MVP, `v0.3` API read gateway) using checkpoint evidence.
+1. Promote `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` from intake once active queue clears.
+2. Run PM refinement when engineering active queue reaches zero.
+3. Sequence post-v0.1 deferred roadmap work using release-checkpoint evidence.
 
 ## Progress Signals
-- Engineering done stories: `20`
+- Engineering done stories: `21`
 - Architecture done stories: `11`
-- Engineering active stories: `3`
+- Engineering active stories: `2`
 - Engineering intake stories: `1`
 
 ## Founder Checkpoints
