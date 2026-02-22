@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-memory-cli-v1-write-retrieve-baseline
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 - We need the first functional memory interface that can write and retrieve prompts/instructions from repo-local files using semantic lookup, with review-controlled mutation workflows.
