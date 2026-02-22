@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: ARCH-20260222-memory-schema-versioning-policy
 - `owner_persona`: Software Architect - Ada.md
-- `status`: qa
+- `status`: done
 
 ## Decision Scope
 - Define schema/versioning policy for `/memory` artifacts (`index.yaml`, metadata files, and markdown entry contracts) to support safe evolution.
