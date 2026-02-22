@@ -17,6 +17,8 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - `scripts/run_doc_tests.sh`
 4. Confirm active queue:
    - `backlog/engineering/active/README.md`
+5. Confirm program board context:
+   - `research/roadmap/PROGRAM_STATE_BOARD.md`
 
 ## Planning Stage Loop (As Needed)
 1. Launch:
@@ -28,6 +30,7 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - convert ideas into engineering and/or architecture intake stories
    - recommend next stage (`architect` and/or `pm`) based on decision needs
    - commit planning notes and new intake artifacts as `plan-<plan-id>`
+   - mark planning session `status: finalized` after intake artifacts are linked
 
 ## Engineering Stage Loop
 1. Launch:
@@ -69,6 +72,8 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 2. Follow returned seed prompt:
    - `prompts/active/pm-refinement-seed-prompt.md`
 3. Refine intake and re-rank active queue in `backlog/engineering/active/README.md`.
+4. Update `research/roadmap/PROGRAM_STATE_BOARD.md` counts and Now/Next priorities.
+5. Ensure intake/active stories have traceability metadata (`idea_id`, `phase`, `adr_refs`, metric).
 
 ## If X Then Y Rules
 - If engineering launch returns `no stories`:
@@ -94,3 +99,4 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 2. Ensure latest cycle changes are committed with story-linked messages.
 3. Leave next actionable queue visible in `backlog/engineering/active/README.md`.
 4. Capture any new ideas/defects in `backlog/engineering/intake/` before ending session.
+5. If items should be considered shipped, produce a release bundle from `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`.

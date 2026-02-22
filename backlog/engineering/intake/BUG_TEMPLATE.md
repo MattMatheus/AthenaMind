@@ -6,6 +6,9 @@
 - `reported_by`: QA Engineer - Iris
 - `source_story`: <path to story reviewed in qa>
 - `status`: intake
+- `phase`: v0.1 | v0.2 | v0.3
+- `adr_refs`: [ADR-XXXX, ...]
+- `impact_metric`: <one measurable impact>
 
 ## Priority Definitions
 - `P0`: release-blocking, data loss/corruption, security-critical

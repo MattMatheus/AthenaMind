@@ -35,6 +35,10 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 - Planning commit format: `plan-<plan-id>`.
 - Architect commit format: `arch-<story-id>`.
 - QA commit format: `qa-<story-id>`.
+- Apply stage exits from `docs/process/STAGE_EXIT_GATES.md`.
+- Keep `research/roadmap/PROGRAM_STATE_BOARD.md` in sync during PM refinement.
+- Treat `done` as QA-complete, not automatically shipped; use release checkpoint bundles.
+- Do not add time estimates; prioritize by value/risk/dependency sequence.
 
 ## Documentation Sync Rule
 When work-system behavior changes (stage flow, handoff rules, commit conventions, state transitions, launch commands):

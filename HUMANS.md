@@ -22,6 +22,15 @@ Use launcher commands to start each stage safely.
   - move misfiled `STORY-*`/`BUG-*` items to `backlog/engineering/intake/`,
   - rerun validation until it passes.
 
+## Program Control Plane
+- PM must keep `research/roadmap/PROGRAM_STATE_BOARD.md` current after each refinement cycle.
+- New intake items must include traceability metadata:
+  - `idea_id`, `phase`, `adr_refs`, and one metric field.
+- `done` is not automatically `shipped`:
+  - create/maintain release bundles using `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`.
+- Use `docs/process/STAGE_EXIT_GATES.md` as mandatory gate criteria for each stage.
+- Do not use time estimates in planning/refinement artifacts; sequence by value/risk/dependencies.
+
 ## Stage Commands
 - Planning: `./scripts/launch_stage.sh planning`
 - Engineering: `./scripts/launch_stage.sh engineering`

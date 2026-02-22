@@ -4,6 +4,11 @@
 - `id`: ARCH-YYYYMMDD-<slug>
 - `owner_persona`: Software Architect - Ada.md
 - `status`: intake | ready | active | qa | done | blocked
+- `idea_id`: PLAN-YYYYMMDD-<slug> | direct
+- `phase`: v0.1 | v0.2 | v0.3
+- `adr_refs`: [ADR-XXXX, ...]
+- `decision_owner`: personas/Software Architect - Ada.md
+- `success_metric`: <one measurable outcome>
 
 ## Decision Scope
 -

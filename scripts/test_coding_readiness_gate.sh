@@ -25,8 +25,8 @@ doc_assert_exists "$decision" "Decision artifact exists"
 
 doc_assert_contains "$checklist" "Applied Run (2026-02-22)" "Checklist applied run recorded"
 doc_assert_contains "$checklist" "Result summary:" "Checklist result summary recorded"
-doc_assert_contains "$decision" "NO-GO" "Decision includes explicit no-go outcome"
-doc_assert_contains "$decision" "Blockers (Converted and Ranked in Backlog)" "Decision includes blockers section"
+doc_assert_contains "$decision" "GO" "Decision includes explicit go/no-go outcome"
+doc_assert_contains "$decision" "Prior Blockers (Now Resolved)" "Decision includes blocker resolution section"
 
 doc_assert_contains "$path_doc" "CODING_READINESS_GATE_CHECKLIST.md" "Pre-coding path references checklist artifact"
 doc_assert_contains "$path_doc" "CODING_READINESS_DECISION_2026-02-22.md" "Pre-coding path references decision artifact"

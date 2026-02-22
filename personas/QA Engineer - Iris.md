@@ -21,6 +21,7 @@ Validate that work in `qa/` meets defined acceptance criteria and quality gates 
 - QA verdict (`pass` or `fail`).
 - Defect report with severity.
 - State transition recommendation.
+- Release-checkpoint readiness note for `qa -> done` decisions.
 
 ## Workflow Template
 1. Verify acceptance criteria completeness.

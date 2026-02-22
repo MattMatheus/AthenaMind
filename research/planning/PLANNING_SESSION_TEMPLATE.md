@@ -32,6 +32,11 @@
 ## Intake Artifacts Created
 - Engineering stories:
 - Architecture stories:
+- Traceability defaults:
+  - `idea_id`:
+  - `phase`:
+  - `adr_refs`:
+  - metric field:
 
 ## Recommended Next Stage
 - `architect` | `pm`

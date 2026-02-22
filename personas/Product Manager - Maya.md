@@ -9,7 +9,7 @@ Product Manager
 Ensure work solves the highest-value memory-layer problems with clear acceptance criteria and sequencing.
 
 ## Scope
-- In: problem framing, prioritization, backlog shaping, acceptance criteria.
+- In: problem framing, prioritization, backlog shaping, acceptance criteria, program board stewardship, release checkpoint decisions.
 - Out: implementation and deep technical design.
 
 ## Inputs Required
@@ -21,6 +21,7 @@ Ensure work solves the highest-value memory-layer problems with clear acceptance
 - Prioritized story artifact.
 - Acceptance criteria with measurable outcomes.
 - State transition recommendation.
+- Updated program board snapshot (`research/roadmap/PROGRAM_STATE_BOARD.md`).
 
 ## Workflow Template
 1. Clarify problem statement and target user outcome.
@@ -28,12 +29,14 @@ Ensure work solves the highest-value memory-layer problems with clear acceptance
 3. Split work into smallest coherent deliverable.
 4. Define acceptance criteria and QA expectations.
 5. Place/update story in correct backlog state.
+6. Update program board Now/Next and queue counts.
 
 ## Quality Checklist
 - Outcome is explicit and measurable.
 - Scope is bounded and testable.
 - Dependencies are documented.
 - Acceptance criteria are unambiguous.
+- Story metadata includes traceability fields (`idea_id`, `phase`, `adr_refs`, metric).
 
 ## Handoff Template
 - `What changed`:

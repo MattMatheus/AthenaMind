@@ -10,10 +10,12 @@ Your task is to run an interactive idea-generation session with the human operat
 3. Classify each proposed idea:
    - Implementation work -> create story in `backlog/engineering/intake/` using `backlog/engineering/intake/STORY_TEMPLATE.md`.
    - Architecture/ADR decision work -> create story in `backlog/architecture/intake/` using `backlog/architecture/intake/ARCH_STORY_TEMPLATE.md`.
-4. Provide a next-stage recommendation:
+4. Ensure all created intake items include traceability metadata (`idea_id`, `phase`, `adr_refs`, metric fields).
+5. Provide a next-stage recommendation:
    - `architect` when architecture decisions are required first.
    - `pm` when intake is ready for refinement and ranking.
-5. Commit planning notes and any created intake artifacts as: `plan-<plan-id>`.
+6. Set planning session status to `finalized` once intake artifacts are created and linked.
+7. Commit planning notes and any created intake artifacts as: `plan-<plan-id>`.
 
 ## Session Output Requirements
 - Problem framing and target outcomes

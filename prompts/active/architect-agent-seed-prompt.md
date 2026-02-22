@@ -13,9 +13,10 @@ Your task is to execute the top architecture story in `backlog/architecture/acti
 2. Update architecture artifacts and/or ADRs needed to satisfy acceptance criteria.
 3. Validate consistency with accepted ADR constraints and memory-layer scope.
 4. Run docs validation (`scripts/run_doc_tests.sh`) plus any story-specific tests.
-5. Commit changes using format: `arch-<story-id>`.
-6. Prepare handoff package.
-7. Move story to `backlog/architecture/qa/`.
+5. Add explicit follow-on implementation story paths for each accepted decision.
+6. Commit changes using format: `arch-<story-id>`.
+7. Prepare handoff package.
+8. Move story to `backlog/architecture/qa/`.
 
 ## Handoff Package (Required)
 - Decision(s) made
@@ -30,3 +31,4 @@ Your task is to execute the top architecture story in `backlog/architecture/acti
 - Do not skip tests.
 - Do not skip commit after passing tests.
 - Do not move story directly to done.
+- Apply stage exit requirements in `docs/process/STAGE_EXIT_GATES.md`.

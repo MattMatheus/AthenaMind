@@ -14,6 +14,8 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
 4. Run docs validation command before handoff/decision points:
    - `scripts/run_doc_tests.sh`
 5. Apply backlog state movement only through the canonical flow (`engineering/active -> engineering/qa -> engineering/done`, with intake/active loop for defects).
+6. Apply stage gates:
+   - `docs/process/STAGE_EXIT_GATES.md`
 
 ## Branch Rule and Empty Active Behavior
 - Branch safety rule: launcher requires branch `dev`.
@@ -48,6 +50,11 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
   - `backlog/engineering/archive/`
 - Active queue ordering:
   - `backlog/engineering/active/README.md`
+- Program control plane:
+  - `research/roadmap/PROGRAM_STATE_BOARD.md`
+  - `docs/process/PROGRAM_OPERATING_SYSTEM.md`
+- Release checkpoint template:
+  - `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
 - Personas directory and role index:
   - `personas/`
   - `personas/STAFF_DIRECTORY.md`

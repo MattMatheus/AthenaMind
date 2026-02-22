@@ -4,6 +4,11 @@
 - `id`: STORY-20260222-go-toolchain-availability
 - `owner_persona`: personas/Product Manager - Maya.md
 - `status`: intake
+- `idea_id`: direct
+- `phase`: v0.1
+- `adr_refs`: [ADR-0009, ADR-0010, ADR-0011, ADR-0012]
+- `success_metric`: environment testability rate for `go test ./...`
+- `release_checkpoint`: deferred
 
 ## Problem Statement
 - Memory CLI implementation work now depends on Go, but the current execution environment lacks the `go` toolchain, blocking compilation and test execution in engineering cycles.

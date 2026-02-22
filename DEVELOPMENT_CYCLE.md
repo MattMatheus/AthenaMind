@@ -39,10 +39,25 @@ Quick launch helper:
    - QA then commits QA artifacts and backlog state transitions as `qa-<story-id>`.
 5. PM refines intake bugs/stories, re-ranks active queue, and commits refinement/state updates.
 6. Repeat until QA + Engineering are satisfied.
+7. Shipping checkpoint (separate from `done`):
+   - PM/operator prepares release bundle and explicit ship/hold decision.
 
 PM intake validation requirement:
 - Run `scripts/validate_intake_items.sh` before promoting intake items to active queues.
 - Validation failures must be fixed (metadata/status) and lane crossover must be corrected before ranking.
+
+Traceability requirement:
+- New stories and bugs must include `phase`, ADR references, and metric traceability metadata.
+- Planning-originated work must include `idea_id`.
+
+Program board requirement:
+- PM refinement must update `research/roadmap/PROGRAM_STATE_BOARD.md` with queue counts and Now/Next priorities.
+
+Stage exit gates:
+- Use `docs/process/STAGE_EXIT_GATES.md` as mandatory acceptance gate for stage transitions.
+
+No-time-estimate rule:
+- Pipeline sequencing is value/risk/dependency based; do not require duration estimates in stage artifacts.
 
 ## Architecture Item Type
 - Architecture work uses a separate lane: `backlog/architecture/`.

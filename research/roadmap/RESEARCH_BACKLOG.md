@@ -13,9 +13,11 @@
 
 ## Now
 - Dogfooding loop design and telemetry KPI set.
+- Program state consistency and release-checkpoint adoption.
 
 ## Next
-- Formalize state-transition checklist for active -> qa -> done flow.
+- First KPI snapshot publication and trend interpretation.
+- v0.2 candidate research based on v0.1 evidence.
 
 ## Later
 - v2.0 exploration: centralized/swarm memory and multi-operator governance model.

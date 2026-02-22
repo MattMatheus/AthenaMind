@@ -13,7 +13,8 @@ Your task is to validate the top story in `backlog/engineering/qa/`.
    - If defects exist: move story back to `backlog/engineering/active/`.
    - If quality bar is met: move story to `backlog/engineering/done/`.
    - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` for transition artifact gates.
-5. Commit QA artifacts and backlog state changes with commit format: `qa-<story-id>`.
+5. For `qa -> done` transitions, include release-checkpoint readiness note in QA result.
+6. Commit QA artifacts and backlog state changes with commit format: `qa-<story-id>`.
 
 ## QA Output Requirements
 - Explicit pass/fail verdict
@@ -25,3 +26,4 @@ Your task is to validate the top story in `backlog/engineering/qa/`.
 - No direct reprioritization; PM handles refinement/ranking.
 - Do not skip commit after QA decision.
 - Commit message must be prefixed with `qa-` and include only the story identifier.
+- Apply stage exit requirements in `docs/process/STAGE_EXIT_GATES.md`.

@@ -12,6 +12,7 @@ Treat process quality as a product: measurable, iterative, and testable.
 4. QA the process change impact.
 5. Measure KPI deltas in `work-system/metrics/`.
 6. Keep/adjust/revert via decision records.
+7. Maintain explicit shipped checkpoint bundles before declaring release completion.
 
 ## Documentation Maintenance Rule
 Any accepted process change must include documentation sync:
