@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-semantic-retrieval-quality-gates-implementation
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 
 ## Problem Statement
 - Architecture now defines objective retrieval quality thresholds, but engineering lacks an implementation-level harness and gate enforcement to prove pass/fail readiness.
