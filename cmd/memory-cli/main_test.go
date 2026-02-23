@@ -958,3 +958,99 @@ func TestBootstrapSeededReturnsProceduralMatchesAndTelemetry(t *testing.T) {
 		t.Fatal("expected bootstrap telemetry event")
 	}
 }
+
+func TestEpisodeWriteListAndRetrieveRoundTrip(t *testing.T) {
+	root := t.TempDir()
+	telemetryPath := filepath.Join(root, "events.jsonl")
+	if err := runEpisodeWrite([]string{
+		"--root", root,
+		"--repo", "AthenaMind",
+		"--session-id", "sess-ep-1",
+		"--cycle-id", "CYCLE-1",
+		"--story-id", "STORY-1",
+		"--outcome", "success",
+		"--summary", "completed baseline cycle",
+		"--files-changed", "cmd/memory-cli/main.go,internal/episode/episode.go",
+		"--decisions", "kept behavior parity",
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "record cycle outcome",
+		"--risk", "low",
+		"--notes", "approved",
+		"--telemetry-file", telemetryPath,
+	}); err != nil {
+		t.Fatalf("runEpisodeWrite failed: %v", err)
+	}
+
+	outPath := filepath.Join(root, "episodes.json")
+	oldStdout := os.Stdout
+	f, err := os.Create(outPath)
+	if err != nil {
+		t.Fatalf("create capture file: %v", err)
+	}
+	os.Stdout = f
+	defer func() { os.Stdout = oldStdout }()
+	if err := runEpisodeList([]string{"--root", root, "--repo", "athenamind"}); err != nil {
+		t.Fatalf("runEpisodeList failed: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatalf("close capture file: %v", err)
+	}
+
+	data, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read list output: %v", err)
+	}
+	var rows []episodeRecord
+	if err := json.Unmarshal(data, &rows); err != nil {
+		t.Fatalf("parse list output: %v", err)
+	}
+	if len(rows) == 0 {
+		t.Fatal("expected at least one episode row")
+	}
+
+	result, err := retrieve(root, "CYCLE-1", "athenamind")
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if result.SelectedID == "" || result.SourcePath == "" {
+		t.Fatalf("expected retrievable episode selection metadata, got %+v", result)
+	}
+
+	events := readTelemetryEvents(t, telemetryPath)
+	seen := false
+	for _, ev := range events {
+		if ev.Operation == "episode_write" {
+			seen = true
+		}
+	}
+	if !seen {
+		t.Fatal("expected episode_write telemetry event")
+	}
+}
+
+func TestEpisodeWriteBlockedDuringAutonomousRun(t *testing.T) {
+	t.Setenv("AUTONOMOUS_RUN", "true")
+	root := t.TempDir()
+	err := runEpisodeWrite([]string{
+		"--root", root,
+		"--repo", "AthenaMind",
+		"--session-id", "sess-ep-block",
+		"--cycle-id", "CYCLE-2",
+		"--story-id", "STORY-2",
+		"--outcome", "blocked",
+		"--summary", "blocked by policy",
+		"--files-changed", "",
+		"--decisions", "defer to human",
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "record blocked run",
+		"--risk", "low",
+		"--notes", "approved",
+	})
+	if err == nil || !strings.Contains(err.Error(), "ERR_MUTATION_NOT_ALLOWED_DURING_AUTONOMOUS_RUN") {
+		t.Fatalf("expected autonomous run block, got %v", err)
+	}
+}

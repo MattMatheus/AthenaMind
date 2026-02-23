@@ -63,7 +63,7 @@ func ValidateIndex(idx types.IndexFile, root string) error {
 			return fmt.Errorf("ERR_SCHEMA_VALIDATION: duplicate index entry id %s", e.ID)
 		}
 		seen[e.ID] = struct{}{}
-		if e.Type != "prompt" && e.Type != "instruction" {
+		if e.Type != "prompt" && e.Type != "instruction" && e.Type != "episode" {
 			return fmt.Errorf("ERR_SCHEMA_VALIDATION: index entry %s has invalid type", e.ID)
 		}
 		if !IsValidStatus(e.Status) {
@@ -77,6 +77,9 @@ func ValidateIndex(idx types.IndexFile, root string) error {
 		}
 		if e.Type == "instruction" && !strings.HasPrefix(e.Path, "instructions/") {
 			return fmt.Errorf("ERR_SCHEMA_VALIDATION: index entry %s path must be under instructions/", e.ID)
+		}
+		if e.Type == "episode" && !strings.HasPrefix(e.Path, "episodes/") {
+			return fmt.Errorf("ERR_SCHEMA_VALIDATION: index entry %s path must be under episodes/", e.ID)
 		}
 		if !strings.HasPrefix(e.MetadataPath, "metadata/") {
 			return fmt.Errorf("ERR_SCHEMA_VALIDATION: index entry %s metadata path must be under metadata/", e.ID)
@@ -138,8 +141,8 @@ func UpsertEntry(root string, in types.UpsertEntryInput, policy types.WritePolic
 	if in.ID == "" || in.Title == "" || in.Type == "" || in.Domain == "" {
 		return errors.New("--id --title --type --domain are required")
 	}
-	if in.Type != "prompt" && in.Type != "instruction" {
-		return errors.New("--type must be prompt or instruction")
+	if in.Type != "prompt" && in.Type != "instruction" && in.Type != "episode" {
+		return errors.New("--type must be prompt, instruction, or episode")
 	}
 
 	entryBody := strings.TrimSpace(in.Body)
@@ -163,6 +166,9 @@ func UpsertEntry(root string, in types.UpsertEntryInput, policy types.WritePolic
 	dirName := "prompts"
 	if in.Type == "instruction" {
 		dirName = "instructions"
+	}
+	if in.Type == "episode" {
+		dirName = "episodes"
 	}
 
 	relContentPath := filepath.ToSlash(filepath.Join(dirName, in.Domain, in.ID+".md"))

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"athenamind/internal/episode"
 	"athenamind/internal/gateway"
 	"athenamind/internal/governance"
 	"athenamind/internal/index"
@@ -397,6 +398,132 @@ func runSnapshot(args []string) error {
 	default:
 		return fmt.Errorf("unknown snapshot subcommand: %s", args[0])
 	}
+}
+
+func runEpisode(args []string) error {
+	if len(args) == 0 {
+		return errors.New("usage: memory-cli episode <write|list> [flags]")
+	}
+	switch args[0] {
+	case "write":
+		return runEpisodeWrite(args[1:])
+	case "list":
+		return runEpisodeList(args[1:])
+	default:
+		return fmt.Errorf("unknown episode subcommand: %s", args[0])
+	}
+}
+
+func runEpisodeWrite(args []string) (err error) {
+	fs := flag.NewFlagSet("episode write", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	repo := fs.String("repo", "", "repository identifier")
+	sessionID := fs.String("session-id", "", "session identifier")
+	cycleID := fs.String("cycle-id", "", "cycle id")
+	storyID := fs.String("story-id", "", "story id")
+	outcome := fs.String("outcome", "", "episode outcome: success|partial|blocked")
+	summary := fs.String("summary", "", "episode summary")
+	summaryFile := fs.String("summary-file", "", "summary file path")
+	filesChanged := fs.String("files-changed", "", "comma-separated changed files")
+	decisions := fs.String("decisions", "", "episode decisions")
+	decisionsFile := fs.String("decisions-file", "", "decisions file path")
+	stage := fs.String("stage", "pm", "policy stage: planning|architect|pm")
+	reviewer := fs.String("reviewer", "", "reviewer identity")
+	approved := fs.Bool("approved", false, "legacy flag: equivalent to --decision=approved")
+	decision := fs.String("decision", "", "review decision: approved|rejected")
+	notes := fs.String("notes", "", "decision notes")
+	reason := fs.String("reason", "", "reason for write")
+	risk := fs.String("risk", "", "risk and mitigation note")
+	reworkNotes := fs.String("rework-notes", "", "required when --decision=rejected")
+	reReviewedBy := fs.String("re-reviewed-by", "", "required when --decision=rejected")
+	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	startedAt := time.Now().UTC()
+	traceID := fmt.Sprintf("trace-%d", startedAt.UnixNano())
+	defer func() {
+		result := "success"
+		errorCode := ""
+		reasonMsg := ""
+		if err != nil {
+			result = "fail"
+			errorCode = telemetry.TelemetryErrorCode(err)
+			reasonMsg = err.Error()
+		}
+		emitErr := telemetry.Emit(*root, *telemetryFile, types.TelemetryEvent{
+			EventName:       "memory.episode.write",
+			EventVersion:    telemetry.EventSchema,
+			TimestampUTC:    time.Now().UTC().Format(time.RFC3339),
+			SessionID:       telemetry.NormalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:         traceID,
+			ScenarioID:      telemetry.NormalizeTelemetryValue(*cycleID, "episode"),
+			Operation:       "episode_write",
+			Result:          result,
+			PolicyGate:      "medium",
+			MemoryType:      "state",
+			LatencyMS:       time.Since(startedAt).Milliseconds(),
+			OperatorVerdict: "not_scored",
+			ErrorCode:       errorCode,
+			Reason:          reasonMsg,
+		})
+		if err == nil && emitErr != nil {
+			err = emitErr
+		}
+	}()
+	if err := governance.EnforceConstraintChecks("write", *sessionID, *cycleID, traceID); err != nil {
+		return err
+	}
+	policy, err := governance.EnforceWritePolicy(types.WritePolicyInput{
+		Stage:        *stage,
+		Reviewer:     *reviewer,
+		ApprovedFlag: *approved,
+		Decision:     *decision,
+		Notes:        *notes,
+		Reason:       *reason,
+		Risk:         *risk,
+		ReworkNotes:  *reworkNotes,
+		ReReviewedBy: *reReviewedBy,
+	})
+	if err != nil {
+		return err
+	}
+	record, err := episode.Write(*root, types.WriteEpisodeInput{
+		Repo:          *repo,
+		SessionID:     *sessionID,
+		CycleID:       *cycleID,
+		StoryID:       *storyID,
+		Outcome:       *outcome,
+		Summary:       *summary,
+		SummaryFile:   *summaryFile,
+		FilesChanged:  *filesChanged,
+		Decisions:     *decisions,
+		DecisionsFile: *decisionsFile,
+		Stage:         *stage,
+	}, policy)
+	if err != nil {
+		return err
+	}
+	return printResult(record)
+}
+
+func runEpisodeList(args []string) error {
+	fs := flag.NewFlagSet("episode list", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	repo := fs.String("repo", "", "repository identifier")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	rows, err := episode.List(*root, *repo)
+	if err != nil {
+		return err
+	}
+	return printResult(rows)
 }
 
 func runSnapshotCreate(args []string) (err error) {

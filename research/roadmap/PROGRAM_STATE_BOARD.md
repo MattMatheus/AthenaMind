@@ -7,8 +7,8 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 6
-- `engineering_qa_count`: 0
+- `engineering_active_count`: 5
+- `engineering_qa_count`: 1
 - `engineering_done_story_count`: 35
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
@@ -21,7 +21,7 @@
 - `v0.3`: not started
 
 ## Now
-- Execute v0.1 foundational queue refresh starting with `STORY-20260223-episode-writeback`.
+- Execute v0.1 foundational queue refresh starting with `STORY-20260223-launch-stage-memory-integration`.
 - Preserve dependency order across bootstrap/write-back/integration stories to close the memory dogfooding loop.
 - Keep weekly KPI monitoring active while active queue throughput resumes.
 

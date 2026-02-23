@@ -25,3 +25,4 @@ type writePolicyDecision = types.WritePolicyDecision
 type bootstrapMemoryEntry = types.BootstrapMemoryEntry
 type episodeContext = types.EpisodeContext
 type bootstrapPayload = types.BootstrapPayload
+type episodeRecord = types.EpisodeRecord

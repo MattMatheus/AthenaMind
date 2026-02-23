@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate|bootstrap> [flags]"))
+		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate|bootstrap|episode> [flags]"))
 	}
 
 	var err error
@@ -27,6 +27,8 @@ func main() {
 		err = runEvaluate(os.Args[2:])
 	case "bootstrap":
 		err = runBootstrap(os.Args[2:])
+	case "episode":
+		err = runEpisode(os.Args[2:])
 	default:
 		err = fmt.Errorf("unknown command: %s", os.Args[1])
 	}

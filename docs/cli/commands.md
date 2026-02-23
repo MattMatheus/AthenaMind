@@ -5,7 +5,7 @@ Command reference for all currently supported `memory-cli` operations.
 
 ## Root Command
 ```bash
-memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap> [flags]
+memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap|episode> [flags]
 ```
 
 ## `write`
@@ -106,6 +106,16 @@ Bootstrap payload schema:
 - top-level: `repo`, `session_id`, `scenario`, `generated_at`, `memory_entries`, optional `episode`
 - `memory_entries[]`: `id`, `selection_mode`, `source_path`, `confidence`, `reason`, `type`, `domain`, `title`
 - `episode` (when available from episode store): `repo`, `scenario`, `cycle_id`, `story_id`, `outcome`, `summary`, `timestamp_utc`
+
+## `episode`
+Episode subcommands:
+- `episode write`
+  - required: `--repo`, `--session-id`, `--cycle-id`, `--story-id`, `--outcome`, `--summary` or `--summary-file`, `--decisions` or `--decisions-file`
+  - required governance review: `--reviewer --decision --reason --risk --notes`
+  - optional: `--files-changed`, `--stage` (default `pm`), `--root`, `--telemetry-file`, rejection evidence fields
+- `episode list`
+  - required: `--repo`
+  - optional: `--root`
 
 ## References
 - `cmd/memory-cli/main.go`

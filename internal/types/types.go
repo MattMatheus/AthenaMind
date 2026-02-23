@@ -239,3 +239,30 @@ type BootstrapPayload struct {
 	MemoryEntries []BootstrapMemoryEntry `json:"memory_entries"`
 	Episode       *EpisodeContext        `json:"episode,omitempty"`
 }
+
+type EpisodeRecord struct {
+	ID           string   `json:"id"`
+	Repo         string   `json:"repo"`
+	SessionID    string   `json:"session_id"`
+	CycleID      string   `json:"cycle_id"`
+	StoryID      string   `json:"story_id"`
+	Outcome      string   `json:"outcome"`
+	Summary      string   `json:"summary"`
+	FilesChanged []string `json:"files_changed"`
+	Decisions    string   `json:"decisions"`
+	CreatedAt    string   `json:"created_at"`
+}
+
+type WriteEpisodeInput struct {
+	Repo          string
+	SessionID     string
+	CycleID       string
+	StoryID       string
+	Outcome       string
+	Summary       string
+	SummaryFile   string
+	FilesChanged  string
+	Decisions     string
+	DecisionsFile string
+	Stage         string
+}
