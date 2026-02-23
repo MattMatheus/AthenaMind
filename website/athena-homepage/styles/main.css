@@ -1,0 +1,79 @@
+:root {
+  --bg: #f7f4ed;
+  --surface: #fffaf0;
+  --ink: #1f2a37;
+  --muted: #5b6470;
+  --line: #d9d0bf;
+  --accent: #b65a2a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 80% 10%, #ffe8bf 0%, var(--bg) 52%);
+  color: var(--ink);
+  font-family: "Avenir Next", "Segoe UI", Tahoma, sans-serif;
+}
+
+.shell {
+  min-height: 100vh;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 64px 24px;
+}
+
+.hero {
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+h1 {
+  margin: 8px 0 10px;
+  font-size: clamp(44px, 9vw, 84px);
+  line-height: 0.95;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: clamp(16px, 2.6vw, 24px);
+  color: var(--muted);
+  max-width: 48ch;
+}
+
+.cards {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 16px;
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+

@@ -1,6 +1,16 @@
-# AthenaMind
+# Athena Platform Repository
 
-AthenaMind is a Go-based memory toolchain for agent workflows. It supports governed writes, retrieval, bootstrap payload generation, snapshots, and episode logging over a local memory root.
+This repository now hosts two products:
+
+- AthenaMind: memory system and retrieval runtime
+- AthenaWork: staged work-system and operational workflow
+
+Legacy root paths are preserved via compatibility links.
+
+## Product Roots
+- AthenaMind: `/Users/foundry/AthenaMind/products/athena-mind`
+- AthenaWork: `/Users/foundry/AthenaMind/products/athena-work`
+- Website scaffold: `/Users/foundry/AthenaMind/website/athena-homepage`
 
 ## Root Entry Points
 - `README.md`: product and CLI quick orientation
@@ -13,6 +23,10 @@ AthenaMind is a Go-based memory toolchain for agent workflows. It supports gover
 - `knowledge-base/process/PRE_CODING_PATH.md`: coding readiness gate path
 - `knowledge-base/product/VISION.md`: preserved long-term product direction
 - `product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`: phased execution plan
+
+## Product Skills
+- AthenaMind skill: `/Users/foundry/AthenaMind/skills/athena-mind/SKILL.md`
+- AthenaWork skill: `/Users/foundry/AthenaMind/skills/athena-work/SKILL.md`
 
 ## What v0.1 Delivers Today
 - Local-first memory write and retrieve workflow

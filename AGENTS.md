@@ -5,6 +5,17 @@ Navigation and operating guide for new or lost agents in this repository.
 ## Mission Context
 AthenaMind v0.1 is a memory-layer product with a strict staged development workflow.
 
+## Repository Split Context
+This repository now contains:
+- AthenaMind product boundary: `products/athena-mind/`
+- AthenaWork product boundary: `products/athena-work/`
+
+Use product-specific skills:
+- AthenaMind skill: `skills/athena-mind/SKILL.md`
+- AthenaWork skill: `skills/athena-work/SKILL.md`
+
+Compatibility links are kept at repo root for existing commands.
+
 ## First 5 Minutes
 1. Read `HUMANS.md` for operator expectations.
 2. Read `DEVELOPMENT_CYCLE.md` for stage rules.
