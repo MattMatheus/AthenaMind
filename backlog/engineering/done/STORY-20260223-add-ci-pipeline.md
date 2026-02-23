@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-add-ci-pipeline
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: done
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0004]

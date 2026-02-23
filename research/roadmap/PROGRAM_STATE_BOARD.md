@@ -7,8 +7,8 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 4
-- `engineering_qa_count`: 2
+- `engineering_active_count`: 3
+- `engineering_qa_count`: 4
 - `engineering_done_story_count`: 36
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
