@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "workflows-write-retrieve-baseline-e41eba8a",
+  "title": "Workflows Write Retrieve Baseline E41eba8a",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:31Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:31Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

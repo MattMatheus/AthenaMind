@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "process-operator-daily-workflow-d129e818",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:27Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/process-operator-daily-workflow-d129e818.md",
+    "metadata/process-operator-daily-workflow-d129e818.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

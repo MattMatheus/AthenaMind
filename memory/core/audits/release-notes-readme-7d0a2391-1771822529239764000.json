@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "release-notes-readme-7d0a2391",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:29Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/release-notes-readme-7d0a2391.md",
+    "metadata/release-notes-readme-7d0a2391.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

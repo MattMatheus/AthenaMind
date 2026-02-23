@@ -4,14 +4,14 @@
 Operate AthenaMind as a memory system for indexing, retrieval, and bootstrap support.
 
 ## Working Directories
-- Toolchain root: `/Users/foundry/Source/orchestrator/AthenaMind`
-- Memory root (recommended): `/Users/foundry/Source/orchestrator/AthenaMind-Memory/core`
-- Work root (optional): `/Users/foundry/Source/orchestrator/AthenaMind-Memory/work`
+- Toolchain root: `/Users/foundry/AthenaMind`
+- Memory root (recommended): `/Users/foundry/AthenaMind/memory/core`
+- Work root (optional): `/Users/foundry/AthenaMind/memory/work`
 
 ## Environment
 1. Load environment variables:
    ```bash
-   set -a; source /Users/foundry/Source/orchestrator/AthenaMind/.env; set +a
+   set -a; source /Users/foundry/AthenaMind/.env; set +a
    ```
 2. For context-first retrieval (no latency fallback), set:
    ```bash
@@ -20,16 +20,16 @@ Operate AthenaMind as a memory system for indexing, retrieval, and bootstrap sup
 
 ## Initialize Memory
 ```bash
-mkdir -p /Users/foundry/Source/orchestrator/AthenaMind-Memory/core /Users/foundry/Source/orchestrator/AthenaMind-Memory/work
+mkdir -p /Users/foundry/AthenaMind/memory/core /Users/foundry/AthenaMind/memory/work
 ```
 
 ## Core Commands
-Run from `/Users/foundry/Source/orchestrator/AthenaMind`.
+Run from `/Users/foundry/AthenaMind`.
 
 1. Bootstrap
 ```bash
 go run ./cmd/memory-cli bootstrap \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --root /Users/foundry/AthenaMind/memory/core \
   --repo AthenaMind \
   --session-id setup-session \
   --scenario setup
@@ -38,8 +38,8 @@ go run ./cmd/memory-cli bootstrap \
 2. Crawl markdown content
 ```bash
 go run ./cmd/memory-cli crawl \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
-  --dir /Users/foundry/Source/orchestrator/AthenaMind/docs \
+  --root /Users/foundry/AthenaMind/memory/core \
+  --dir /Users/foundry/AthenaMind/knowledge-base \
   --domain docs-crawl \
   --reviewer system
 ```
@@ -47,19 +47,19 @@ go run ./cmd/memory-cli crawl \
 3. Reindex embeddings (Azure-backed when env is loaded)
 ```bash
 go run ./cmd/memory-cli reindex-all \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
+  --root /Users/foundry/AthenaMind/memory/core
 ```
 
 4. Verify embedding coverage
 ```bash
 go run ./cmd/memory-cli verify embeddings \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
+  --root /Users/foundry/AthenaMind/memory/core
 ```
 
 5. Retrieve
 ```bash
 go run ./cmd/memory-cli retrieve \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --root /Users/foundry/AthenaMind/memory/core \
   --query "memory lifecycle" \
   --domain docs-crawl
 ```
@@ -69,7 +69,7 @@ go run ./cmd/memory-cli retrieve \
   - `selection_mode: embedding_semantic`
 - Confirm embeddings coverage:
   ```bash
-  sqlite3 /Users/foundry/Source/orchestrator/AthenaMind-Memory/core/index.db \
+  sqlite3 /Users/foundry/AthenaMind/memory/core/index.db \
   "select (select count(*) from entries),(select count(*) from embeddings),(select count(*) from entries e left join embeddings em on em.entry_id=e.id where em.entry_id is null);"
   ```
 
