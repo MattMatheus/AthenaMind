@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "codex-onboard-check",
+  "stage": "planning",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T12:32:22Z",
+  "decision_notes": "codex onboarding",
+  "reason": "onboarding validation",
+  "risk": "low; local memory entry",
+  "changed_files": [
+    "prompts/docs-crawl/codex-onboard-check.md",
+    "metadata/codex-onboard-check.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}
