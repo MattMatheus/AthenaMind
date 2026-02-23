@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 go_mod="$root_dir/go.mod"
 
 fail() {

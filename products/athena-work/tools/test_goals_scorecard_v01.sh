@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 adr="$root_dir/product-research/decisions/ADR-0008-v01-goals-and-scorecard-target-bands.md"
 pm_todo="$root_dir/knowledge-base/process/PM-TODO.md"

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
 delta_snapshot="$root_dir/operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md"

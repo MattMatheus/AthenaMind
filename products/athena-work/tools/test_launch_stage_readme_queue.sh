@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 active_readme="$root_dir/delivery-backlog/engineering/active/README.md"
 launch_script="$root_dir/tools/launch_stage.sh"
 story_a="$root_dir/delivery-backlog/engineering/active/STORY-TEST-README-ORDER-A.md"

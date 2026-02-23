@@ -2,7 +2,8 @@
 set -euo pipefail
 
 stage="${1:-engineering}"
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 active_dir="$root_dir/delivery-backlog/engineering/active"
 active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/delivery-backlog/architecture/active"

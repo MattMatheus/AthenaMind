@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 checklist="$root_dir/product-research/roadmap/CODING_READINESS_GATE_CHECKLIST.md"
 decision="$root_dir/product-research/roadmap/CODING_READINESS_DECISION_2026-02-22.md"
