@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-split-main-go-into-packages
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0003, ADR-0009]

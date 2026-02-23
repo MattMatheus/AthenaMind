@@ -8,11 +8,10 @@ Ordered execution queue for engineering implementation.
 - Queue ordering is product-first; process stories only outrank product work when process defects are blocking delivery (`docs/process/BACKLOG_WEIGHTING_POLICY.md`).
 
 ## Active Sequence
-1. `STORY-20260223-split-main-go-into-packages.md` - foundational refactor that unlocks safer feature delivery and testability in subsequent stories.
-2. `STORY-20260223-agent-bootstrap-protocol.md` - implements the bootstrap contract needed for memory-aware session startup.
-3. `STORY-20260223-episode-writeback.md` - establishes cycle-boundary state memory that bootstrap can consume.
-4. `STORY-20260223-launch-stage-memory-integration.md` - wires bootstrap/write-back into stage launch and observer workflows.
-5. `STORY-20260223-add-ci-pipeline.md` - adds automated quality gate enforcement on `dev` and PR flows.
-6. `STORY-20260223-readme-v01-alignment.md` - aligns top-level product messaging to implemented v0.1 behavior.
-7. `STORY-20260223-sqlite-index-store.md` - starts v0.2 storage evolution once v0.1 queue-critical work is in motion.
-8. `STORY-20260223-embedding-retrieval-via-ollama.md` - follows SQLite foundation for v0.2 retrieval-quality upgrade.
+1. `STORY-20260223-agent-bootstrap-protocol.md` - implements the bootstrap contract needed for memory-aware session startup.
+2. `STORY-20260223-episode-writeback.md` - establishes cycle-boundary state memory that bootstrap can consume.
+3. `STORY-20260223-launch-stage-memory-integration.md` - wires bootstrap/write-back into stage launch and observer workflows.
+4. `STORY-20260223-add-ci-pipeline.md` - adds automated quality gate enforcement on `dev` and PR flows.
+5. `STORY-20260223-readme-v01-alignment.md` - aligns top-level product messaging to implemented v0.1 behavior.
+6. `STORY-20260223-sqlite-index-store.md` - starts v0.2 storage evolution once v0.1 queue-critical work is in motion.
+7. `STORY-20260223-embedding-retrieval-via-ollama.md` - follows SQLite foundation for v0.2 retrieval-quality upgrade.
