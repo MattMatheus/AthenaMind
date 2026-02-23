@@ -7,3 +7,4 @@ Product requirements, goals, and user outcome definitions.
 - v0.1 goals and scorecard
 - roadmap narratives
 - persona-driven workflows
+- long-term vision (`VISION.md`)

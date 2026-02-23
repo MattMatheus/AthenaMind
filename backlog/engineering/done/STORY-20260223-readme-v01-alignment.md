@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-readme-v01-alignment
 - `owner_persona`: personas/Technical Writer - Clara.md
-- `status`: active
+- `status`: qa
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0007, ADR-0009]

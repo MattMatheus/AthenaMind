@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 3
-- `engineering_qa_count`: 4
-- `engineering_done_story_count`: 36
+- `engineering_active_count`: 2
+- `engineering_qa_count`: 0
+- `engineering_done_story_count`: 39
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,13 +21,13 @@
 - `v0.3`: not started
 
 ## Now
-- Execute v0.1 foundational queue refresh starting with `STORY-20260223-add-ci-pipeline`.
-- Preserve dependency order across bootstrap/write-back/integration stories to close the memory dogfooding loop.
-- Keep weekly KPI monitoring active while active queue throughput resumes.
+- Execute active queue head: `STORY-20260223-sqlite-index-store`.
+- Preserve ranked dependency order across remaining active stories.
+- Keep weekly KPI monitoring active while queue throughput resumes.
 
 ## Next
-- Complete remaining v0.1 active stories (`add-ci-pipeline`, `readme-v01-alignment`) after memory-loop integration work.
-- Start queued v0.2 progression in active order (`sqlite-index-store` then `embedding-retrieval-via-ollama`) once v0.1 release-checkpoint items stabilize.
+- Continue queued v0.2 progression in active order (`sqlite-index-store` then `embedding-retrieval-via-ollama`).
+- Re-run QA on queued items and update release-checkpoint evidence for changed scope.
 - Rebaseline founder snapshot signals after first post-refresh engineering/QA cycles.
 
 ## Risks
