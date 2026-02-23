@@ -2,6 +2,16 @@
 
 AthenaMind is a Go-based memory toolchain for agent workflows. It supports governed writes, retrieval, bootstrap payload generation, snapshots, episode logging, and embedding-backed semantic search over a local memory root.
 
+## Root Entry Points
+- `README.md`: product and CLI quick orientation
+- `HUMANS.md`: operator quick guide
+- `AGENTS.md`: agent operating and stage rules
+- `DEVELOPMENT_CYCLE.md`: canonical workflow and launch behavior
+- `knowledge-base/process/CYCLE_INDEX.md`: cycle navigation and first-5-minutes flow
+- `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`: day-to-day execution loop
+- `knowledge-base/process/PM-TODO.md`: PM control-plane checklist
+- `knowledge-base/process/PRE_CODING_PATH.md`: coding readiness gate path
+
 ## Current Operating Model
 - Toolchain root: `/Users/foundry/Source/orchestrator/AthenaMind`
 - Active memory root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/core`
@@ -38,7 +48,7 @@ mkdir -p /Users/foundry/Source/orchestrator/AthenaMind-Memory/core /Users/foundr
 ```bash
 go run ./cmd/memory-cli crawl \
   --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
-  --dir /Users/foundry/Source/orchestrator/AthenaMind/docs \
+  --dir /Users/foundry/Source/orchestrator/AthenaMind/knowledge-base \
   --domain docs-crawl \
   --reviewer system
 ```
@@ -71,6 +81,6 @@ go run ./cmd/memory-cli retrieve \
 | Full repository suite (`go test ./...`) | ✖ FAIL | Not currently green due to the memory-cli package failure above |
 
 ## References
-- Scope boundary: `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
-- CLI docs: `docs/cli/commands.md`, `docs/cli/examples.md`
-- Process docs: `docs/process/STAGE_EXIT_GATES.md`, `docs/process/BACKLOG_WEIGHTING_POLICY.md`
+- Scope boundary: `product-research/decisions/ADR-0007-memory-layer-scope-refinement.md`
+- CLI docs: `knowledge-base/cli/commands.md`, `knowledge-base/cli/examples.md`
+- Process docs: `knowledge-base/process/STAGE_EXIT_GATES.md`, `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`

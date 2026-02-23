@@ -8,37 +8,37 @@ AthenaMind v0.1 is a memory-layer product with a strict staged development workf
 ## First 5 Minutes
 1. Read `HUMANS.md` for operator expectations.
 2. Read `DEVELOPMENT_CYCLE.md` for stage rules.
-3. Read `backlog/engineering/active/README.md` for queue order.
-4. Launch the requested stage with `scripts/launch_stage.sh <stage>`.
+3. Read `delivery-backlog/engineering/active/README.md` for queue order.
+4. Launch the requested stage with `tools/launch_stage.sh <stage>`.
 
 ## Canonical Stage Prompts
-- Planning: `prompts/active/planning-seed-prompt.md`
-- Engineering: `prompts/active/next-agent-seed-prompt.md`
-- Architect: `prompts/active/architect-agent-seed-prompt.md`
-- QA: `prompts/active/qa-agent-seed-prompt.md`
-- PM: `prompts/active/pm-refinement-seed-prompt.md`
-- Cycle: `prompts/active/cycle-seed-prompt.md`
+- Planning: `stage-prompts/active/planning-seed-prompt.md`
+- Engineering: `stage-prompts/active/next-agent-seed-prompt.md`
+- Architect: `stage-prompts/active/architect-agent-seed-prompt.md`
+- QA: `stage-prompts/active/qa-agent-seed-prompt.md`
+- PM: `stage-prompts/active/pm-refinement-seed-prompt.md`
+- Cycle: `stage-prompts/active/cycle-seed-prompt.md`
 
 ## Source-of-Truth Maps
-- Staff roles: `personas/STAFF_DIRECTORY.md`
-- Product/architecture decisions: `research/decisions/`
-- Architecture backlog lane: `backlog/architecture/README.md`
-- Process-improvement system: `work-system/README.md`
-- Observer artifacts: `work-system/observer/README.md`
-- Wiki docs root: `docs/INDEX.md`
+- Staff roles: `staff-personas/STAFF_DIRECTORY.md`
+- Product/architecture decisions: `product-research/decisions/`
+- Architecture backlog lane: `delivery-backlog/architecture/README.md`
+- Process-improvement system: `operating-system/README.md`
+- Observer artifacts: `operating-system/observer/README.md`
+- Wiki docs root: `knowledge-base/INDEX.md`
 
 ## Mandatory Behavioral Rules
 - Branch must be `dev` (launcher enforces this).
 - Respect backlog state model and do not skip stages.
-- Use `backlog/architecture/` for architecture item types (do not place architecture stories in `backlog/engineering/active/`).
+- Use `delivery-backlog/architecture/` for architecture item types (do not place architecture stories in `delivery-backlog/engineering/active/`).
 - Do not fabricate work when engineering reports `no stories`.
 - Do not commit during intermediate stage transitions.
-- Run observer after each completed cycle using `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`.
+- Run observer after each completed cycle using `tools/run_observer_cycle.sh --cycle-id <cycle-id>`.
 - Commit once per cycle with format `cycle-<cycle-id>`.
-- Include observer report artifact in the cycle commit (`work-system/observer/OBSERVER-REPORT-<cycle-id>.md`).
-- Apply stage exits from `docs/process/STAGE_EXIT_GATES.md`.
-- Respect product-first backlog weighting (`docs/process/BACKLOG_WEIGHTING_POLICY.md`).
-- Keep `research/roadmap/PROGRAM_STATE_BOARD.md` in sync during PM refinement.
+- Include observer report artifact in the cycle commit (`operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`).
+- Apply stage exits from `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Respect product-first backlog weighting (`knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`).
+- Keep `product-research/roadmap/PROGRAM_STATE_BOARD.md` in sync during PM refinement.
 - Treat `done` as QA-complete, not automatically shipped; use release checkpoint bundles.
 - Do not add time estimates; prioritize by value/risk/dependency sequence.
 - Keep Azure DevOps CI gate green (`go test ./...` on push/PR via `azure-pipelines.yml`).
@@ -48,7 +48,7 @@ When work-system behavior changes (stage flow, handoff rules, commit conventions
 1. Update `HUMANS.md`.
 2. Update `DEVELOPMENT_CYCLE.md`.
 3. Update affected stage prompt(s).
-4. Update `docs/process/README.md` or linked process docs as needed.
+4. Update `knowledge-base/process/README.md` or linked process docs as needed.
 
 ## Progressive Disclosure Rule
 Prefer shallow-to-deep guidance:

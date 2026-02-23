@@ -9,4 +9,5 @@
 *.swp
 *.swo
 
+# Local environment
 .env
