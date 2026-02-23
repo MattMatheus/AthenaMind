@@ -11,3 +11,4 @@
 
 # Local environment
 .env
+.site/

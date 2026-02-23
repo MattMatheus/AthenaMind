@@ -77,3 +77,13 @@ h1 {
   line-height: 1.45;
 }
 
+.docs-link {
+  margin: 20px 2px 0;
+}
+
+.docs-link a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid #d88a63;
+}

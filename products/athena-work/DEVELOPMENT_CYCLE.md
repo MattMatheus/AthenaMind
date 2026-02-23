@@ -20,7 +20,12 @@ Quick launch helper:
 - `tools/launch_stage.sh pm`
 - `tools/launch_stage.sh cycle`
 - `tools/run_observer_cycle.sh --cycle-id <cycle-id>`
+- `tools/build_docs_site.sh` (local docs-site build)
 - CI gate (Azure DevOps): `go test ./...` runs on push and PR via `azure-pipelines.yml`.
+- Docs publish gate (GitHub Actions): `.github/workflows/docs-publish.yml` publishes docs artifacts.
+
+Documentation source-of-truth rule:
+- Edit docs only in repository markdown; published site content is generated output.
 
 Memory integration (soft dependency):
 - `launch_stage.sh` invokes `memory-cli bootstrap` and appends bootstrap context to stage output when available.

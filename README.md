@@ -28,6 +28,13 @@ Legacy root paths are preserved via compatibility links.
 - AthenaMind skill: `/Users/foundry/AthenaMind/skills/athena-mind/SKILL.md`
 - AthenaWork skill: `/Users/foundry/AthenaMind/skills/athena-work/SKILL.md`
 
+## Documentation Hosting Model
+- Source-of-truth: markdown in this repository.
+- Published site: `athena.teamorchestrator.com/docs/`.
+- Local build command: `tools/build_docs_site.sh`.
+- CI publish workflow: `.github/workflows/docs-publish.yml`.
+- Policy reference: `knowledge-base/process/DOCS_PUBLISH_POLICY.md`.
+
 ## What v0.1 Delivers Today
 - Local-first memory write and retrieve workflow
 - Governance-aware mutation lifecycle

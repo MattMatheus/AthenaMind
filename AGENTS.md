@@ -53,6 +53,8 @@ Compatibility links are kept at repo root for existing commands.
 - Treat `done` as QA-complete, not automatically shipped; use release checkpoint bundles.
 - Do not add time estimates; prioritize by value/risk/dependency sequence.
 - Keep Azure DevOps CI gate green (`go test ./...` on push/PR via `azure-pipelines.yml`).
+- Treat repository markdown as the documentation source of truth; do not edit published docs directly.
+- Ensure docs changes remain publishable through `.github/workflows/docs-publish.yml`.
 
 ## Documentation Sync Rule
 When work-system behavior changes (stage flow, handoff rules, commit conventions, state transitions, launch commands):

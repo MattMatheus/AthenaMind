@@ -18,8 +18,9 @@ Execution brief for building and maintaining comprehensive user-facing documenta
 1. PM promotes documentation stories into active queue based on value/risk.
 2. Clara executes doc story scope and updates user-facing pages under `knowledge-base/`.
 3. Clara removes stale/conflicting docs and captures remaining gaps.
-4. QA validates documentation acceptance criteria and references.
-5. Observer runs, then one cycle commit is made using `cycle-<cycle-id>`.
+4. Clara validates docs with `tools/run_doc_tests.sh` and ensures publish workflow eligibility.
+5. QA validates documentation acceptance criteria and references.
+6. Observer runs, then one cycle commit is made using `cycle-<cycle-id>`.
 
 ## Operating Modes
 ### Continuous Mode (Every Relevant Cycle)
@@ -28,6 +29,7 @@ Execution brief for building and maintaining comprehensive user-facing documenta
   - updated docs pages
   - linked evidence references
   - gaps captured as intake items
+  - publish pipeline-ready docs changes (repo source updated; no direct host edits)
 
 ### Release Mode (On-Demand Before Release Decision)
 - Trigger during release checkpoint preparation.
@@ -44,5 +46,7 @@ Execution brief for building and maintaining comprehensive user-facing documenta
 ## References
 - `staff-personas/Technical Writer - Clara.md`
 - `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `knowledge-base/process/DOCS_PUBLISH_POLICY.md`
 - `tools/run_observer_cycle.sh`
+- `tools/build_docs_site.sh`
 - `operating-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`

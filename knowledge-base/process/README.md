@@ -10,10 +10,12 @@ Documentation for how the team improves and governs the work system.
 - stage launch model (planning, architect, engineering, QA, PM, cycle)
 - observer and cycle-commit policy
 - stage exit gates and shipped checkpoint policy
+- docs source-of-truth and publish policy
 - program operating system and control-plane rules
 
 ## Core Docs
 - `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `knowledge-base/process/DOCS_PUBLISH_POLICY.md`
 - `knowledge-base/process/PROGRAM_OPERATING_SYSTEM.md`
 - `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`
 - `knowledge-base/process/CYCLE_INDEX.md`

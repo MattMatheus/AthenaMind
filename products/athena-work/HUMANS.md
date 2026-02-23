@@ -6,6 +6,7 @@ Quick operator guide for founders and new helpers.
 This repo runs a staged workflow: Planning (as needed) -> Architect (as needed) -> Engineering -> QA -> PM Refinement.
 Use launcher commands to start each stage safely.
 Backlog ranking is product-first unless process defects are actively blocking delivery (`knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`).
+Docs policy: markdown in git is canonical, website docs are publish artifacts.
 
 Commit policy is cycle-based:
 - Do not commit at intermediate stage transitions.
@@ -83,7 +84,9 @@ Use this section as the unified "humans area." It points only to canonical docs 
 - PM: `./tools/launch_stage.sh pm`
 - Continuous loop: `./tools/launch_stage.sh cycle`
 - Observer: `./tools/run_observer_cycle.sh --cycle-id <cycle-id>`
+- Build docs site locally: `./tools/build_docs_site.sh`
 - CI enforcement (Azure DevOps): `go test ./...` on push and PR (`azure-pipelines.yml`).
+- CI docs publish (GitHub Actions): `.github/workflows/docs-publish.yml` deploys docs to `athena.teamorchestrator.com/docs/`.
 
 ### Memory Integration (Soft Dependency)
 - `launch_stage.sh` attempts `memory-cli bootstrap` and appends returned context to stage output.
