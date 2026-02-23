@@ -39,7 +39,7 @@ Compatibility links are kept at repo root for existing commands.
 - Wiki docs root: `knowledge-base/INDEX.md`
 
 ## Mandatory Behavioral Rules
-- Branch must be `dev` (launcher enforces this).
+- Branch must match `ATHENA_REQUIRED_BRANCH` (default `dev`; launcher enforces this).
 - Respect backlog state model and do not skip stages.
 - Use `delivery-backlog/architecture/` for architecture item types (do not place architecture stories in `delivery-backlog/engineering/active/`).
 - Do not fabricate work when engineering reports `no stories`.

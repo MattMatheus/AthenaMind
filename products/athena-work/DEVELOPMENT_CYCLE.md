@@ -39,9 +39,9 @@ Memory integration (soft dependency):
 - Standard and template: `product-research/roadmap/DOC_TEST_HARNESS_STANDARD.md`.
 
 ## Branch Safety Rule
-- All stage launches require the current git branch to be `dev`.
-- If branch is not `dev`, launcher aborts with:
-  - `abort: active branch is '<branch>'; expected 'dev'`
+- All stage launches require the current git branch to match `ATHENA_REQUIRED_BRANCH` (default `dev`).
+- If branch does not match, launcher aborts with:
+  - `abort: active branch is '<branch>'; expected '<required-branch>'`
 - This is intentional to prevent accidental execution from the wrong branch.
 
 ## Canonical Flow
