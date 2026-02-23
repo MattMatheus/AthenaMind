@@ -22,8 +22,8 @@ doc_assert_contains "$workflow_doc" "cycle-<cycle-id>" "Workflow references cycl
 doc_assert_contains "$workflow_doc" "If engineering launch returns" "Workflow includes empty backlog instruction"
 doc_assert_contains "$workflow_doc" "no stories" "Workflow includes explicit no-stories token"
 doc_assert_contains "$workflow_doc" "If QA finds blocking defects" "Workflow includes QA failure instruction"
-doc_assert_contains "$workflow_doc" "branch is not" "Workflow includes branch discipline"
-doc_assert_contains "$workflow_doc" "dev" "Workflow includes explicit dev branch token"
+doc_assert_contains "$workflow_doc" "ATHENA_REQUIRED_BRANCH" "Workflow includes branch discipline"
+doc_assert_contains "$workflow_doc" "default dev" "Workflow includes explicit default branch token"
 doc_assert_contains "$workflow_doc" "command escalation" "Workflow includes escalation rules"
 
 doc_test_finish

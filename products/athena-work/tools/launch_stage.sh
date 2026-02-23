@@ -8,7 +8,9 @@ active_dir="$root_dir/delivery-backlog/engineering/active"
 active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/delivery-backlog/architecture/active"
 arch_active_readme="$arch_active_dir/README.md"
-required_branch="dev"
+required_branch="${ATHENA_REQUIRED_BRANCH:-dev}"
+memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
+repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
 
 if ! git -C "$root_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -49,7 +51,6 @@ select_top_story_from_lane() {
 
 emit_memory_bootstrap_context() {
   local bootstrap_output
-  local repo_id
   local session_id
   local scenario_id
 
@@ -58,10 +59,9 @@ emit_memory_bootstrap_context() {
     return 0
   fi
 
-  repo_id="$(basename "$root_dir")"
   session_id="launch-$stage-$(date -u +"%Y%m%dT%H%M%SZ")"
   scenario_id="$stage"
-  if ! bootstrap_output="$("$memory_cli_bin" bootstrap --root "$root_dir/memory" --repo "$repo_id" --session-id "$session_id" --scenario "$scenario_id" 2>&1)"; then
+  if ! bootstrap_output="$("$memory_cli_bin" bootstrap --root "$memory_root" --repo "$repo_id" --session-id "$session_id" --scenario "$scenario_id" 2>&1)"; then
     echo "warning: memory bootstrap skipped; bootstrap command failed: $bootstrap_output" >&2
     return 0
   fi

@@ -49,7 +49,7 @@ Use this section as the unified "humans area." It points only to canonical docs 
 4. Confirm release bundle status before declaring anything shipped.
 
 ## 60-Second Start
-1. Ensure branch is `dev`.
+1. Ensure branch matches `ATHENA_REQUIRED_BRANCH` (default `dev`).
 2. Run `./tools/launch_stage.sh engineering`.
 3. Follow the returned story and checklist.
 4. Move completed work to QA (`delivery-backlog/engineering/qa/`), then run QA stage.
@@ -129,7 +129,7 @@ Use this section as the unified "humans area." It points only to canonical docs 
 4. Run stage launcher and follow prompt output.
 
 ## If Something Looks Wrong
-- Wrong branch? Launcher aborts if not `dev`.
+- Wrong branch? Launcher aborts if branch does not match `ATHENA_REQUIRED_BRANCH` (default `dev`).
 - No active stories? Engineering returns `no stories`; run PM refinement.
 - QA found issues? Bugs go to `delivery-backlog/engineering/intake/`, story returns to `delivery-backlog/engineering/active/`.
 

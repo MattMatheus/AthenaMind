@@ -35,14 +35,29 @@ assert_equal() {
   fi
 }
 
-actual_eng_intake="$(find "$root_dir/delivery-backlog/engineering/intake" -maxdepth 1 -type f -name '*.md' ! -name '*TEMPLATE*' | wc -l | tr -d ' ')"
-actual_eng_active="$(find "$root_dir/delivery-backlog/engineering/active" -maxdepth 1 -type f -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')"
-actual_eng_qa="$(find "$root_dir/delivery-backlog/engineering/qa" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
-actual_eng_done="$(find "$root_dir/delivery-backlog/engineering/done" -maxdepth 1 -type f -name 'STORY-*.md' | wc -l | tr -d ' ')"
-actual_arch_intake="$(find "$root_dir/delivery-backlog/architecture/intake" -maxdepth 1 -type f -name '*.md' ! -name '*TEMPLATE*' | wc -l | tr -d ' ')"
-actual_arch_active="$(find "$root_dir/delivery-backlog/architecture/active" -maxdepth 1 -type f -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')"
-actual_arch_qa="$(find "$root_dir/delivery-backlog/architecture/qa" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
-actual_arch_done="$(find "$root_dir/delivery-backlog/architecture/done" -maxdepth 1 -type f -name 'ARCH-*.md' | wc -l | tr -d ' ')"
+count_matching_files() {
+  local dir="$1"
+  local include_pattern="$2"
+  local exclude_pattern="${3:-}"
+  if [[ ! -d "$dir" ]]; then
+    printf '0'
+    return 0
+  fi
+  if [[ -n "$exclude_pattern" ]]; then
+    find "$dir" -maxdepth 1 -type f -name "$include_pattern" ! -name "$exclude_pattern" | wc -l | tr -d ' '
+    return 0
+  fi
+  find "$dir" -maxdepth 1 -type f -name "$include_pattern" | wc -l | tr -d ' '
+}
+
+actual_eng_intake="$(count_matching_files "$root_dir/delivery-backlog/engineering/intake" '*.md' '*TEMPLATE*')"
+actual_eng_active="$(count_matching_files "$root_dir/delivery-backlog/engineering/active" '*.md' 'README.md')"
+actual_eng_qa="$(count_matching_files "$root_dir/delivery-backlog/engineering/qa" '*.md')"
+actual_eng_done="$(count_matching_files "$root_dir/delivery-backlog/engineering/done" 'STORY-*.md')"
+actual_arch_intake="$(count_matching_files "$root_dir/delivery-backlog/architecture/intake" '*.md' '*TEMPLATE*')"
+actual_arch_active="$(count_matching_files "$root_dir/delivery-backlog/architecture/active" '*.md' 'README.md')"
+actual_arch_qa="$(count_matching_files "$root_dir/delivery-backlog/architecture/qa" '*.md')"
+actual_arch_done="$(count_matching_files "$root_dir/delivery-backlog/architecture/done" 'ARCH-*.md')"
 
 assert_equal "$(extract_count engineering_intake_count)" "$actual_eng_intake" "Program board engineering intake count matches"
 assert_equal "$(extract_count engineering_active_count)" "$actual_eng_active" "Program board engineering active count matches"
