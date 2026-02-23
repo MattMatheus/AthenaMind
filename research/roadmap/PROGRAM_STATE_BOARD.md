@@ -7,7 +7,7 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 0
+- `engineering_active_count`: 8
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 33
 - `architecture_intake_count`: 0
@@ -21,14 +21,14 @@
 - `v0.3`: not started
 
 ## Now
-- Run PM refinement because engineering active queue is empty after Clara documentation completion.
-- Confirm released bundle scope remains aligned to backlog state after QA closure.
-- Keep weekly KPI monitoring active to ensure post-hardening quality remains inside target bands.
+- Execute v0.1 foundational queue refresh starting with `STORY-20260223-split-main-go-into-packages`.
+- Preserve dependency order across bootstrap/write-back/integration stories to close the memory dogfooding loop.
+- Keep weekly KPI monitoring active while active queue throughput resumes.
 
 ## Next
-- Sequence deferred roadmap work only after PM confirms release-checkpoint closure and queue refresh.
-- Rebaseline founder snapshot signals against the refreshed release bundle.
-- Continue weekly KPI cadence to verify post-hardening trends hold.
+- Complete remaining v0.1 active stories (`add-ci-pipeline`, `readme-v01-alignment`) after memory-loop integration work.
+- Start queued v0.2 progression in active order (`sqlite-index-store` then `embedding-retrieval-via-ollama`) once v0.1 release-checkpoint items stabilize.
+- Rebaseline founder snapshot signals after first post-refresh engineering/QA cycles.
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.
