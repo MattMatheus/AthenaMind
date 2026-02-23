@@ -1,78 +1,76 @@
-# AthenaMind v0.1
+# AthenaMind
 
-AthenaMind v0.1 is a Go CLI memory layer for agent workflows. It provides file-based memory operations with governance-gated mutations, retrieval evaluation, read access APIs, and deterministic lifecycle artifacts.
+AthenaMind is a Go-based memory toolchain for agent workflows. It supports governed writes, retrieval, bootstrap payload generation, snapshots, episode logging, and embedding-backed semantic search over a local memory root.
 
-## What v0.1 Delivers Today
+## Current Operating Model
+- Toolchain root: `/Users/foundry/Source/orchestrator/AthenaMind`
+- Active memory root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/core`
+- Optional work root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/work`
+- Embeddings: Azure OpenAI when `AZURE_OPENAI_ENDPOINT` and credentials are present
+- Latency fallback policy: configurable with `MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS` (`0` disables latency fallback)
+
+## Command Surface
 Implemented command families in `cmd/memory-cli`:
 - `write`
 - `retrieve`
 - `evaluate`
+- `bootstrap`
+- `verify` (`embeddings`)
+- `reindex-all`
+- `crawl`
 - `snapshot` (`create`, `list`, `restore`)
+- `episode` (`write`, `list`)
 - `serve-read-gateway`
 - `api-retrieve`
-- `bootstrap`
-- `episode` (`write`, `list`)
 
-Operational capabilities currently implemented:
-- File-based memory storage and index operations under a local root (default `memory/`)
-- Governance-enforced mutation gates and review evidence requirements for writes/restores
-- Constraint checks for operation budgets and autonomy policies
-- Telemetry event output for write/retrieve/evaluate/episode flows
-- Snapshot create/list/restore with manifest and audit event tracking
-- Read-gateway parity checks between API retrieval and local CLI retrieval behavior
-
-Scope boundary reference:
-- `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
-
-## Quick Start
-Write a memory entry:
-
+## Practical Workflow
+1. Load environment:
 ```bash
-go run ./cmd/memory-cli write \
-  --root memory \
-  --id handoff-template \
-  --title "Handoff Template" \
-  --type instruction \
-  --domain docs \
-  --body "Always include risks, evidence, and next-state recommendation." \
-  --stage pm \
-  --reviewer maya \
-  --decision approved \
-  --reason "baseline docs quality" \
-  --risk "low; reversible by git revert" \
-  --notes "approved for docs baseline"
+set -a; source /Users/foundry/Source/orchestrator/AthenaMind/.env; set +a
 ```
 
-Retrieve a memory entry:
+2. Ensure memory roots exist:
+```bash
+mkdir -p /Users/foundry/Source/orchestrator/AthenaMind-Memory/core /Users/foundry/Source/orchestrator/AthenaMind-Memory/work
+```
 
+3. Crawl docs into memory (collision-safe IDs are path-based and deterministic):
+```bash
+go run ./cmd/memory-cli crawl \
+  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --dir /Users/foundry/Source/orchestrator/AthenaMind/docs \
+  --domain docs-crawl \
+  --reviewer system
+```
+
+4. Build missing embeddings:
+```bash
+go run ./cmd/memory-cli reindex-all \
+  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
+```
+
+5. Verify embedding coverage:
+```bash
+go run ./cmd/memory-cli verify embeddings \
+  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
+```
+
+6. Retrieve:
 ```bash
 go run ./cmd/memory-cli retrieve \
-  --root memory \
-  --query "handoff instruction template"
+  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --query "memory lifecycle" \
+  --domain docs-crawl
 ```
 
-More command examples:
-- `docs/cli/examples.md`
-- `docs/cli/commands.md`
+## Test Status
+| Gate | Status | Notes |
+|---|---|---|
+| Targeted governance and memory-cli tests | ✔ PASS | `go test ./internal/governance` and targeted `./cmd/memory-cli` tests are passing |
+| Full memory-cli package | ✖ FAIL | Known failing test: `TestSemanticConfidenceGate` |
+| Full repository suite (`go test ./...`) | ✖ FAIL | Not currently green due to the memory-cli package failure above |
 
-## Future Direction
-Long-term product vision (preserved separately from v0.1 scope):
-- `docs/product/VISION.md`
-
-Phased plan (v0.1 -> v0.3):
-- `research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
-
-## Development Workflow
-Stage-based flow:
-- `HUMANS.md`
-- `DEVELOPMENT_CYCLE.md`
-- `docs/process/STAGE_EXIT_GATES.md`
-- `docs/process/BACKLOG_WEIGHTING_POLICY.md`
-
-## Quality Gates
-Run locally before handoff:
-- `scripts/run_doc_tests.sh`
-- `go test ./...`
-
-CI gate:
-- `azure-pipelines.yml` runs `go test ./...` on push and PR.
+## References
+- Scope boundary: `research/decisions/ADR-0007-memory-layer-scope-refinement.md`
+- CLI docs: `docs/cli/commands.md`, `docs/cli/examples.md`
+- Process docs: `docs/process/STAGE_EXIT_GATES.md`, `docs/process/BACKLOG_WEIGHTING_POLICY.md`
