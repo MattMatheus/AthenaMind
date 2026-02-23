@@ -52,6 +52,7 @@ func runWrite(args []string) (err error) {
 	risk := fs.String("risk", "", "risk and mitigation note")
 	reworkNotes := fs.String("rework-notes", "", "required when --decision=rejected")
 	reReviewedBy := fs.String("re-reviewed-by", "", "required when --decision=rejected")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint for write-time indexing")
 
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -117,6 +118,11 @@ func runWrite(args []string) (err error) {
 	}, policy); err != nil {
 		return err
 	}
+	if warning, err := retrieval.IndexEntryEmbedding(*root, *id, *embeddingEndpoint); err != nil {
+		return err
+	} else if strings.TrimSpace(warning) != "" {
+		fmt.Fprintf(os.Stderr, "warning: %s\n", warning)
+	}
 
 	fmt.Printf("wrote entry %s at %s\n", *id, fmt.Sprintf("%s/%s/%s.md", map[bool]string{true: "instructions", false: "prompts"}[*typeValue == "instruction"], *domain, *id))
 	return nil
@@ -134,6 +140,7 @@ func runRetrieve(args []string) (err error) {
 	memoryType := fs.String("memory-type", "semantic", "telemetry memory type: procedural|state|semantic")
 	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
 	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -180,9 +187,12 @@ func runRetrieve(args []string) (err error) {
 		return err
 	}
 
-	result, err := retrieval.Retrieve(*root, *query, *domain)
+	result, warning, err := retrieval.RetrieveWithEmbeddingEndpoint(*root, *query, *domain, *embeddingEndpoint)
 	if err != nil {
 		return err
+	}
+	if strings.TrimSpace(warning) != "" {
+		fmt.Fprintf(os.Stderr, "warning: %s\n", warning)
 	}
 	telemetryResult = result
 	return printResult(result)
@@ -202,6 +212,7 @@ func runEvaluate(args []string) (err error) {
 	corpusID := fs.String("corpus-id", defaultEvaluationCorpusID, "pinned corpus snapshot id")
 	querySetID := fs.String("query-set-id", defaultEvaluationQuerySetID, "pinned query set id")
 	configID := fs.String("config-id", defaultEvaluationConfigID, "retrieval configuration snapshot id")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -245,7 +256,7 @@ func runEvaluate(args []string) (err error) {
 		return err
 	}
 
-	report, err := retrieval.EvaluateRetrieval(*root, queries, *corpusID, *querySetID, *configID)
+	report, err := retrieval.EvaluateRetrievalWithEmbeddingEndpoint(*root, queries, *corpusID, *querySetID, *configID, *embeddingEndpoint)
 	if err != nil {
 		return err
 	}

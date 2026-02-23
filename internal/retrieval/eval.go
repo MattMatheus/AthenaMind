@@ -11,6 +11,10 @@ import (
 )
 
 func EvaluateRetrieval(root string, queries []types.EvaluationQuery, corpusID, querySetID, configID string) (types.EvaluationReport, error) {
+	return EvaluateRetrievalWithEmbeddingEndpoint(root, queries, corpusID, querySetID, configID, DefaultEmbeddingEndpoint)
+}
+
+func EvaluateRetrievalWithEmbeddingEndpoint(root string, queries []types.EvaluationQuery, corpusID, querySetID, configID, embeddingEndpoint string) (types.EvaluationReport, error) {
 	report := types.EvaluationReport{
 		CorpusID:            corpusID,
 		QuerySetID:          querySetID,
@@ -31,7 +35,7 @@ func EvaluateRetrieval(root string, queries []types.EvaluationQuery, corpusID, q
 	fallbackStable := 0
 
 	for _, q := range queries {
-		result, err := Retrieve(root, q.Query, q.Domain)
+		result, _, err := RetrieveWithEmbeddingEndpoint(root, q.Query, q.Domain, embeddingEndpoint)
 		if err != nil {
 			return report, err
 		}
@@ -41,7 +45,7 @@ func EvaluateRetrieval(root string, queries []types.EvaluationQuery, corpusID, q
 		if result.SelectedID != "" && result.SourcePath != "" {
 			sourceTracePresent++
 		}
-		if result.SelectionMode == "semantic" && q.ExpectedID != "" && result.SelectedID == q.ExpectedID {
+		if (result.SelectionMode == "semantic" || result.SelectionMode == "embedding_semantic") && q.ExpectedID != "" && result.SelectedID == q.ExpectedID {
 			top1Useful++
 		} else if q.ExpectedID != "" && result.SelectedID != q.ExpectedID {
 			report.FailingQueries = append(report.FailingQueries, types.QueryMiss{
@@ -56,7 +60,7 @@ func EvaluateRetrieval(root string, queries []types.EvaluationQuery, corpusID, q
 			fallbackChecks++
 			stable := true
 			for i := 0; i < 4; i++ {
-				again, err := Retrieve(root, q.Query, q.Domain)
+				again, _, err := RetrieveWithEmbeddingEndpoint(root, q.Query, q.Domain, embeddingEndpoint)
 				if err != nil {
 					return report, err
 				}

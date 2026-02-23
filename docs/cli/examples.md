@@ -17,14 +17,16 @@ go run ./cmd/memory-cli write \
   --decision approved \
   --reason "baseline docs quality" \
   --risk "low; reversible by git revert" \
-  --notes "approved for docs baseline"
+  --notes "approved for docs baseline" \
+  --embedding-endpoint http://localhost:11434
 ```
 
 ## Retrieve Entry
 ```bash
 go run ./cmd/memory-cli retrieve \
   --root memory \
-  --query "handoff instruction template"
+  --query "handoff instruction template" \
+  --embedding-endpoint http://localhost:11434
 ```
 
 ## Run Evaluation
@@ -33,7 +35,8 @@ go run ./cmd/memory-cli evaluate \
   --root memory \
   --query-file cmd/memory-cli/testdata/eval-query-set-v1.json \
   --corpus-id memory-corpus-v1 \
-  --query-set-id query-set-v1
+  --query-set-id query-set-v1 \
+  --embedding-endpoint http://localhost:11434
 ```
 
 ## Snapshot Create/List/Restore

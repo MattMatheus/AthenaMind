@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-embedding-retrieval-via-ollama
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 - `idea_id`: direct
 - `phase`: v0.2
 - `adr_refs`: [ADR-0005, ADR-0012]

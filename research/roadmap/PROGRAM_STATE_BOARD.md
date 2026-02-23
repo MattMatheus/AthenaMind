@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 1
+- `engineering_active_count`: 0
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 42
+- `engineering_done_story_count`: 41
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,12 +21,12 @@
 - `v0.3`: not started
 
 ## Now
-- Execute active queue head: `STORY-20260223-embedding-retrieval-via-ollama`.
-- Preserve ranked dependency order across remaining active stories.
+- Run QA closure for `STORY-20260223-embedding-retrieval-via-ollama`.
 - Keep weekly KPI monitoring active while queue throughput resumes.
+- Trigger PM refinement because engineering active queue is currently empty.
 
 ## Next
-- Complete remaining queued v0.2 progression (`embedding-retrieval-via-ollama`) after QA closure for `sqlite-index-store`.
+- Replenish ranked engineering active queue from intake after QA closure.
 - Re-run QA on queued items and update release-checkpoint evidence for changed scope.
 - Rebaseline founder snapshot signals after first post-refresh engineering/QA cycles.
 

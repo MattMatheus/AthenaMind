@@ -24,30 +24,59 @@ type candidate struct {
 }
 
 func Retrieve(root, query, domain string) (types.RetrieveResult, error) {
+	result, _, err := RetrieveWithEmbeddingEndpoint(root, query, domain, DefaultEmbeddingEndpoint)
+	return result, err
+}
+
+func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string) (types.RetrieveResult, string, error) {
 	startedAt := time.Now()
 	if strings.TrimSpace(query) == "" {
-		return types.RetrieveResult{}, errors.New("--query is required")
+		return types.RetrieveResult{}, "", errors.New("--query is required")
 	}
 
 	idx, err := index.LoadIndex(root)
 	if err != nil {
-		return types.RetrieveResult{}, err
+		return types.RetrieveResult{}, "", err
 	}
 	if len(idx.Entries) == 0 {
-		return types.RetrieveResult{}, errors.New("memory index has no entries")
+		return types.RetrieveResult{}, "", errors.New("memory index has no entries")
 	}
 
 	candidates, err := loadCandidates(root, idx.Entries, domain)
 	if err != nil {
-		return types.RetrieveResult{}, err
+		return types.RetrieveResult{}, "", err
 	}
 	if len(candidates) == 0 {
-		return types.RetrieveResult{}, errors.New("no candidates found for query/domain")
+		return types.RetrieveResult{}, "", errors.New("no candidates found for query/domain")
 	}
 
 	q := strings.ToLower(strings.TrimSpace(query))
+	warning := ""
+	embeddingScoresApplied := false
+	queryEmbedding, embedErr := GenerateEmbedding(embeddingEndpoint, q)
+	if embedErr != nil {
+		warning = fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr)
+	}
+	ids := make([]string, 0, len(candidates))
+	for _, c := range candidates {
+		ids = append(ids, c.Entry.ID)
+	}
+	embeddings, embLoadErr := index.GetEmbeddings(root, ids)
+	if embLoadErr != nil {
+		warning = fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr)
+	}
+
 	for i := range candidates {
 		candidates[i].Score = semanticScore(q, candidates[i])
+		if len(queryEmbedding) > 0 {
+			if vec, ok := embeddings[candidates[i].Entry.ID]; ok && len(vec) > 0 {
+				candidates[i].Score = cosineSimilarity(queryEmbedding, vec)
+				embeddingScoresApplied = true
+			}
+		}
+	}
+	if len(queryEmbedding) > 0 && !embeddingScoresApplied && warning == "" {
+		warning = "embedding unavailable for candidate entries; using token-overlap scoring"
 	}
 	sort.SliceStable(candidates, func(i, j int) bool {
 		if candidates[i].Score == candidates[j].Score {
@@ -73,17 +102,21 @@ func Retrieve(root, query, domain string) (types.RetrieveResult, error) {
 			SourcePath:    chosen.Entry.Path,
 			Confidence:    chosen.Score,
 			Reason:        "latency degradation policy forced deterministic fallback",
-		}, nil
+		}, warning, nil
 	}
 
 	if IsSemanticConfident(top.Score, second) {
+		mode := "semantic"
+		if embeddingScoresApplied {
+			mode = "embedding_semantic"
+		}
 		return types.RetrieveResult{
 			SelectedID:    top.Entry.ID,
-			SelectionMode: "semantic",
+			SelectionMode: mode,
 			SourcePath:    top.Entry.Path,
 			Confidence:    top.Score,
 			Reason:        "semantic confidence gate passed",
-		}, nil
+		}, warning, nil
 	}
 
 	for _, c := range candidates {
@@ -94,7 +127,7 @@ func Retrieve(root, query, domain string) (types.RetrieveResult, error) {
 				SourcePath:    c.Entry.Path,
 				Confidence:    c.Score,
 				Reason:        "semantic confidence gate failed; exact-key fallback matched",
-			}, nil
+			}, warning, nil
 		}
 	}
 
@@ -108,7 +141,7 @@ func Retrieve(root, query, domain string) (types.RetrieveResult, error) {
 		SourcePath:    chosen.Entry.Path,
 		Confidence:    chosen.Score,
 		Reason:        "semantic confidence gate failed; deterministic path-priority fallback used",
-	}, nil
+	}, warning, nil
 }
 
 func loadCandidates(root string, entries []types.IndexEntry, domain string) ([]candidate, error) {

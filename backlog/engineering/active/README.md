@@ -8,4 +8,4 @@ Ordered execution queue for engineering implementation.
 - Queue ordering is product-first; process stories only outrank product work when process defects are blocking delivery (`docs/process/BACKLOG_WEIGHTING_POLICY.md`).
 
 ## Active Sequence
-1. `STORY-20260223-embedding-retrieval-via-ollama.md` - follows SQLite foundation for v0.2 retrieval-quality upgrade.
+No active engineering stories.

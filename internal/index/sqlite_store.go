@@ -83,6 +83,11 @@ CREATE TABLE IF NOT EXISTS entries (
   updated_at TEXT NOT NULL,
   title TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS embeddings (
+  entry_id TEXT PRIMARY KEY,
+  vector_json TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
 INSERT INTO meta (id, schema_version, updated_at)
 VALUES (1, '1.0', strftime('%Y-%m-%dT%H:%M:%SZ','now'))
 ON CONFLICT(id) DO NOTHING;
@@ -182,4 +187,74 @@ func runSQLite(root, sql string, jsonMode bool) (string, error) {
 
 func sqlQuote(v string) string {
 	return "'" + strings.ReplaceAll(v, "'", "''") + "'"
+}
+
+func UpsertEmbedding(root, entryID string, vector []float64) error {
+	if strings.TrimSpace(entryID) == "" {
+		return errors.New("entry id is required for embedding upsert")
+	}
+	if len(vector) == 0 {
+		return errors.New("embedding vector cannot be empty")
+	}
+	if err := initSQLite(root); err != nil {
+		return err
+	}
+	raw, err := json.Marshal(vector)
+	if err != nil {
+		return err
+	}
+	now := time.Now().UTC().Format(time.RFC3339)
+	stmt := fmt.Sprintf(
+		"INSERT INTO embeddings (entry_id, vector_json, updated_at) VALUES (%s,%s,%s) ON CONFLICT(entry_id) DO UPDATE SET vector_json=excluded.vector_json, updated_at=excluded.updated_at;",
+		sqlQuote(strings.TrimSpace(entryID)),
+		sqlQuote(string(raw)),
+		sqlQuote(now),
+	)
+	_, err = runSQLite(root, stmt, false)
+	return err
+}
+
+func GetEmbeddings(root string, ids []string) (map[string][]float64, error) {
+	out := map[string][]float64{}
+	if len(ids) == 0 {
+		return out, nil
+	}
+	if err := initSQLite(root); err != nil {
+		return nil, err
+	}
+	values := make([]string, 0, len(ids))
+	for _, id := range ids {
+		id = strings.TrimSpace(id)
+		if id == "" {
+			continue
+		}
+		values = append(values, sqlQuote(id))
+	}
+	if len(values) == 0 {
+		return out, nil
+	}
+	query := fmt.Sprintf("SELECT entry_id, vector_json FROM embeddings WHERE entry_id IN (%s);", strings.Join(values, ","))
+	raw, err := runSQLite(root, query, true)
+	if err != nil {
+		return nil, err
+	}
+	type row struct {
+		EntryID    string `json:"entry_id"`
+		VectorJSON string `json:"vector_json"`
+	}
+	rows := []row{}
+	if strings.TrimSpace(raw) == "" {
+		return out, nil
+	}
+	if err := json.Unmarshal([]byte(raw), &rows); err != nil {
+		return nil, err
+	}
+	for _, r := range rows {
+		vec := []float64{}
+		if err := json.Unmarshal([]byte(r.VectorJSON), &vec); err != nil {
+			return nil, err
+		}
+		out[r.EntryID] = vec
+	}
+	return out, nil
 }

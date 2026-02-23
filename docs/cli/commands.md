@@ -31,6 +31,7 @@ Optional:
 - `--memory-type`
 - `--operator-verdict`
 - `--telemetry-file`
+- `--embedding-endpoint` (default `http://localhost:11434`)
 - `--approved` (legacy alias for approved decision)
 - `--rework-notes` and `--re-reviewed-by` (required for rejected decision)
 
@@ -43,6 +44,7 @@ Required:
 Optional:
 - `--root` (default `memory`)
 - `--domain`
+- `--embedding-endpoint` (default `http://localhost:11434`)
 - `--session-id`
 - `--scenario-id`
 - `--memory-type`
@@ -58,6 +60,7 @@ Optional:
 - `--corpus-id`
 - `--query-set-id`
 - `--config-id`
+- `--embedding-endpoint` (default `http://localhost:11434`)
 - telemetry flags (`--session-id`, `--scenario-id`, `--memory-type`, `--operator-verdict`, `--telemetry-file`)
 
 ## `snapshot`
