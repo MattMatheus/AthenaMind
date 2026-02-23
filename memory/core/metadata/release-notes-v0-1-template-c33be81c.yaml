@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "release-notes-v0-1-template-c33be81c",
+  "title": "Release Notes V0 1 Template C33be81c",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:29Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:29Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

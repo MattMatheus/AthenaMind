@@ -1,0 +1,30 @@
+# Release Notes V0 1 Template C33be81c
+
+# Release Notes: v0.1
+
+## Summary
+User-facing summary of what changed in v0.1 and what to expect during adoption.
+
+## Intended Audience
+- AthenaMind users evaluating v0.1 readiness.
+- Internal operators preparing release communication.
+
+## Preconditions
+- Release bundle decision and evidence are complete.
+- Linked stories and QA artifacts are in `done`.
+
+## Main Flow
+1. Publish highlights of user-visible capabilities.
+2. Enumerate fixes and behavior changes.
+3. Document known limitations and mitigation guidance.
+4. Link evidence and support paths.
+
+## Failure Modes
+- Missing links to QA evidence for claimed behaviors.
+- Ambiguous limitations or unsupported workaround advice.
+- Stale notes after late-cycle scope changes.
+
+## References
+- `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
+- `knowledge-base/release-notes/README.md`
+- `knowledge-base/troubleshooting/README.md`

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "how-to-go-toolchain-setup-7ac550c0",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:27Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/how-to-go-toolchain-setup-7ac550c0.md",
+    "metadata/how-to-go-toolchain-setup-7ac550c0.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

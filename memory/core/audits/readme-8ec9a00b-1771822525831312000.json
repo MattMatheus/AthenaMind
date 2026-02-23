@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "readme-8ec9a00b",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:25Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/readme-8ec9a00b.md",
+    "metadata/readme-8ec9a00b.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

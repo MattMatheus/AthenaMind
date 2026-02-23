@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "process-stage-exit-gates-19606da2",
+  "title": "Process Stage Exit Gates 19606da2",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:28Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:28Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

@@ -8,3 +8,7 @@
 # Common editor/project cache artifacts
 *.swp
 *.swo
+
+# Local environment
+.env
+.site/

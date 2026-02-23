@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "process-pre-coding-path-a4331b5c",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:27Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/process-pre-coding-path-a4331b5c.md",
+    "metadata/process-pre-coding-path-a4331b5c.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "process-operator-daily-workflow-d129e818",
+  "title": "Process Operator Daily Workflow D129e818",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:27Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:27Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

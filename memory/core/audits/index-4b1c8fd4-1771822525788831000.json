@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "index-4b1c8fd4",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:25Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/index-4b1c8fd4.md",
+    "metadata/index-4b1c8fd4.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

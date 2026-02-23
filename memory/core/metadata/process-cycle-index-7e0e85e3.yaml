@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "process-cycle-index-7e0e85e3",
+  "title": "Process Cycle Index 7e0e85e3",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:27Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:27Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

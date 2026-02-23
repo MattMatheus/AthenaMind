@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "process-pm-todo-6bc30ade",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:27Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/process-pm-todo-6bc30ade.md",
+    "metadata/process-pm-todo-6bc30ade.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "process-readme-0d4376cb",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:28Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/process-readme-0d4376cb.md",
+    "metadata/process-readme-0d4376cb.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

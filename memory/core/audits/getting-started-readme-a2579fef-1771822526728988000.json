@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "getting-started-readme-a2579fef",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:26Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/getting-started-readme-a2579fef.md",
+    "metadata/getting-started-readme-a2579fef.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

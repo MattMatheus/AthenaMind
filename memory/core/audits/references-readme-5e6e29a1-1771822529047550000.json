@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "references-readme-5e6e29a1",
+  "stage": "pm",
+  "decision": "approved",
+  "reviewed_by": "system",
+  "reviewed_at": "2026-02-23T04:55:29Z",
+  "decision_notes": "automated crawl",
+  "reason": "bulk crawl indexing",
+  "risk": "none",
+  "changed_files": [
+    "instructions/docs-crawl/references-readme-5e6e29a1.md",
+    "metadata/references-readme-5e6e29a1.yaml",
+    "index.yaml"
+  ],
+  "applied": true
+}

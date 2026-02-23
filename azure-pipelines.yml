@@ -1,0 +1,25 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - main
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: GoTool@0
+    displayName: 'Use Go 1.22'
+    inputs:
+      version: '1.22.x'
+
+  - script: go version
+    displayName: 'Go version'
+
+  - script: go test ./...
+    displayName: 'Run unit tests'

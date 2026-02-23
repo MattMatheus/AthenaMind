@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "faq-common-questions-5940d99e",
+  "title": "Faq Common Questions 5940d99e",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:26Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:26Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

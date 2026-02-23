@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "readme-8ec9a00b",
+  "title": "Readme 8ec9a00b",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:25Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:25Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

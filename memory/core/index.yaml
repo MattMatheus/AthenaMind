@@ -1,0 +1,406 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-02-23T04:55:31Z",
+  "entries": [
+    {
+      "id": "agents-37dd6836",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/agents-37dd6836.md",
+      "metadata_path": "metadata/agents-37dd6836.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Agents 37dd6836"
+    },
+    {
+      "id": "architecture-readme-e9bb65a8",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/architecture-readme-e9bb65a8.md",
+      "metadata_path": "metadata/architecture-readme-e9bb65a8.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Architecture Readme E9bb65a8"
+    },
+    {
+      "id": "cli-commands-4a43d031",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/cli-commands-4a43d031.md",
+      "metadata_path": "metadata/cli-commands-4a43d031.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Cli Commands 4a43d031"
+    },
+    {
+      "id": "cli-examples-eb8d8e89",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/cli-examples-eb8d8e89.md",
+      "metadata_path": "metadata/cli-examples-eb8d8e89.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Cli Examples Eb8d8e89"
+    },
+    {
+      "id": "cli-readme-ea1491fd",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/cli-readme-ea1491fd.md",
+      "metadata_path": "metadata/cli-readme-ea1491fd.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Cli Readme Ea1491fd"
+    },
+    {
+      "id": "concepts-governance-1c616379",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/concepts-governance-1c616379.md",
+      "metadata_path": "metadata/concepts-governance-1c616379.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Concepts Governance 1c616379"
+    },
+    {
+      "id": "concepts-memory-lifecycle-74ce7d08",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/concepts-memory-lifecycle-74ce7d08.md",
+      "metadata_path": "metadata/concepts-memory-lifecycle-74ce7d08.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Concepts Memory Lifecycle 74ce7d08"
+    },
+    {
+      "id": "concepts-readme-b7d267b9",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/concepts-readme-b7d267b9.md",
+      "metadata_path": "metadata/concepts-readme-b7d267b9.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Concepts Readme B7d267b9"
+    },
+    {
+      "id": "concepts-retrieval-and-quality-6830e042",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/concepts-retrieval-and-quality-6830e042.md",
+      "metadata_path": "metadata/concepts-retrieval-and-quality-6830e042.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Concepts Retrieval And Quality 6830e042"
+    },
+    {
+      "id": "decisions-readme-be09ce4a",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/decisions-readme-be09ce4a.md",
+      "metadata_path": "metadata/decisions-readme-be09ce4a.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Decisions Readme Be09ce4a"
+    },
+    {
+      "id": "faq-common-questions-5940d99e",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/faq-common-questions-5940d99e.md",
+      "metadata_path": "metadata/faq-common-questions-5940d99e.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Faq Common Questions 5940d99e"
+    },
+    {
+      "id": "faq-readme-8bc7d3b6",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/faq-readme-8bc7d3b6.md",
+      "metadata_path": "metadata/faq-readme-8bc7d3b6.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Faq Readme 8bc7d3b6"
+    },
+    {
+      "id": "getting-started-installation-af867fc1",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/getting-started-installation-af867fc1.md",
+      "metadata_path": "metadata/getting-started-installation-af867fc1.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Getting Started Installation Af867fc1"
+    },
+    {
+      "id": "getting-started-quickstart-eb7d25ee",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/getting-started-quickstart-eb7d25ee.md",
+      "metadata_path": "metadata/getting-started-quickstart-eb7d25ee.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Getting Started Quickstart Eb7d25ee"
+    },
+    {
+      "id": "getting-started-readme-a2579fef",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/getting-started-readme-a2579fef.md",
+      "metadata_path": "metadata/getting-started-readme-a2579fef.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:26Z",
+      "title": "Getting Started Readme A2579fef"
+    },
+    {
+      "id": "how-to-go-toolchain-setup-7ac550c0",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/how-to-go-toolchain-setup-7ac550c0.md",
+      "metadata_path": "metadata/how-to-go-toolchain-setup-7ac550c0.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "How To Go Toolchain Setup 7ac550c0"
+    },
+    {
+      "id": "how-to-readme-4eae3d2e",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/how-to-readme-4eae3d2e.md",
+      "metadata_path": "metadata/how-to-readme-4eae3d2e.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "How To Readme 4eae3d2e"
+    },
+    {
+      "id": "index-4b1c8fd4",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/index-4b1c8fd4.md",
+      "metadata_path": "metadata/index-4b1c8fd4.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Index 4b1c8fd4"
+    },
+    {
+      "id": "operations-readme-75dca438",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/operations-readme-75dca438.md",
+      "metadata_path": "metadata/operations-readme-75dca438.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Operations Readme 75dca438"
+    },
+    {
+      "id": "process-backlog-weighting-policy-29ae36d0",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-backlog-weighting-policy-29ae36d0.md",
+      "metadata_path": "metadata/process-backlog-weighting-policy-29ae36d0.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Process Backlog Weighting Policy 29ae36d0"
+    },
+    {
+      "id": "process-cycle-index-7e0e85e3",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-cycle-index-7e0e85e3.md",
+      "metadata_path": "metadata/process-cycle-index-7e0e85e3.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Process Cycle Index 7e0e85e3"
+    },
+    {
+      "id": "process-operator-daily-workflow-d129e818",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-operator-daily-workflow-d129e818.md",
+      "metadata_path": "metadata/process-operator-daily-workflow-d129e818.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Process Operator Daily Workflow D129e818"
+    },
+    {
+      "id": "process-pm-todo-6bc30ade",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-pm-todo-6bc30ade.md",
+      "metadata_path": "metadata/process-pm-todo-6bc30ade.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Process Pm Todo 6bc30ade"
+    },
+    {
+      "id": "process-pre-coding-path-a4331b5c",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-pre-coding-path-a4331b5c.md",
+      "metadata_path": "metadata/process-pre-coding-path-a4331b5c.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:27Z",
+      "title": "Process Pre Coding Path A4331b5c"
+    },
+    {
+      "id": "process-program-operating-system-20ff0264",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-program-operating-system-20ff0264.md",
+      "metadata_path": "metadata/process-program-operating-system-20ff0264.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:28Z",
+      "title": "Process Program Operating System 20ff0264"
+    },
+    {
+      "id": "process-readme-0d4376cb",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-readme-0d4376cb.md",
+      "metadata_path": "metadata/process-readme-0d4376cb.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:28Z",
+      "title": "Process Readme 0d4376cb"
+    },
+    {
+      "id": "process-stage-exit-gates-19606da2",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/process-stage-exit-gates-19606da2.md",
+      "metadata_path": "metadata/process-stage-exit-gates-19606da2.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:28Z",
+      "title": "Process Stage Exit Gates 19606da2"
+    },
+    {
+      "id": "product-readme-b4a504bc",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/product-readme-b4a504bc.md",
+      "metadata_path": "metadata/product-readme-b4a504bc.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:28Z",
+      "title": "Product Readme B4a504bc"
+    },
+    {
+      "id": "product-vision-f02a617c",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/product-vision-f02a617c.md",
+      "metadata_path": "metadata/product-vision-f02a617c.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:28Z",
+      "title": "Product Vision F02a617c"
+    },
+    {
+      "id": "readme-8ec9a00b",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/readme-8ec9a00b.md",
+      "metadata_path": "metadata/readme-8ec9a00b.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:25Z",
+      "title": "Readme 8ec9a00b"
+    },
+    {
+      "id": "references-readme-5e6e29a1",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/references-readme-5e6e29a1.md",
+      "metadata_path": "metadata/references-readme-5e6e29a1.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:29Z",
+      "title": "References Readme 5e6e29a1"
+    },
+    {
+      "id": "release-notes-readme-7d0a2391",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/release-notes-readme-7d0a2391.md",
+      "metadata_path": "metadata/release-notes-readme-7d0a2391.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:29Z",
+      "title": "Release Notes Readme 7d0a2391"
+    },
+    {
+      "id": "release-notes-v0-1-0a089890",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/release-notes-v0-1-0a089890.md",
+      "metadata_path": "metadata/release-notes-v0-1-0a089890.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:29Z",
+      "title": "Release Notes V0 1 0a089890"
+    },
+    {
+      "id": "release-notes-v0-1-template-c33be81c",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/release-notes-v0-1-template-c33be81c.md",
+      "metadata_path": "metadata/release-notes-v0-1-template-c33be81c.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:29Z",
+      "title": "Release Notes V0 1 Template C33be81c"
+    },
+    {
+      "id": "troubleshooting-common-errors-25830e34",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/troubleshooting-common-errors-25830e34.md",
+      "metadata_path": "metadata/troubleshooting-common-errors-25830e34.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:30Z",
+      "title": "Troubleshooting Common Errors 25830e34"
+    },
+    {
+      "id": "troubleshooting-readme-999aea86",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/troubleshooting-readme-999aea86.md",
+      "metadata_path": "metadata/troubleshooting-readme-999aea86.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:29Z",
+      "title": "Troubleshooting Readme 999aea86"
+    },
+    {
+      "id": "workflows-evaluation-gate-77815a42",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/workflows-evaluation-gate-77815a42.md",
+      "metadata_path": "metadata/workflows-evaluation-gate-77815a42.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:30Z",
+      "title": "Workflows Evaluation Gate 77815a42"
+    },
+    {
+      "id": "workflows-readme-787eb813",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/workflows-readme-787eb813.md",
+      "metadata_path": "metadata/workflows-readme-787eb813.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:30Z",
+      "title": "Workflows Readme 787eb813"
+    },
+    {
+      "id": "workflows-snapshot-recovery-0fec6745",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/workflows-snapshot-recovery-0fec6745.md",
+      "metadata_path": "metadata/workflows-snapshot-recovery-0fec6745.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:30Z",
+      "title": "Workflows Snapshot Recovery 0fec6745"
+    },
+    {
+      "id": "workflows-write-retrieve-baseline-e41eba8a",
+      "type": "instruction",
+      "domain": "docs-crawl",
+      "path": "instructions/docs-crawl/workflows-write-retrieve-baseline-e41eba8a.md",
+      "metadata_path": "metadata/workflows-write-retrieve-baseline-e41eba8a.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T04:55:31Z",
+      "title": "Workflows Write Retrieve Baseline E41eba8a"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://athena.teamorchestrator.com/sitemap.xml
+
