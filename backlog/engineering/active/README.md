@@ -8,4 +8,3 @@ Ordered execution queue for engineering implementation.
 
 ## Active Sequence
 None.
-1. `backlog/engineering/active/STORY-20260222-release-checkpoint-refresh-v01.md`

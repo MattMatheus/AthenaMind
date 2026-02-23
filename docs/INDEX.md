@@ -4,7 +4,16 @@
 - `README.md`
 - `AGENTS.md`
 
-## Core Areas
+## User Documentation
+- `getting-started/README.md`
+- `concepts/README.md`
+- `cli/README.md`
+- `workflows/README.md`
+- `troubleshooting/README.md`
+- `faq/README.md`
+- `release-notes/README.md`
+
+## System and Process Documentation
 - `architecture/README.md`
 - `product/README.md`
 - `operations/README.md`

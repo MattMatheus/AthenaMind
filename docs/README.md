@@ -13,6 +13,13 @@ This is the wiki-facing documentation root.
 
 ## Start Here
 - `AGENTS.md`
+- `getting-started/README.md`
+- `concepts/README.md`
+- `cli/README.md`
+- `workflows/README.md`
+- `troubleshooting/README.md`
+- `faq/README.md`
+- `release-notes/README.md`
 - `process/README.md`
 - `architecture/README.md`
 - `product/README.md`
