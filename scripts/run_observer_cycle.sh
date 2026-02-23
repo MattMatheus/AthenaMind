@@ -3,10 +3,50 @@ set -euo pipefail
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root_dir"
+memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
 
 cycle_id=""
 story_path=""
 out_path=""
+
+emit_episode_writeback() {
+  local files_csv="$1"
+  local story_id="$2"
+  local summary_file="$3"
+  local decisions_file="$4"
+  local write_output
+  local repo_id
+  local session_id
+
+  if ! command -v "$memory_cli_bin" >/dev/null 2>&1; then
+    echo "warning: episode write-back skipped; '$memory_cli_bin' not found" >&2
+    return 0
+  fi
+
+  repo_id="$(basename "$root_dir")"
+  session_id="observer-$cycle_slug"
+  if ! write_output="$("$memory_cli_bin" episode write \
+    --root "$root_dir/memory" \
+    --repo "$repo_id" \
+    --session-id "$session_id" \
+    --cycle-id "$cycle_id" \
+    --story-id "$story_id" \
+    --outcome "success" \
+    --summary-file "$summary_file" \
+    --files-changed "$files_csv" \
+    --decisions-file "$decisions_file" \
+    --stage "pm" \
+    --reviewer "cycle-observer" \
+    --decision "approved" \
+    --notes "observer cycle closure write-back" \
+    --reason "record cycle outcome for stage bootstrap context" \
+    --risk "low risk append-only memory update" 2>&1)"; then
+    echo "warning: episode write-back skipped; memory-cli command failed: $write_output" >&2
+    return 0
+  fi
+
+  echo "memory episode write-back: recorded for cycle '$cycle_id'"
+}
 
 usage() {
   cat <<USAGE
@@ -78,13 +118,16 @@ generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 tmp_staged="$(mktemp)"
 tmp_unstaged="$(mktemp)"
 tmp_untracked="$(mktemp)"
-trap 'rm -f "$tmp_staged" "$tmp_unstaged" "$tmp_untracked"' EXIT
+tmp_summary="$(mktemp)"
+tmp_decisions="$(mktemp)"
+trap 'rm -f "$tmp_staged" "$tmp_unstaged" "$tmp_untracked" "$tmp_summary" "$tmp_decisions"' EXIT
 
 git diff --cached --name-status > "$tmp_staged"
 git diff --name-status > "$tmp_unstaged"
 git ls-files --others --exclude-standard | sed 's/^/A\t/' > "$tmp_untracked"
 
 combined_status="$(cat "$tmp_staged" "$tmp_unstaged" "$tmp_untracked" | awk 'NF' | sort -u || true)"
+files_changed_csv="$(printf '%s\n' "$combined_status" | awk -F'\t' 'NF >= 2 {for (i = 2; i <= NF; i++) if ($i != "") print $i}' | sort -u | paste -sd, -)"
 
 idea_id="unknown"
 adr_refs="unknown"
@@ -135,5 +178,25 @@ fi
   echo "- [ ] release_checkpoint impact evaluated for stories touched in this cycle."
   echo "- [ ] If release-bound scope changed, update release bundle inputs."
 } > "$out_path"
+
+story_id="$cycle_slug"
+story_label="none"
+if [[ -n "$story_path" ]]; then
+  story_file="$(basename "$story_path")"
+  story_id="${story_file%.md}"
+  story_label="${story_path#"$root_dir/"}"
+fi
+
+cat > "$tmp_summary" <<EOF
+Cycle $cycle_id observer report generated on branch $branch at $generated_at.
+Story: $story_label
+Report: ${out_path#"$root_dir/"}
+EOF
+
+cat > "$tmp_decisions" <<EOF
+Generated deterministic observer report and wrote cycle outcome for bootstrap reuse.
+EOF
+
+emit_episode_writeback "$files_changed_csv" "$story_id" "$tmp_summary" "$tmp_decisions"
 
 printf '%s\n' "wrote: ${out_path#"$root_dir/"}"

@@ -85,6 +85,11 @@ Use this section as the unified "humans area." It points only to canonical docs 
 - Observer: `./scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
 - CI enforcement (Azure DevOps): `go test ./...` on push and PR (`azure-pipelines.yml`).
 
+### Memory Integration (Soft Dependency)
+- `launch_stage.sh` attempts `memory-cli bootstrap` and appends returned context to stage output.
+- `run_observer_cycle.sh` attempts `memory-cli episode write` after report generation.
+- If `memory-cli` is unavailable or returns an error, workflows continue with warning-only behavior.
+
 ## Backlog State Model
 - `backlog/engineering/intake/`: raw new engineering work (stories/bugs)
 - `backlog/engineering/active/`: ranked engineering execution queue

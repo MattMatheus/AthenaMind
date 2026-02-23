@@ -8,6 +8,7 @@ active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/backlog/architecture/active"
 arch_active_readme="$arch_active_dir/README.md"
 required_branch="dev"
+memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
 
 if ! git -C "$root_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "abort: not a git repository at $root_dir" >&2
@@ -45,6 +46,31 @@ select_top_story_from_lane() {
   find "$lane_dir" -maxdepth 1 -type f -name '*.md' ! -name 'README.md' | sort | head -n1
 }
 
+emit_memory_bootstrap_context() {
+  local bootstrap_output
+  local repo_id
+  local session_id
+  local scenario_id
+
+  if ! command -v "$memory_cli_bin" >/dev/null 2>&1; then
+    echo "warning: memory bootstrap skipped; '$memory_cli_bin' not found" >&2
+    return 0
+  fi
+
+  repo_id="$(basename "$root_dir")"
+  session_id="launch-$stage-$(date -u +"%Y%m%dT%H%M%SZ")"
+  scenario_id="$stage"
+  if ! bootstrap_output="$("$memory_cli_bin" bootstrap --root "$root_dir/memory" --repo "$repo_id" --session-id "$session_id" --scenario "$scenario_id" 2>&1)"; then
+    echo "warning: memory bootstrap skipped; bootstrap command failed: $bootstrap_output" >&2
+    return 0
+  fi
+
+  echo "memory_bootstrap_context:"
+  while IFS= read -r line; do
+    echo "  $line"
+  done <<< "$bootstrap_output"
+}
+
 case "$stage" in
   engineering)
     top_story="$(select_top_story_from_lane "$active_dir" "$active_readme" || true)"
@@ -80,6 +106,7 @@ checklist:
   6) move story to backlog/engineering/qa
   7) do not commit yet (cycle-level commit after observer step)
 EOF
+    emit_memory_bootstrap_context
     ;;
   qa)
     cat <<EOF
@@ -93,6 +120,7 @@ checklist:
   5) run observer: scripts/run_observer_cycle.sh --cycle-id <story-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_memory_bootstrap_context
     ;;
   pm)
     cat <<EOF
@@ -106,6 +134,7 @@ checklist:
   5) run observer: scripts/run_observer_cycle.sh --cycle-id PM-<date>-<slug>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_memory_bootstrap_context
     ;;
   planning)
     cat <<EOF
@@ -119,6 +148,7 @@ checklist:
   5) run observer: scripts/run_observer_cycle.sh --cycle-id <plan-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_memory_bootstrap_context
     ;;
   architect)
     top_arch_story="$(select_top_story_from_lane "$arch_active_dir" "$arch_active_readme" || true)"
@@ -140,6 +170,7 @@ checklist:
   5) move story to backlog/architecture/qa
   6) do not commit yet (cycle-level commit after observer step)
 EOF
+    emit_memory_bootstrap_context
     ;;
   cycle)
     cat <<EOF
@@ -155,6 +186,7 @@ loop:
   - commit once: cycle-<cycle-id>
   - repeat until active backlog is drained
 EOF
+    emit_memory_bootstrap_context
     ;;
   *)
     echo "usage: scripts/launch_stage.sh [engineering|qa|pm|planning|architect|cycle]" >&2

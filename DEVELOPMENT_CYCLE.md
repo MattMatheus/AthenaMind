@@ -22,6 +22,11 @@ Quick launch helper:
 - `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
 - CI gate (Azure DevOps): `go test ./...` runs on push and PR via `azure-pipelines.yml`.
 
+Memory integration (soft dependency):
+- `launch_stage.sh` invokes `memory-cli bootstrap` and appends bootstrap context to stage output when available.
+- `run_observer_cycle.sh` invokes `memory-cli episode write` after observer report generation when available.
+- Missing/failed `memory-cli` calls must not block stage flow; scripts emit warnings and proceed.
+
 ## Doc Validation Standard
 - Canonical docs validation command: `scripts/run_doc_tests.sh`
 - Story-specific doc tests live under `scripts/test_*.sh`.

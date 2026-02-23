@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 5
-- `engineering_qa_count`: 1
-- `engineering_done_story_count`: 35
+- `engineering_active_count`: 4
+- `engineering_qa_count`: 2
+- `engineering_done_story_count`: 36
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,7 +21,7 @@
 - `v0.3`: not started
 
 ## Now
-- Execute v0.1 foundational queue refresh starting with `STORY-20260223-launch-stage-memory-integration`.
+- Execute v0.1 foundational queue refresh starting with `STORY-20260223-add-ci-pipeline`.
 - Preserve dependency order across bootstrap/write-back/integration stories to close the memory dogfooding loop.
 - Keep weekly KPI monitoring active while active queue throughput resumes.
 

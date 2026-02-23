@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-launch-stage-memory-integration
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: done
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0001, ADR-0002, ADR-0009]
