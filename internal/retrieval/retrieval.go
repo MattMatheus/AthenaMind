@@ -48,20 +48,26 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 		return types.RetrieveResult{}, "", errors.New("memory index has no entries")
 	}
 
-	candidates, err := loadCandidates(root, idx.Entries, domain)
+	candidates, skippedCandidates, err := loadCandidates(root, idx.Entries, domain)
 	if err != nil {
 		return types.RetrieveResult{}, "", err
 	}
 	if len(candidates) == 0 {
+		if skippedCandidates > 0 {
+			return types.RetrieveResult{}, "", fmt.Errorf("no candidates found for query/domain; skipped %d invalid entries", skippedCandidates)
+		}
 		return types.RetrieveResult{}, "", errors.New("no candidates found for query/domain")
 	}
 
 	q := strings.ToLower(strings.TrimSpace(query))
-	warning := ""
+	warnings := []string{}
+	if skippedCandidates > 0 {
+		warnings = append(warnings, fmt.Sprintf("skipped %d invalid entries during candidate load", skippedCandidates))
+	}
 	embeddingScoresApplied := false
 	queryEmbedding, embedErr := GenerateEmbedding(embeddingEndpoint, q)
 	if embedErr != nil {
-		warning = fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr)
+		warnings = append(warnings, fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr))
 	}
 	profile := ActiveEmbeddingProfile(embeddingEndpoint)
 	ids := make([]string, 0, len(candidates))
@@ -70,7 +76,7 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 	}
 	embeddings, embLoadErr := index.GetEmbeddingRecords(root, ids)
 	if embLoadErr != nil {
-		warning = fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr)
+		warnings = append(warnings, fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr))
 	}
 
 	for i := range candidates {
@@ -88,8 +94,8 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 			}
 		}
 	}
-	if len(queryEmbedding) > 0 && !embeddingScoresApplied && warning == "" {
-		warning = "embedding unavailable for candidate entries; using token-overlap scoring"
+	if len(queryEmbedding) > 0 && !embeddingScoresApplied {
+		warnings = append(warnings, "embedding unavailable for candidate entries; using token-overlap scoring")
 	}
 	sort.SliceStable(candidates, func(i, j int) bool {
 		if candidates[i].Score == candidates[j].Score {
@@ -124,7 +130,7 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 			FallbackUsed:  true,
 			SemanticHit:   false,
 			PrecisionHint: 0,
-		}, warning, nil
+		}, joinWarnings(warnings), nil
 	}
 
 	if IsSemanticConfident(top.Score, second) {
@@ -141,7 +147,7 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 			FallbackUsed:  false,
 			SemanticHit:   true,
 			PrecisionHint: 1,
-		}, warning, nil
+		}, joinWarnings(warnings), nil
 	}
 
 	for _, c := range candidates {
@@ -155,7 +161,7 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 				FallbackUsed:  true,
 				SemanticHit:   false,
 				PrecisionHint: 0,
-			}, warning, nil
+			}, joinWarnings(warnings), nil
 		}
 	}
 
@@ -175,7 +181,7 @@ func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpo
 		FallbackUsed:  true,
 		SemanticHit:   false,
 		PrecisionHint: 0,
-	}, warning, nil
+	}, joinWarnings(warnings), nil
 }
 
 func isEmbeddingCompatible(profile EmbeddingProfile, queryDim int, rec types.EmbeddingRecord) bool {
@@ -218,8 +224,9 @@ func embeddingFreshnessBonus(rec types.EmbeddingRecord, sessionID string) float6
 	return bonus
 }
 
-func loadCandidates(root string, entries []types.IndexEntry, domain string) ([]candidate, error) {
+func loadCandidates(root string, entries []types.IndexEntry, domain string) ([]candidate, int, error) {
 	candidates := make([]candidate, 0, len(entries))
+	skipped := 0
 	for _, e := range entries {
 		if domain != "" && e.Domain != domain {
 			continue
@@ -229,15 +236,34 @@ func loadCandidates(root string, entries []types.IndexEntry, domain string) ([]c
 		}
 		data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(e.Path)))
 		if err != nil {
-			return nil, err
+			skipped++
+			continue
 		}
 		meta, err := loadMetadata(root, e)
 		if err != nil {
-			return nil, err
+			skipped++
+			continue
 		}
 		candidates = append(candidates, candidate{Entry: e, Meta: meta, Body: string(data)})
 	}
-	return candidates, nil
+	return candidates, skipped, nil
+}
+
+func joinWarnings(warnings []string) string {
+	unique := map[string]struct{}{}
+	out := make([]string, 0, len(warnings))
+	for _, warning := range warnings {
+		trimmed := strings.TrimSpace(warning)
+		if trimmed == "" {
+			continue
+		}
+		if _, exists := unique[trimmed]; exists {
+			continue
+		}
+		unique[trimmed] = struct{}{}
+		out = append(out, trimmed)
+	}
+	return strings.Join(out, "; ")
 }
 
 func loadMetadata(root string, entry types.IndexEntry) (types.MetadataFile, error) {

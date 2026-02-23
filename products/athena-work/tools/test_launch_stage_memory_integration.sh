@@ -4,6 +4,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 launch_script="$root_dir/tools/launch_stage.sh"
+current_branch="$(git -C "$root_dir" branch --show-current)"
 
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
@@ -25,7 +26,7 @@ exit 1
 EOF
 chmod +x "$stub_bin/memory-cli"
 
-output="$(PATH="$stub_bin:$PATH" MEMORY_CLI_TEST_LOG="$args_log" "$launch_script" pm)"
+output="$(PATH="$stub_bin:$PATH" MEMORY_CLI_TEST_LOG="$args_log" ATHENA_REQUIRED_BRANCH="$current_branch" "$launch_script" pm)"
 if grep -Fq "memory_bootstrap_context:" <<<"$output" && grep -Fq "stub-entry" <<<"$output"; then
   echo "PASS: launch_stage appends memory bootstrap context when memory-cli is available"
 else
@@ -43,7 +44,7 @@ else
 fi
 
 warn_file="$tmp_dir/warn.log"
-MEMORY_CLI_BIN="memory-cli-missing-for-test" "$launch_script" qa > /dev/null 2>"$warn_file"
+MEMORY_CLI_BIN="memory-cli-missing-for-test" ATHENA_REQUIRED_BRANCH="$current_branch" "$launch_script" qa > /dev/null 2>"$warn_file"
 if grep -Fq "warning: memory bootstrap skipped" "$warn_file"; then
   echo "PASS: launch_stage degrades gracefully when memory-cli is unavailable"
 else
