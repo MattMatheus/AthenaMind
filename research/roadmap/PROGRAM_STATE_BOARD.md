@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 1
+- `engineering_active_count`: 0
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 25
+- `engineering_done_story_count`: 26
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,14 +21,14 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `STORY-20260222-release-checkpoint-refresh-v01` to reconcile release scope/evidence and set explicit ship/hold decision from current KPI evidence.
-- Keep release decision at `hold` until release checkpoint refresh completes.
-- Ensure release bundle reflects post-hardening KPI delta evidence before any ship decision.
+- Run PM refinement because engineering active queue is empty.
+- Confirm released bundle scope remains aligned to backlog state after QA closure.
+- Keep weekly KPI monitoring active to ensure post-hardening quality remains inside target bands.
 
 ## Next
-- If KPI evidence clears thresholds, update release bundle decision from `hold` to explicit `ship` with rationale.
-- Sequence deferred roadmap work only after v0.1 release checkpoint decision is finalized.
+- Sequence deferred roadmap work only after PM confirms release-checkpoint closure and queue refresh.
 - Rebaseline founder snapshot signals against the refreshed release bundle.
+- Continue weekly KPI cadence to verify post-hardening trends hold.
 
 ## Risks
 - Strategic docs can drift from backlog state without enforced consistency tests.

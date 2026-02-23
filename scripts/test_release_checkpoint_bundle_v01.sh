@@ -11,7 +11,12 @@ doc_test_init
 
 doc_assert_exists "$bundle" "Release checkpoint bundle exists"
 doc_assert_contains "$bundle" "## Decision" "Release bundle includes decision section"
-doc_assert_contains "$bundle" "hold" "Release bundle records explicit hold/ship decision"
+if rg -q '^[[:space:]]*-[[:space:]]*`(ship|hold)`' "$bundle"; then
+  echo "PASS: Release bundle records explicit hold/ship decision"
+else
+  echo "FAIL: Release bundle records explicit hold/ship decision"
+  DOC_TEST_FAILURES=$((DOC_TEST_FAILURES + 1))
+fi
 doc_assert_contains "$bundle" "Included stories" "Release bundle includes scope stories"
 doc_assert_contains "$bundle" "QA result artifacts" "Release bundle includes QA evidence"
 doc_assert_contains "$bundle" "Validation commands/results" "Release bundle includes validation evidence"
