@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 2
+- `engineering_active_count`: 1
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 24
+- `engineering_done_story_count`: 25
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,9 +21,9 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01` to publish post-hardening metric deltas vs baseline.
-- Keep release decision at `hold` until KPI delta evidence is published and checkpoint risks are re-evaluated.
-- Run queued release-control stories in order: KPI delta snapshot -> release checkpoint refresh.
+- Execute `STORY-20260222-release-checkpoint-refresh-v01` to reconcile release scope/evidence and set explicit ship/hold decision from current KPI evidence.
+- Keep release decision at `hold` until release checkpoint refresh completes.
+- Ensure release bundle reflects post-hardening KPI delta evidence before any ship decision.
 
 ## Next
 - If KPI evidence clears thresholds, update release bundle decision from `hold` to explicit `ship` with rationale.
@@ -40,4 +40,5 @@
 - Readiness decision: `research/roadmap/CODING_READINESS_DECISION_2026-02-22.md`
 - Exit gates: `docs/process/STAGE_EXIT_GATES.md`
 - KPI baseline snapshot: `work-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+- KPI post-hardening delta snapshot: `work-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md`
 - Release checkpoint bundle: `work-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`

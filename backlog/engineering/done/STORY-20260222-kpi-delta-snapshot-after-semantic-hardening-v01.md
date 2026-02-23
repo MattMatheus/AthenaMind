@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01
 - `owner_persona`: QA Engineer - Iris.md
-- `status`: active
+- `status`: done
 - `idea_id`: PLAN-20260222-architecture-gap-to-execution
 - `phase`: v0.1
 - `adr_refs`: [ADR-0002, ADR-0008, ADR-0015]
