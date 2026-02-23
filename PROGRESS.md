@@ -49,3 +49,9 @@
 - Validation:
   - `go test ./internal/index` passed.
   - `go test ./...` passed after the change.
+
+## 2026-02-23T10:21:34Z — Release prep
+- Added release artifact:
+  - `/products/athena-work/operating-system/handoff/RELEASE_BUNDLE_v0.1-experiment-memory-work-hardening-2026-02-23.md`
+- Included ship decision, scope, evidence, risk/rollback, and expected outcome signals.
+- Next action: publish branch and open PR to upstream repository.
