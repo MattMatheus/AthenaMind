@@ -1,6 +1,6 @@
 # AthenaMind
 
-AthenaMind is a Go-based memory toolchain for agent workflows. It supports governed writes, retrieval, bootstrap payload generation, snapshots, episode logging, and embedding-backed semantic search over a local memory root.
+AthenaMind is a Go-based memory toolchain for agent workflows. It supports governed writes, retrieval, bootstrap payload generation, snapshots, and episode logging over a local memory root.
 
 ## Root Entry Points
 - `README.md`: product and CLI quick orientation
@@ -11,12 +11,20 @@ AthenaMind is a Go-based memory toolchain for agent workflows. It supports gover
 - `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`: day-to-day execution loop
 - `knowledge-base/process/PM-TODO.md`: PM control-plane checklist
 - `knowledge-base/process/PRE_CODING_PATH.md`: coding readiness gate path
+- `knowledge-base/product/VISION.md`: preserved long-term product direction
+- `product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`: phased execution plan
+
+## What v0.1 Delivers Today
+- Local-first memory write and retrieve workflow
+- Governance-aware mutation lifecycle
+- Snapshot lifecycle (`create`, `list`, `restore`)
+- Episode write-back and retrieval support
+- Deterministic crawl ingestion for local docs
 
 ## Current Operating Model
 - Toolchain root: `/Users/foundry/Source/orchestrator/AthenaMind`
 - Active memory root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/core`
 - Optional work root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/work`
-- Embeddings: Azure OpenAI when `AZURE_OPENAI_ENDPOINT` and credentials are present
 - Latency fallback policy: configurable with `MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS` (`0` disables latency fallback)
 
 ## Command Surface
@@ -25,7 +33,7 @@ Implemented command families in `cmd/memory-cli`:
 - `retrieve`
 - `evaluate`
 - `bootstrap`
-- `verify` (`embeddings`)
+- `verify`
 - `reindex-all`
 - `crawl`
 - `snapshot` (`create`, `list`, `restore`)
@@ -44,7 +52,19 @@ set -a; source /Users/foundry/Source/orchestrator/AthenaMind/.env; set +a
 mkdir -p /Users/foundry/Source/orchestrator/AthenaMind-Memory/core /Users/foundry/Source/orchestrator/AthenaMind-Memory/work
 ```
 
-3. Crawl docs into memory (collision-safe IDs are path-based and deterministic):
+3. Write a memory entry:
+```bash
+go run ./cmd/memory-cli write \
+  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --type prompt \
+  --domain docs-crawl \
+  --id intro-note \
+  --title "Intro note" \
+  --content "AthenaMind write path smoke check." \
+  --reviewer system
+```
+
+4. Crawl docs into memory (collision-safe IDs are path-based and deterministic):
 ```bash
 go run ./cmd/memory-cli crawl \
   --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
@@ -53,15 +73,9 @@ go run ./cmd/memory-cli crawl \
   --reviewer system
 ```
 
-4. Build missing embeddings:
+5. Refresh index artifacts:
 ```bash
 go run ./cmd/memory-cli reindex-all \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
-```
-
-5. Verify embedding coverage:
-```bash
-go run ./cmd/memory-cli verify embeddings \
   --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
 ```
 

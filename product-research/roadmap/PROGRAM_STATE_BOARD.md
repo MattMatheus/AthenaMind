@@ -9,7 +9,7 @@
 - `engineering_intake_count`: 0
 - `engineering_active_count`: 0
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 41
+- `engineering_done_story_count`: 43
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
