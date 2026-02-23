@@ -248,7 +248,7 @@ func tokenSet(s string) map[string]struct{} {
 
 func IsSemanticConfident(top, second float64) bool {
 	const minConfidence = 0.34
-	const minMargin = 0.15
+	const minMargin = 0.03
 	if top < minConfidence {
 		return false
 	}

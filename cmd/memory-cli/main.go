@@ -27,6 +27,10 @@ func main() {
 		err = runEvaluate(os.Args[2:])
 	case "bootstrap":
 		err = runBootstrap(os.Args[2:])
+	case "reindex-all":
+		err = runReindexAll(os.Args[2:])
+	case "crawl":
+		err = runCrawl(os.Args[2:])
 	case "episode":
 		err = runEpisode(os.Args[2:])
 	default:

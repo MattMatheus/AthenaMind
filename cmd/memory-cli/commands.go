@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -708,6 +709,137 @@ func runSnapshotRestore(args []string) (err error) {
 		Timestamp:  time.Now().UTC().Format(time.RFC3339),
 	})
 
+	return nil
+}
+
+func runReindexAll(args []string) error {
+	fs := flag.NewFlagSet("reindex-all", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "memory", "memory root path")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	idx, err := index.LoadIndex(*root)
+	if err != nil {
+		return err
+	}
+
+	embeddings, err := index.GetEmbeddings(*root, nil) // nil to get all existing
+	if err != nil {
+		return err
+	}
+
+	var missing []string
+	for _, e := range idx.Entries {
+		if vec, ok := embeddings[e.ID]; !ok || len(vec) == 0 {
+			missing = append(missing, e.ID)
+		}
+	}
+
+	if len(missing) == 0 {
+		fmt.Println("No entries missing embeddings.")
+		return nil
+	}
+
+	fmt.Printf("Reindexing %d entries...\n", len(missing))
+	warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, missing, *embeddingEndpoint)
+	if err != nil {
+		return err
+	}
+
+	for _, w := range warnings {
+		fmt.Fprintf(os.Stderr, "warning: %s\n", w)
+	}
+
+	fmt.Printf("Successfully processed %d entries.\n", len(missing))
+	return nil
+}
+
+func runCrawl(args []string) error {
+	fs := flag.NewFlagSet("crawl", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "memory", "memory root path")
+	dir := fs.String("dir", "", "directory to crawl for markdown files")
+	domain := fs.String("domain", "auto-crawled", "domain for crawled entries")
+	reviewer := fs.String("reviewer", "system", "reviewer identity")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
+
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *dir == "" {
+		return errors.New("--dir is required")
+	}
+
+	var mdFiles []string
+	err := filepath.Walk(*dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && strings.HasSuffix(strings.ToLower(info.Name()), ".md") {
+			// Skip files in the memory root itself
+			absPath, _ := filepath.Abs(path)
+			absRoot, _ := filepath.Abs(*root)
+			if !strings.HasPrefix(absPath, absRoot) {
+				mdFiles = append(mdFiles, path)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if len(mdFiles) == 0 {
+		fmt.Printf("No markdown files found in %s\n", *dir)
+		return nil
+	}
+
+	fmt.Printf("Found %d markdown files. Indexing...\n", len(mdFiles))
+
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: *reviewer,
+		Reason:   "bulk crawl indexing",
+		Notes:    "automated crawl",
+		Risk:     "none",
+	}
+
+	var processedIDs []string
+	for _, f := range mdFiles {
+		id := strings.TrimSuffix(filepath.Base(f), ".md")
+		title := strings.Title(strings.ReplaceAll(id, "-", " "))
+
+		upsertIn := types.UpsertEntryInput{
+			ID:       id,
+			Title:    title,
+			Type:     "instruction",
+			Domain:   *domain,
+			BodyFile: f,
+			Stage:    "pm",
+		}
+
+		if err := index.UpsertEntry(*root, upsertIn, policy); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: failed to index %s: %v\n", f, err)
+			continue
+		}
+		processedIDs = append(processedIDs, id)
+	}
+
+	if len(processedIDs) > 0 {
+		fmt.Printf("Batch embedding %d entries...\n", len(processedIDs))
+		warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, processedIDs, *embeddingEndpoint)
+		if err != nil {
+			return err
+		}
+		for _, w := range warnings {
+			fmt.Fprintf(os.Stderr, "warning: %s\n", w)
+		}
+	}
+
+	fmt.Printf("Successfully crawled and indexed %d files.\n", len(processedIDs))
 	return nil
 }
 
