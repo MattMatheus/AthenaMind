@@ -5,18 +5,40 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 cd "$root_dir"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
+memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
+repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 
 cycle_id=""
 story_path=""
 out_path=""
+
+infer_policy_stage() {
+  local cycle_value="$1"
+  local story_value="$2"
+  local lower_cycle
+  local lower_story
+
+  lower_cycle="$(printf '%s' "$cycle_value" | tr '[:upper:]' '[:lower:]')"
+  lower_story="$(printf '%s' "$story_value" | tr '[:upper:]' '[:lower:]')"
+
+  if [[ "$lower_story" == *"/architecture/"* ]] || [[ "$lower_cycle" == arch-* ]] || [[ "$lower_cycle" == *"architect"* ]]; then
+    echo "architect"
+    return 0
+  fi
+  if [[ "$lower_cycle" == plan-* ]] || [[ "$lower_cycle" == *"planning"* ]]; then
+    echo "planning"
+    return 0
+  fi
+  echo "pm"
+}
 
 emit_episode_writeback() {
   local files_csv="$1"
   local story_id="$2"
   local summary_file="$3"
   local decisions_file="$4"
+  local policy_stage="$5"
   local write_output
-  local repo_id
   local session_id
 
   if ! command -v "$memory_cli_bin" >/dev/null 2>&1; then
@@ -24,10 +46,9 @@ emit_episode_writeback() {
     return 0
   fi
 
-  repo_id="$(basename "$root_dir")"
   session_id="observer-$cycle_slug"
   if ! write_output="$("$memory_cli_bin" episode write \
-    --root "$root_dir/memory" \
+    --root "$memory_root" \
     --repo "$repo_id" \
     --session-id "$session_id" \
     --cycle-id "$cycle_id" \
@@ -36,7 +57,7 @@ emit_episode_writeback() {
     --summary-file "$summary_file" \
     --files-changed "$files_csv" \
     --decisions-file "$decisions_file" \
-    --stage "pm" \
+    --stage "$policy_stage" \
     --reviewer "cycle-observer" \
     --decision "approved" \
     --notes "observer cycle closure write-back" \
@@ -198,6 +219,7 @@ cat > "$tmp_decisions" <<EOF
 Generated deterministic observer report and wrote cycle outcome for bootstrap reuse.
 EOF
 
-emit_episode_writeback "$files_changed_csv" "$story_id" "$tmp_summary" "$tmp_decisions"
+policy_stage="$(infer_policy_stage "$cycle_id" "$story_label")"
+emit_episode_writeback "$files_changed_csv" "$story_id" "$tmp_summary" "$tmp_decisions" "$policy_stage"
 
 printf '%s\n' "wrote: ${out_path#"$root_dir/"}"

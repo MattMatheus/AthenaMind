@@ -20,6 +20,6 @@ doc_assert_contains "$cycle_index" "delivery-backlog/architecture/active/" "Cycl
 doc_assert_contains "$cycle_index" "staff-personas/STAFF_DIRECTORY.md" "Cycle index links staff directory"
 doc_assert_contains "$cycle_index" "product-research/handoff.md" "Cycle index links handoff docs"
 doc_assert_contains "$cycle_index" "no stories" "Cycle index includes no-stories behavior"
-doc_assert_contains "$cycle_index" "expected 'dev'" "Cycle index includes branch safety rule"
+doc_assert_contains "$cycle_index" "expected '<required-branch>'" "Cycle index includes branch safety rule"
 
 doc_test_finish

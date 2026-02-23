@@ -9,7 +9,7 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 ## Startup Routine
 1. Open workspace at repo root and confirm branch discipline:
    - Run `git branch --show-current`
-   - If branch is not `dev`, switch/fix before running stages.
+   - Ensure branch matches `ATHENA_REQUIRED_BRANCH` (default dev) before running stages.
 2. Check current cycle context:
    - Read `knowledge-base/process/CYCLE_INDEX.md`
    - Read `DEVELOPMENT_CYCLE.md`
