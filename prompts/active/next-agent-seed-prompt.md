@@ -15,6 +15,7 @@ Your task is to execute the top story in `backlog/engineering/active/`.
    - Apply `backlog/STATE_TRANSITION_CHECKLIST.md` before moving story state.
 3. Update tests.
 4. Run tests with the canonical docs command (`scripts/run_doc_tests.sh`) plus any story-specific test commands. Tests must pass.
+   - Include `go test ./...` before handoff.
 5. Prepare handoff package.
 6. Move the story to `backlog/engineering/qa/`.
 7. Do not commit yet; cycle commit occurs only after QA + observer.

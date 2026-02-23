@@ -20,6 +20,7 @@ Quick launch helper:
 - `scripts/launch_stage.sh pm`
 - `scripts/launch_stage.sh cycle`
 - `scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
+- CI gate (Azure DevOps): `go test ./...` runs on push and PR via `azure-pipelines.yml`.
 
 ## Doc Validation Standard
 - Canonical docs validation command: `scripts/run_doc_tests.sh`
@@ -51,6 +52,7 @@ Quick launch helper:
 PM intake validation requirement:
 - Run `scripts/validate_intake_items.sh` before promoting intake items to active queues.
 - Validation failures must be fixed (metadata/status) and lane crossover must be corrected before ranking.
+- Ranking must apply product-first weighting per `docs/process/BACKLOG_WEIGHTING_POLICY.md`.
 
 Traceability requirement:
 - New stories and bugs must include `phase`, ADR references, and metric traceability metadata.
@@ -61,6 +63,11 @@ Program board requirement:
 
 Stage exit gates:
 - Use `docs/process/STAGE_EXIT_GATES.md` as mandatory acceptance gate for stage transitions and cycle closure.
+
+Backlog weighting policy:
+- PM ranks product stories above process stories by default.
+- Process stories may outrank product work only when a broken process is blocking delivery or stage-gate enforcement.
+- Record the override reason in queue notes when process work is elevated.
 
 No-time-estimate rule:
 - Pipeline sequencing is value/risk/dependency based; do not require duration estimates in stage artifacts.

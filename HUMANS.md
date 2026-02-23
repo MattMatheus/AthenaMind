@@ -5,6 +5,7 @@ Quick operator guide for founders and new helpers.
 ## Summary
 This repo runs a staged workflow: Planning (as needed) -> Architect (as needed) -> Engineering -> QA -> PM Refinement.
 Use launcher commands to start each stage safely.
+Backlog ranking is product-first unless process defects are actively blocking delivery (`docs/process/BACKLOG_WEIGHTING_POLICY.md`).
 
 Commit policy is cycle-based:
 - Do not commit at intermediate stage transitions.
@@ -33,6 +34,8 @@ Use this section as the unified "humans area." It points only to canonical docs 
 ### Release and Ship Readiness
 - Stage exit gates (mandatory):
   - `docs/process/STAGE_EXIT_GATES.md`
+- Backlog weighting policy (mandatory for PM ranking):
+  - `docs/process/BACKLOG_WEIGHTING_POLICY.md`
 - Release bundle policy/template (`done` != shipped):
   - `work-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
 - Observer policy and artifacts:
@@ -64,6 +67,7 @@ Use this section as the unified "humans area." It points only to canonical docs 
 
 ## Program Control Plane
 - PM must keep `research/roadmap/PROGRAM_STATE_BOARD.md` current after each refinement cycle.
+- PM must apply product-first backlog weighting during queue ranking (`docs/process/BACKLOG_WEIGHTING_POLICY.md`).
 - New intake items must include traceability metadata:
   - `idea_id`, `phase`, `adr_refs`, and one metric field.
 - `done` is not automatically `shipped`:
@@ -79,6 +83,7 @@ Use this section as the unified "humans area." It points only to canonical docs 
 - PM: `./scripts/launch_stage.sh pm`
 - Continuous loop: `./scripts/launch_stage.sh cycle`
 - Observer: `./scripts/run_observer_cycle.sh --cycle-id <cycle-id>`
+- CI enforcement (Azure DevOps): `go test ./...` on push and PR (`azure-pipelines.yml`).
 
 ## Backlog State Model
 - `backlog/engineering/intake/`: raw new engineering work (stories/bugs)

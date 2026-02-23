@@ -15,3 +15,4 @@ Documentation for how the team improves and governs the work system.
 ## Core Docs
 - `docs/process/STAGE_EXIT_GATES.md`
 - `docs/process/PROGRAM_OPERATING_SYSTEM.md`
+- `docs/process/BACKLOG_WEIGHTING_POLICY.md`

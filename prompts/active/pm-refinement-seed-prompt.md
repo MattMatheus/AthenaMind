@@ -15,6 +15,8 @@ Run this cycle when QA has created intake bugs or when `backlog/engineering/acti
    - rerun `scripts/validate_intake_items.sh` until it passes.
 4. Refine each item into clear, actionable stories/bug cards.
 5. Rank and move refined items to `backlog/engineering/active/` in execution order.
+   - Apply product-first weighting from `docs/process/BACKLOG_WEIGHTING_POLICY.md`.
+   - Process stories may outrank product work only when a broken process is blocking delivery or gate enforcement.
 6. Update `backlog/engineering/active/README.md` Active Sequence.
    - Verify queue/order updates remain consistent with `backlog/STATE_TRANSITION_CHECKLIST.md`.
 7. Update `research/roadmap/PROGRAM_STATE_BOARD.md` queue counts and Now/Next items.

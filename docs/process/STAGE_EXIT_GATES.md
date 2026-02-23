@@ -23,19 +23,21 @@ All must pass:
 All must pass:
 1. Intake validation passes (`scripts/validate_intake_items.sh`).
 2. Active queue is ranked and explicit in `backlog/engineering/active/README.md`.
-3. Active stories include traceability metadata (`idea_id`, `phase`, `adr_refs`, metric).
-4. Program board is updated (`research/roadmap/PROGRAM_STATE_BOARD.md`).
-5. PM TODO `Now` contains at least one actionable item.
+3. Product-first backlog weighting is applied per `docs/process/BACKLOG_WEIGHTING_POLICY.md`.
+4. Active stories include traceability metadata (`idea_id`, `phase`, `adr_refs`, metric).
+5. Program board is updated (`research/roadmap/PROGRAM_STATE_BOARD.md`).
+6. PM TODO `Now` contains at least one actionable item.
 
 ## Engineering Exit Gate
 All must pass:
 1. Story acceptance criteria are implemented.
 2. Tests updated for touched behavior.
 3. `scripts/run_doc_tests.sh` and story-specific tests pass.
-4. Handoff package is complete and includes risks/questions.
-5. New gaps are recorded as intake artifacts before handoff.
-6. Story transitions `active -> qa`.
-7. No stage-level commit is made before observer step.
+4. `go test ./...` passes locally and is eligible for CI enforcement in Azure DevOps.
+5. Handoff package is complete and includes risks/questions.
+6. New gaps are recorded as intake artifacts before handoff.
+7. Story transitions `active -> qa`.
+8. No stage-level commit is made before observer step.
 
 ## QA Exit Gate
 All must pass for `PASS`:
