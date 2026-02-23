@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -8,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -426,6 +429,70 @@ func runEpisode(args []string) error {
 	}
 }
 
+func runVerify(args []string) error {
+	if len(args) == 0 {
+		return errors.New("usage: memory-cli verify <embeddings> [flags]")
+	}
+	switch args[0] {
+	case "embeddings":
+		return runVerifyEmbeddings(args[1:])
+	default:
+		return fmt.Errorf("unknown verify subcommand: %s", args[0])
+	}
+}
+
+func runVerifyEmbeddings(args []string) error {
+	fs := flag.NewFlagSet("verify embeddings", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "memory", "memory root path")
+	showMissing := fs.Bool("show-missing", true, "include missing entry ids")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	idx, err := index.LoadIndex(*root)
+	if err != nil {
+		return err
+	}
+	embeddings, err := index.GetEmbeddings(*root, nil)
+	if err != nil {
+		return err
+	}
+
+	missing := make([]string, 0)
+	for _, e := range idx.Entries {
+		if vec, ok := embeddings[e.ID]; !ok || len(vec) == 0 {
+			missing = append(missing, e.ID)
+		}
+	}
+	sort.Strings(missing)
+
+	provider := "ollama_or_custom_endpoint"
+	if strings.TrimSpace(os.Getenv("AZURE_OPENAI_ENDPOINT")) != "" {
+		provider = "azure_openai"
+	}
+
+	report := struct {
+		Root              string   `json:"root"`
+		ProviderHint      string   `json:"provider_hint"`
+		IndexedEntries    int      `json:"indexed_entries"`
+		StoredEmbeddings  int      `json:"stored_embeddings"`
+		MissingEmbeddings int      `json:"missing_embeddings"`
+		MissingIDs        []string `json:"missing_ids,omitempty"`
+	}{
+		Root:              *root,
+		ProviderHint:      provider,
+		IndexedEntries:    len(idx.Entries),
+		StoredEmbeddings:  len(embeddings),
+		MissingEmbeddings: len(missing),
+	}
+	if *showMissing {
+		report.MissingIDs = missing
+	}
+
+	return printResult(report)
+}
+
 func runEpisodeWrite(args []string) (err error) {
 	fs := flag.NewFlagSet("episode write", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
@@ -809,7 +876,7 @@ func runCrawl(args []string) error {
 
 	var processedIDs []string
 	for _, f := range mdFiles {
-		id := strings.TrimSuffix(filepath.Base(f), ".md")
+		id := buildCrawlEntryID(*dir, f)
 		title := strings.Title(strings.ReplaceAll(id, "-", " "))
 
 		upsertIn := types.UpsertEntryInput{
@@ -841,6 +908,46 @@ func runCrawl(args []string) error {
 
 	fmt.Printf("Successfully crawled and indexed %d files.\n", len(processedIDs))
 	return nil
+}
+
+func buildCrawlEntryID(crawlRoot, filePath string) string {
+	rel, err := filepath.Rel(crawlRoot, filePath)
+	if err != nil || strings.HasPrefix(rel, "..") {
+		rel = filePath
+	}
+	rel = filepath.ToSlash(rel)
+	base := strings.TrimSuffix(rel, filepath.Ext(rel))
+	slug := slugify(base)
+	if slug == "" {
+		slug = "doc"
+	}
+	sum := sha1.Sum([]byte(rel))
+	suffix := hex.EncodeToString(sum[:4])
+	const maxSlugLen = 72
+	if len(slug) > maxSlugLen {
+		slug = slug[:maxSlugLen]
+	}
+	return slug + "-" + suffix
+}
+
+func slugify(s string) string {
+	var b strings.Builder
+	lastDash := false
+	for _, r := range strings.ToLower(s) {
+		isAlpha := r >= 'a' && r <= 'z'
+		isDigit := r >= '0' && r <= '9'
+		if isAlpha || isDigit {
+			b.WriteRune(r)
+			lastDash = false
+			continue
+		}
+		if !lastDash {
+			b.WriteByte('-')
+			lastDash = true
+		}
+	}
+	out := strings.Trim(b.String(), "-")
+	return out
 }
 
 func printResult(r any) error {

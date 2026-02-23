@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate|bootstrap|episode> [flags]"))
+		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate|bootstrap|verify|episode> [flags]"))
 	}
 
 	var err error
@@ -31,6 +31,8 @@ func main() {
 		err = runReindexAll(os.Args[2:])
 	case "crawl":
 		err = runCrawl(os.Args[2:])
+	case "verify":
+		err = runVerify(os.Args[2:])
 	case "episode":
 		err = runEpisode(os.Args[2:])
 	default:

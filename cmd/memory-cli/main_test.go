@@ -1054,3 +1054,77 @@ func TestEpisodeWriteBlockedDuringAutonomousRun(t *testing.T) {
 		t.Fatalf("expected autonomous run block, got %v", err)
 	}
 }
+
+func TestBuildCrawlEntryIDDeterministicAndUnique(t *testing.T) {
+	root := "/tmp/crawl"
+	a := buildCrawlEntryID(root, "/tmp/crawl/docs/README.md")
+	b := buildCrawlEntryID(root, "/tmp/crawl/guides/README.md")
+	c := buildCrawlEntryID(root, "/tmp/crawl/docs/README.md")
+	if a == "" || b == "" {
+		t.Fatal("expected non-empty crawl entry ids")
+	}
+	if a == b {
+		t.Fatalf("expected distinct ids for different paths, got %s", a)
+	}
+	if a != c {
+		t.Fatalf("expected deterministic id generation, first=%s second=%s", a, c)
+	}
+}
+
+func TestRunVerifyEmbeddingsReportsMissingVectors(t *testing.T) {
+	root := t.TempDir()
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "verify-entry",
+		"--title", "Verify Entry",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "verify embeddings output",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed verify test",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	outPath := filepath.Join(root, "verify.json")
+	oldStdout := os.Stdout
+	f, err := os.Create(outPath)
+	if err != nil {
+		t.Fatalf("create capture file: %v", err)
+	}
+	os.Stdout = f
+	defer func() { os.Stdout = oldStdout }()
+	if err := runVerifyEmbeddings([]string{"--root", root}); err != nil {
+		t.Fatalf("runVerifyEmbeddings failed: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatalf("close capture file: %v", err)
+	}
+
+	data, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read verify output: %v", err)
+	}
+	var report struct {
+		IndexedEntries    int      `json:"indexed_entries"`
+		StoredEmbeddings  int      `json:"stored_embeddings"`
+		MissingEmbeddings int      `json:"missing_embeddings"`
+		MissingIDs        []string `json:"missing_ids"`
+	}
+	if err := json.Unmarshal(data, &report); err != nil {
+		t.Fatalf("parse verify output: %v", err)
+	}
+	if report.IndexedEntries != 1 {
+		t.Fatalf("expected one indexed entry, got %d", report.IndexedEntries)
+	}
+	if report.MissingEmbeddings > report.IndexedEntries {
+		t.Fatalf("missing embeddings cannot exceed indexed entries: %+v", report)
+	}
+	if report.MissingEmbeddings > 0 && len(report.MissingIDs) == 0 {
+		t.Fatalf("expected missing ids when missing embeddings > 0, got %+v", report)
+	}
+}
