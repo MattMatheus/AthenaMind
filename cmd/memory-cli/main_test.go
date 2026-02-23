@@ -1128,3 +1128,80 @@ func TestRunVerifyEmbeddingsReportsMissingVectors(t *testing.T) {
 		t.Fatalf("expected missing ids when missing embeddings > 0, got %+v", report)
 	}
 }
+
+func TestRunVerifyHealthReportsPassWithSemanticAndCoverage(t *testing.T) {
+	root := t.TempDir()
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "health-entry",
+		"--title", "Health Entry",
+		"--type", "prompt",
+		"--domain", "ops",
+		"--body", "network incident runbook",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed health test",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req map[string]any
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		prompt, _ := req["prompt"].(string)
+		vec := []float64{0.0, 1.0}
+		if strings.Contains(strings.ToLower(prompt), "network") {
+			vec = []float64{1.0, 0.0}
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": vec})
+	}))
+	defer server.Close()
+
+	if _, err := indexEntryEmbedding(root, "health-entry", server.URL, "sess-health"); err != nil {
+		t.Fatalf("index embedding failed: %v", err)
+	}
+
+	outPath := filepath.Join(root, "health.json")
+	oldStdout := os.Stdout
+	f, err := os.Create(outPath)
+	if err != nil {
+		t.Fatalf("create capture file: %v", err)
+	}
+	os.Stdout = f
+	defer func() { os.Stdout = oldStdout }()
+	if err := runVerifyHealth([]string{
+		"--root", root,
+		"--query", "network incident",
+		"--domain", "ops",
+		"--session-id", "sess-health",
+		"--embedding-endpoint", server.URL,
+	}); err != nil {
+		t.Fatalf("runVerifyHealth failed: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatalf("close capture file: %v", err)
+	}
+
+	data, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read health output: %v", err)
+	}
+	var report struct {
+		CoverageOK        bool   `json:"coverage_ok"`
+		SemanticAvailable bool   `json:"semantic_available"`
+		Pass              bool   `json:"pass"`
+		SelectionMode     string `json:"selection_mode"`
+	}
+	if err := json.Unmarshal(data, &report); err != nil {
+		t.Fatalf("parse health output: %v", err)
+	}
+	if !report.CoverageOK || !report.SemanticAvailable || !report.Pass {
+		t.Fatalf("expected passing semantic health report, got %+v", report)
+	}
+	if report.SelectionMode != "embedding_semantic" {
+		t.Fatalf("expected embedding_semantic mode, got %s", report.SelectionMode)
+	}
+}

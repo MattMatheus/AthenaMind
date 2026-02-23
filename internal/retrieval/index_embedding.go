@@ -1,15 +1,21 @@
 package retrieval
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"athenamind/internal/index"
+	"athenamind/internal/types"
 )
 
-func IndexEntryEmbedding(root, entryID, embeddingEndpoint string) (string, error) {
-	warnings, err := IndexEntriesEmbeddingBatch(root, []string{entryID}, embeddingEndpoint)
+func IndexEntryEmbedding(root, entryID, embeddingEndpoint, sessionID string) (string, error) {
+	warnings, err := IndexEntriesEmbeddingBatch(root, []string{entryID}, embeddingEndpoint, sessionID)
 	if err != nil {
 		return "", err
 	}
@@ -19,7 +25,7 @@ func IndexEntryEmbedding(root, entryID, embeddingEndpoint string) (string, error
 	return "", nil
 }
 
-func IndexEntriesEmbeddingBatch(root string, entryIDs []string, embeddingEndpoint string) ([]string, error) {
+func IndexEntriesEmbeddingBatch(root string, entryIDs []string, embeddingEndpoint, sessionID string) ([]string, error) {
 	if len(entryIDs) == 0 {
 		return nil, nil
 	}
@@ -31,6 +37,7 @@ func IndexEntriesEmbeddingBatch(root string, entryIDs []string, embeddingEndpoin
 
 	bodies := make([]string, 0, len(entryIDs))
 	validIDs := make([]string, 0, len(entryIDs))
+	contentHashes := make([]string, 0, len(entryIDs))
 	var warnings []string
 
 	for _, id := range entryIDs {
@@ -50,8 +57,10 @@ func IndexEntriesEmbeddingBatch(root string, entryIDs []string, embeddingEndpoin
 		if err != nil {
 			return nil, err
 		}
-		bodies = append(bodies, string(data))
+		body := string(data)
+		bodies = append(bodies, body)
 		validIDs = append(validIDs, id)
+		contentHashes = append(contentHashes, sha256Hex(body))
 	}
 
 	if len(bodies) == 0 {
@@ -66,11 +75,38 @@ func IndexEntriesEmbeddingBatch(root string, entryIDs []string, embeddingEndpoin
 		return warnings, nil
 	}
 
+	profile := ActiveEmbeddingProfile(embeddingEndpoint)
+	commitSHA := currentCommitSHA()
+	generatedAt := time.Now().UTC().Format(time.RFC3339)
 	for i, id := range validIDs {
-		if err := index.UpsertEmbedding(root, id, vecs[i]); err != nil {
+		if err := index.UpsertEmbeddingRecord(root, types.EmbeddingRecord{
+			EntryID:     id,
+			Vector:      vecs[i],
+			ModelID:     profile.ModelID,
+			Provider:    profile.Provider,
+			Dim:         len(vecs[i]),
+			ContentHash: contentHashes[i],
+			CommitSHA:   commitSHA,
+			SessionID:   strings.TrimSpace(sessionID),
+			GeneratedAt: generatedAt,
+		}); err != nil {
 			return nil, err
 		}
 	}
 
 	return warnings, nil
+}
+
+func sha256Hex(v string) string {
+	sum := sha256.Sum256([]byte(v))
+	return hex.EncodeToString(sum[:])
+}
+
+func currentCommitSHA() string {
+	cmd := exec.Command("git", "rev-parse", "HEAD")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
 }

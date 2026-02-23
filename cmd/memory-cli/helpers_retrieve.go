@@ -26,3 +26,7 @@ func gatewayRetrieve(gatewayURL string, req apiRetrieveRequest, client *http.Cli
 func isSemanticConfident(top, second float64) bool {
 	return retrieval.IsSemanticConfident(top, second)
 }
+
+func indexEntryEmbedding(root, entryID, endpoint, sessionID string) (string, error) {
+	return retrieval.IndexEntryEmbedding(root, entryID, endpoint, sessionID)
+}

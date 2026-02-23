@@ -122,7 +122,7 @@ func runWrite(args []string) (err error) {
 	}, policy); err != nil {
 		return err
 	}
-	if warning, err := retrieval.IndexEntryEmbedding(*root, *id, *embeddingEndpoint); err != nil {
+	if warning, err := retrieval.IndexEntryEmbedding(*root, *id, *embeddingEndpoint, *sessionID); err != nil {
 		return err
 	} else if strings.TrimSpace(warning) != "" {
 		fmt.Fprintf(os.Stderr, "warning: %s\n", warning)
@@ -164,6 +164,14 @@ func runRetrieve(args []string) (err error) {
 			errorCode = telemetry.TelemetryErrorCode(err)
 			reason = err.Error()
 		}
+		semanticHit := telemetryResult.SelectionMode == "semantic" || telemetryResult.SelectionMode == "embedding_semantic"
+		fallbackUsed := strings.HasPrefix(telemetryResult.SelectionMode, "fallback_")
+		semanticRate := 0.0
+		fallbackRate := 0.0
+		if rate, ferr := telemetry.EmitRetrievalMetric(*root, telemetryResult); ferr == nil {
+			semanticRate = rate.SemanticHitRate
+			fallbackRate = rate.FallbackRate
+		}
 		emitErr := telemetry.Emit(*root, *telemetryFile, types.TelemetryEvent{
 			EventName:       "memory.retrieve",
 			EventVersion:    telemetry.EventSchema,
@@ -182,6 +190,11 @@ func runRetrieve(args []string) (err error) {
 			OperatorVerdict: telemetry.NormalizeOperatorVerdict(*operatorVerdict),
 			ErrorCode:       errorCode,
 			Reason:          reason,
+			FallbackUsed:    fallbackUsed,
+			SemanticHit:     semanticHit,
+			PrecisionProxy:  telemetryResult.PrecisionHint,
+			SemanticHitRate: semanticRate,
+			FallbackRate:    fallbackRate,
 		})
 		if err == nil && emitErr != nil {
 			err = emitErr
@@ -191,7 +204,7 @@ func runRetrieve(args []string) (err error) {
 		return err
 	}
 
-	result, warning, err := retrieval.RetrieveWithEmbeddingEndpoint(*root, *query, *domain, *embeddingEndpoint)
+	result, warning, err := retrieval.RetrieveWithEmbeddingEndpointAndSession(*root, *query, *domain, *embeddingEndpoint, *sessionID)
 	if err != nil {
 		return err
 	}
@@ -431,11 +444,13 @@ func runEpisode(args []string) error {
 
 func runVerify(args []string) error {
 	if len(args) == 0 {
-		return errors.New("usage: memory-cli verify <embeddings> [flags]")
+		return errors.New("usage: memory-cli verify <embeddings|health> [flags]")
 	}
 	switch args[0] {
 	case "embeddings":
 		return runVerifyEmbeddings(args[1:])
+	case "health":
+		return runVerifyHealth(args[1:])
 	default:
 		return fmt.Errorf("unknown verify subcommand: %s", args[0])
 	}
@@ -454,14 +469,14 @@ func runVerifyEmbeddings(args []string) error {
 	if err != nil {
 		return err
 	}
-	embeddings, err := index.GetEmbeddings(*root, nil)
+	embeddings, err := index.GetEmbeddingRecords(*root, nil)
 	if err != nil {
 		return err
 	}
 
 	missing := make([]string, 0)
 	for _, e := range idx.Entries {
-		if vec, ok := embeddings[e.ID]; !ok || len(vec) == 0 {
+		if rec, ok := embeddings[e.ID]; !ok || len(rec.Vector) == 0 {
 			missing = append(missing, e.ID)
 		}
 	}
@@ -491,6 +506,52 @@ func runVerifyEmbeddings(args []string) error {
 	}
 
 	return printResult(report)
+}
+
+func runVerifyHealth(args []string) error {
+	fs := flag.NewFlagSet("verify health", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "memory", "memory root path")
+	query := fs.String("query", "memory lifecycle", "health-check query")
+	domain := fs.String("domain", "", "optional domain filter")
+	sessionID := fs.String("session-id", "session-local", "session identifier")
+	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	report, err := retrieval.EvaluateSemanticHealth(*root, *query, *domain, *embeddingEndpoint, *sessionID)
+	if err != nil {
+		return err
+	}
+	health := struct {
+		Root              string  `json:"root"`
+		Query             string  `json:"query"`
+		IndexedEntries    int     `json:"indexed_entries"`
+		StoredEmbeddings  int     `json:"stored_embeddings"`
+		MissingEmbeddings int     `json:"missing_embeddings"`
+		CoverageOK        bool    `json:"coverage_ok"`
+		SelectionMode     string  `json:"selection_mode"`
+		SemanticAvailable bool    `json:"semantic_available"`
+		Warning           string  `json:"warning,omitempty"`
+		SelectedID        string  `json:"selected_id"`
+		Confidence        float64 `json:"confidence"`
+		Pass              bool    `json:"pass"`
+	}{
+		Root:              *root,
+		Query:             *query,
+		IndexedEntries:    report.IndexedEntries,
+		StoredEmbeddings:  report.StoredEmbeddings,
+		MissingEmbeddings: report.MissingEmbeddings,
+		CoverageOK:        report.CoverageOK,
+		SelectionMode:     report.SelectionMode,
+		SemanticAvailable: report.SemanticAvailable,
+		Warning:           report.Warning,
+		SelectedID:        report.SelectedID,
+		Confidence:        report.Confidence,
+		Pass:              report.Pass,
+	}
+	return printResult(health)
 }
 
 func runEpisodeWrite(args []string) (err error) {
@@ -793,14 +854,14 @@ func runReindexAll(args []string) error {
 		return err
 	}
 
-	embeddings, err := index.GetEmbeddings(*root, nil) // nil to get all existing
+	embeddings, err := index.GetEmbeddingRecords(*root, nil)
 	if err != nil {
 		return err
 	}
 
 	var missing []string
 	for _, e := range idx.Entries {
-		if vec, ok := embeddings[e.ID]; !ok || len(vec) == 0 {
+		if rec, ok := embeddings[e.ID]; !ok || len(rec.Vector) == 0 {
 			missing = append(missing, e.ID)
 		}
 	}
@@ -811,7 +872,7 @@ func runReindexAll(args []string) error {
 	}
 
 	fmt.Printf("Reindexing %d entries...\n", len(missing))
-	warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, missing, *embeddingEndpoint)
+	warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, missing, *embeddingEndpoint, "")
 	if err != nil {
 		return err
 	}
@@ -897,7 +958,7 @@ func runCrawl(args []string) error {
 
 	if len(processedIDs) > 0 {
 		fmt.Printf("Batch embedding %d entries...\n", len(processedIDs))
-		warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, processedIDs, *embeddingEndpoint)
+		warnings, err := retrieval.IndexEntriesEmbeddingBatch(*root, processedIDs, *embeddingEndpoint, "")
 		if err != nil {
 			return err
 		}

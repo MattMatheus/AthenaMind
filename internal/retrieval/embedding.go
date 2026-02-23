@@ -49,6 +49,28 @@ type azureEmbeddingResponse struct {
 	} `json:"data"`
 }
 
+type EmbeddingProfile struct {
+	Provider string
+	ModelID  string
+}
+
+func ActiveEmbeddingProfile(endpoint string) EmbeddingProfile {
+	if strings.TrimSpace(os.Getenv("AZURE_OPENAI_ENDPOINT")) != "" {
+		deployment := strings.TrimSpace(os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME"))
+		if deployment == "" {
+			deployment = "text-embedding-3-small"
+		}
+		return EmbeddingProfile{
+			Provider: "azure_openai",
+			ModelID:  deployment,
+		}
+	}
+	return EmbeddingProfile{
+		Provider: "ollama",
+		ModelID:  "nomic-embed-text",
+	}
+}
+
 func GenerateEmbedding(endpoint, text string) ([]float64, error) {
 	vecs, err := GenerateEmbeddings(endpoint, []string{text})
 	if err != nil {

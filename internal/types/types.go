@@ -43,6 +43,22 @@ type RetrieveResult struct {
 	SourcePath    string  `json:"source_path"`
 	Confidence    float64 `json:"confidence"`
 	Reason        string  `json:"reason"`
+	FallbackUsed  bool    `json:"fallback_used,omitempty"`
+	SemanticHit   bool    `json:"semantic_hit,omitempty"`
+	PrecisionHint float64 `json:"precision_hint,omitempty"`
+}
+
+type EmbeddingRecord struct {
+	EntryID     string    `json:"entry_id"`
+	Vector      []float64 `json:"vector"`
+	ModelID     string    `json:"model_id,omitempty"`
+	Provider    string    `json:"provider,omitempty"`
+	Dim         int       `json:"dim,omitempty"`
+	ContentHash string    `json:"content_hash,omitempty"`
+	CommitSHA   string    `json:"commit_sha,omitempty"`
+	SessionID   string    `json:"session_id,omitempty"`
+	GeneratedAt string    `json:"generated_at,omitempty"`
+	LastUpdated string    `json:"updated_at,omitempty"`
 }
 
 type APIRetrieveRequest struct {
@@ -121,23 +137,28 @@ type EvaluationReport struct {
 }
 
 type TelemetryEvent struct {
-	EventName       string `json:"event_name"`
-	EventVersion    string `json:"event_version"`
-	TimestampUTC    string `json:"timestamp_utc"`
-	SessionID       string `json:"session_id"`
-	TraceID         string `json:"trace_id"`
-	ScenarioID      string `json:"scenario_id"`
-	Operation       string `json:"operation"`
-	Result          string `json:"result"`
-	PolicyGate      string `json:"policy_gate"`
-	MemoryType      string `json:"memory_type"`
-	LatencyMS       int64  `json:"latency_ms"`
-	SelectedID      string `json:"selected_id,omitempty"`
-	SelectionMode   string `json:"selection_mode,omitempty"`
-	SourcePath      string `json:"source_path,omitempty"`
-	OperatorVerdict string `json:"operator_verdict"`
-	ErrorCode       string `json:"error_code,omitempty"`
-	Reason          string `json:"reason,omitempty"`
+	EventName       string  `json:"event_name"`
+	EventVersion    string  `json:"event_version"`
+	TimestampUTC    string  `json:"timestamp_utc"`
+	SessionID       string  `json:"session_id"`
+	TraceID         string  `json:"trace_id"`
+	ScenarioID      string  `json:"scenario_id"`
+	Operation       string  `json:"operation"`
+	Result          string  `json:"result"`
+	PolicyGate      string  `json:"policy_gate"`
+	MemoryType      string  `json:"memory_type"`
+	LatencyMS       int64   `json:"latency_ms"`
+	SelectedID      string  `json:"selected_id,omitempty"`
+	SelectionMode   string  `json:"selection_mode,omitempty"`
+	SourcePath      string  `json:"source_path,omitempty"`
+	OperatorVerdict string  `json:"operator_verdict"`
+	ErrorCode       string  `json:"error_code,omitempty"`
+	Reason          string  `json:"reason,omitempty"`
+	FallbackUsed    bool    `json:"fallback_used,omitempty"`
+	SemanticHit     bool    `json:"semantic_hit,omitempty"`
+	PrecisionProxy  float64 `json:"precision_proxy,omitempty"`
+	SemanticHitRate float64 `json:"semantic_hit_rate,omitempty"`
+	FallbackRate    float64 `json:"fallback_rate,omitempty"`
 }
 
 type SnapshotChecksum struct {

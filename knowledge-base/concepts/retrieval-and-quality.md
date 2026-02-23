@@ -6,6 +6,8 @@ Retrieval uses semantic scoring first, then deterministic fallbacks when confide
 ## Selection Pipeline
 1. Load approved candidates from index + metadata.
 2. Compute semantic score.
+   - embedding score is used only when query/doc vectors are model+dimension compatible
+   - fresher/session-matching embeddings receive a small deterministic freshness bonus
 3. If confidence gate passes, return semantic result.
 4. Otherwise fallback in fixed order:
    - exact key match on `id`
@@ -18,6 +20,15 @@ Every retrieve response includes:
 - `source_path`
 - `confidence`
 - `reason`
+- `fallback_used`
+- `semantic_hit`
+- `precision_hint`
+
+## Observability
+Retrieve telemetry also tracks rolling quality proxies:
+- `semantic_hit_rate`
+- `fallback_rate`
+- `precision_proxy`
 
 ## Quality Gates (Evaluate)
 - Minimum query set size: 50

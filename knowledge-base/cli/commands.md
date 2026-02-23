@@ -5,7 +5,7 @@ Command reference for all currently supported `memory-cli` operations.
 
 ## Root Command
 ```bash
-memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap|episode> [flags]
+memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap|reindex-all|crawl|verify|episode> [flags]
 ```
 
 ## `write`
@@ -119,6 +119,34 @@ Episode subcommands:
 - `episode list`
   - required: `--repo`
   - optional: `--root`
+
+## `reindex-all`
+Rebuilds missing embeddings for currently indexed entries.
+
+Optional:
+- `--root` (default `memory`)
+- `--embedding-endpoint` (default `http://localhost:11434`)
+
+## `crawl`
+Crawls markdown docs and indexes them as instructions with deterministic path-based IDs.
+
+Required:
+- `--dir`
+
+Optional:
+- `--root` (default `memory`)
+- `--domain` (default `auto-crawled`)
+- `--reviewer` (default `system`)
+- `--embedding-endpoint` (default `http://localhost:11434`)
+
+## `verify`
+Verification subcommands:
+- `verify embeddings`
+  - optional: `--root`, `--show-missing`
+  - reports embedding coverage for indexed entries
+- `verify health`
+  - optional: `--root`, `--query`, `--domain`, `--session-id`, `--embedding-endpoint`
+  - runs semantic retrieval health check and reports pass/fail
 
 ## References
 - `cmd/memory-cli/main.go`

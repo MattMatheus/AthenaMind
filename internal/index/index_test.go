@@ -1,6 +1,7 @@
 package index
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -21,6 +22,59 @@ func TestLoadIndexInitializesMissingFile(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(root, "index.db")); err != nil {
 		t.Fatalf("expected sqlite index.db to be initialized: %v", err)
+	}
+}
+
+func TestGetEmbeddingsWithNilIDsReturnsAllRecords(t *testing.T) {
+	root := t.TempDir()
+	if err := UpsertEmbeddingRecord(root, types.EmbeddingRecord{
+		EntryID:     "entry-a",
+		Vector:      []float64{1, 0},
+		ModelID:     "nomic-embed-text",
+		Provider:    "ollama",
+		Dim:         2,
+		ContentHash: "hash-a",
+		CommitSHA:   "commit-a",
+		SessionID:   "session-a",
+		GeneratedAt: "2026-02-23T00:00:00Z",
+	}); err != nil {
+		t.Fatalf("upsert embedding a: %v", err)
+	}
+	if err := UpsertEmbeddingRecord(root, types.EmbeddingRecord{
+		EntryID:     "entry-b",
+		Vector:      []float64{0, 1},
+		ModelID:     "nomic-embed-text",
+		Provider:    "ollama",
+		Dim:         2,
+		ContentHash: "hash-b",
+		CommitSHA:   "commit-b",
+		SessionID:   "session-b",
+		GeneratedAt: "2026-02-23T00:00:01Z",
+	}); err != nil {
+		t.Fatalf("upsert embedding b: %v", err)
+	}
+
+	all, err := GetEmbeddingRecords(root, nil)
+	if err != nil {
+		t.Fatalf("get all embeddings: %v", err)
+	}
+	if len(all) != 2 {
+		t.Fatalf("expected 2 embedding records, got %d", len(all))
+	}
+	if got := all["entry-a"].ModelID; got != "nomic-embed-text" {
+		t.Fatalf("expected model metadata persisted, got %q", got)
+	}
+	if got := all["entry-b"].SessionID; got != "session-b" {
+		t.Fatalf("expected session metadata persisted, got %q", got)
+	}
+
+	vecs, err := GetEmbeddings(root, nil)
+	if err != nil {
+		t.Fatalf("get all vectors: %v", err)
+	}
+	if len(vecs) != 2 {
+		data, _ := json.Marshal(vecs)
+		t.Fatalf("expected 2 vectors, got %d payload=%s", len(vecs), string(data))
 	}
 }
 

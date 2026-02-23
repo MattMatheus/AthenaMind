@@ -16,19 +16,25 @@ import (
 )
 
 type candidate struct {
-	Entry  types.IndexEntry
-	Meta   types.MetadataFile
-	Body   string
-	Score  float64
-	Reason string
+	Entry     types.IndexEntry
+	Meta      types.MetadataFile
+	Body      string
+	Score     float64
+	Reason    string
+	Freshness float64
+	HasVector bool
 }
 
 func Retrieve(root, query, domain string) (types.RetrieveResult, error) {
-	result, _, err := RetrieveWithEmbeddingEndpoint(root, query, domain, DefaultEmbeddingEndpoint)
+	result, _, err := RetrieveWithEmbeddingEndpointAndSession(root, query, domain, DefaultEmbeddingEndpoint, "")
 	return result, err
 }
 
 func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string) (types.RetrieveResult, string, error) {
+	return RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpoint, "")
+}
+
+func RetrieveWithEmbeddingEndpointAndSession(root, query, domain, embeddingEndpoint, sessionID string) (types.RetrieveResult, string, error) {
 	startedAt := time.Now()
 	if strings.TrimSpace(query) == "" {
 		return types.RetrieveResult{}, "", errors.New("--query is required")
@@ -57,11 +63,12 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 	if embedErr != nil {
 		warning = fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr)
 	}
+	profile := ActiveEmbeddingProfile(embeddingEndpoint)
 	ids := make([]string, 0, len(candidates))
 	for _, c := range candidates {
 		ids = append(ids, c.Entry.ID)
 	}
-	embeddings, embLoadErr := index.GetEmbeddings(root, ids)
+	embeddings, embLoadErr := index.GetEmbeddingRecords(root, ids)
 	if embLoadErr != nil {
 		warning = fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr)
 	}
@@ -69,9 +76,15 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 	for i := range candidates {
 		candidates[i].Score = semanticScore(q, candidates[i])
 		if len(queryEmbedding) > 0 {
-			if vec, ok := embeddings[candidates[i].Entry.ID]; ok && len(vec) > 0 {
-				candidates[i].Score = cosineSimilarity(queryEmbedding, vec)
-				embeddingScoresApplied = true
+			if rec, ok := embeddings[candidates[i].Entry.ID]; ok && len(rec.Vector) > 0 {
+				if isEmbeddingCompatible(profile, len(queryEmbedding), rec) {
+					freshness := embeddingFreshnessBonus(rec, sessionID)
+					candidates[i].Freshness = freshness
+					candidates[i].HasVector = true
+					candidates[i].Score = cosineSimilarity(queryEmbedding, rec.Vector) + freshness
+					candidates[i].Reason = "embedding_similarity_with_freshness_bonus"
+					embeddingScoresApplied = true
+				}
 			}
 		}
 	}
@@ -80,7 +93,10 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 	}
 	sort.SliceStable(candidates, func(i, j int) bool {
 		if candidates[i].Score == candidates[j].Score {
-			return candidates[i].Entry.ID < candidates[j].Entry.ID
+			if candidates[i].Freshness == candidates[j].Freshness {
+				return candidates[i].Entry.ID < candidates[j].Entry.ID
+			}
+			return candidates[i].Freshness > candidates[j].Freshness
 		}
 		return candidates[i].Score > candidates[j].Score
 	})
@@ -93,7 +109,10 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 
 	if governance.IsLatencyDegraded(time.Since(startedAt).Milliseconds()) {
 		sort.SliceStable(candidates, func(i, j int) bool {
-			return candidates[i].Entry.Path < candidates[j].Entry.Path
+			if candidates[i].Freshness == candidates[j].Freshness {
+				return candidates[i].Entry.Path < candidates[j].Entry.Path
+			}
+			return candidates[i].Freshness > candidates[j].Freshness
 		})
 		chosen := candidates[0]
 		return types.RetrieveResult{
@@ -102,6 +121,9 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 			SourcePath:    chosen.Entry.Path,
 			Confidence:    chosen.Score,
 			Reason:        "latency degradation policy forced deterministic fallback",
+			FallbackUsed:  true,
+			SemanticHit:   false,
+			PrecisionHint: 0,
 		}, warning, nil
 	}
 
@@ -116,6 +138,9 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 			SourcePath:    top.Entry.Path,
 			Confidence:    top.Score,
 			Reason:        "semantic confidence gate passed",
+			FallbackUsed:  false,
+			SemanticHit:   true,
+			PrecisionHint: 1,
 		}, warning, nil
 	}
 
@@ -127,12 +152,18 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 				SourcePath:    c.Entry.Path,
 				Confidence:    c.Score,
 				Reason:        "semantic confidence gate failed; exact-key fallback matched",
+				FallbackUsed:  true,
+				SemanticHit:   false,
+				PrecisionHint: 0,
 			}, warning, nil
 		}
 	}
 
 	sort.SliceStable(candidates, func(i, j int) bool {
-		return candidates[i].Entry.Path < candidates[j].Entry.Path
+		if candidates[i].Freshness == candidates[j].Freshness {
+			return candidates[i].Entry.Path < candidates[j].Entry.Path
+		}
+		return candidates[i].Freshness > candidates[j].Freshness
 	})
 	chosen := candidates[0]
 	return types.RetrieveResult{
@@ -141,7 +172,50 @@ func RetrieveWithEmbeddingEndpoint(root, query, domain, embeddingEndpoint string
 		SourcePath:    chosen.Entry.Path,
 		Confidence:    chosen.Score,
 		Reason:        "semantic confidence gate failed; deterministic path-priority fallback used",
+		FallbackUsed:  true,
+		SemanticHit:   false,
+		PrecisionHint: 0,
 	}, warning, nil
+}
+
+func isEmbeddingCompatible(profile EmbeddingProfile, queryDim int, rec types.EmbeddingRecord) bool {
+	if queryDim <= 0 || len(rec.Vector) == 0 {
+		return false
+	}
+	if rec.Dim > 0 && rec.Dim != queryDim {
+		return false
+	}
+	if len(rec.Vector) != queryDim {
+		return false
+	}
+	if strings.TrimSpace(profile.ModelID) != "" && strings.TrimSpace(rec.ModelID) != "" && profile.ModelID != rec.ModelID {
+		return false
+	}
+	if strings.TrimSpace(profile.Provider) != "" && strings.TrimSpace(rec.Provider) != "" && profile.Provider != rec.Provider {
+		return false
+	}
+	return true
+}
+
+func embeddingFreshnessBonus(rec types.EmbeddingRecord, sessionID string) float64 {
+	bonus := 0.0
+	if strings.TrimSpace(sessionID) != "" && strings.TrimSpace(rec.SessionID) == strings.TrimSpace(sessionID) {
+		bonus += 0.02
+	}
+	when, err := time.Parse(time.RFC3339, strings.TrimSpace(rec.GeneratedAt))
+	if err != nil {
+		when, err = time.Parse(time.RFC3339, strings.TrimSpace(rec.LastUpdated))
+	}
+	if err != nil {
+		return bonus
+	}
+	age := time.Since(when)
+	if age <= 24*time.Hour {
+		bonus += 0.01
+	} else if age <= 7*24*time.Hour {
+		bonus += 0.005
+	}
+	return bonus
 }
 
 func loadCandidates(root string, entries []types.IndexEntry, domain string) ([]candidate, error) {
@@ -248,7 +322,7 @@ func tokenSet(s string) map[string]struct{} {
 
 func IsSemanticConfident(top, second float64) bool {
 	const minConfidence = 0.34
-	const minMargin = 0.03
+	const minMargin = 0.15
 	if top < minConfidence {
 		return false
 	}

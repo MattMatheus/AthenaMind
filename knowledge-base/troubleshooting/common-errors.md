@@ -34,6 +34,10 @@ Quick lookup for frequent `memory-cli` failures and direct fixes.
   - Fix: ensure trace/session fields are present.
 - `ERR_API_CLI_PARITY_MISMATCH`
   - Fix: investigate gateway divergence from local retrieve contract.
+- `embedding unavailable; using token-overlap scoring`
+  - Fix: ensure Azure/OpenAI or local embedding endpoint is reachable; then rerun `verify health`.
+- `embedding unavailable for candidate entries; using token-overlap scoring`
+  - Fix: run `reindex-all` and confirm `verify embeddings` reports zero missing vectors.
 
 ## Escalation
 - Create a bug using `delivery-backlog/engineering/intake/BUG_TEMPLATE.md`.

@@ -39,6 +39,20 @@ go run ./cmd/memory-cli evaluate \
   --embedding-endpoint http://localhost:11434
 ```
 
+## Verify Embedding Coverage And Semantic Health
+```bash
+go run ./cmd/memory-cli verify embeddings \
+  --root memory
+```
+
+```bash
+go run ./cmd/memory-cli verify health \
+  --root memory \
+  --query "memory lifecycle" \
+  --domain docs-crawl \
+  --session-id docs-session-1
+```
+
 ## Snapshot Create/List/Restore
 ```bash
 go run ./cmd/memory-cli snapshot create \

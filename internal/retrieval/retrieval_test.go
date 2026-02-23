@@ -64,10 +64,10 @@ func TestRetrieveUsesEmbeddingSimilarityWhenAvailable(t *testing.T) {
 	}))
 	defer server.Close()
 
-	if warning, err := IndexEntryEmbedding(root, "net", server.URL); err != nil || warning != "" {
+	if warning, err := IndexEntryEmbedding(root, "net", server.URL, "sess-1"); err != nil || warning != "" {
 		t.Fatalf("index embedding net failed warning=%q err=%v", warning, err)
 	}
-	if warning, err := IndexEntryEmbedding(root, "payroll", server.URL); err != nil || warning != "" {
+	if warning, err := IndexEntryEmbedding(root, "payroll", server.URL, "sess-1"); err != nil || warning != "" {
 		t.Fatalf("index embedding payroll failed warning=%q err=%v", warning, err)
 	}
 
@@ -157,10 +157,10 @@ func TestEmbeddingScoringImprovesOverTokenBaseline(t *testing.T) {
 	}))
 	defer server.Close()
 
-	if _, err := IndexEntryEmbedding(root, "alpha-doc", server.URL); err != nil {
+	if _, err := IndexEntryEmbedding(root, "alpha-doc", server.URL, "sess-2"); err != nil {
 		t.Fatalf("index alpha embedding: %v", err)
 	}
-	if _, err := IndexEntryEmbedding(root, "beta-doc", server.URL); err != nil {
+	if _, err := IndexEntryEmbedding(root, "beta-doc", server.URL, "sess-2"); err != nil {
 		t.Fatalf("index beta embedding: %v", err)
 	}
 
@@ -194,5 +194,97 @@ func TestEmbeddingScoringImprovesOverTokenBaseline(t *testing.T) {
 
 	if embedHits <= tokenHits {
 		t.Fatalf("expected embedding mode to improve over token baseline, token=%d embed=%d", tokenHits, embedHits)
+	}
+}
+
+func TestRetrieveSkipsIncompatibleEmbeddingDimensions(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	if err := index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry",
+		Title:  "Ops Guide",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "fallback body content",
+		Stage:  "pm",
+	}, policy); err != nil {
+		t.Fatalf("seed entry failed: %v", err)
+	}
+
+	indexServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{1.0, 0.0}})
+	}))
+	defer indexServer.Close()
+	if _, err := IndexEntryEmbedding(root, "entry", indexServer.URL, "sess-compat"); err != nil {
+		t.Fatalf("index embedding failed: %v", err)
+	}
+
+	retrieveServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{1.0, 0.0, 0.0}})
+	}))
+	defer retrieveServer.Close()
+
+	got, warning, err := RetrieveWithEmbeddingEndpoint(root, "ops guide", "ops", retrieveServer.URL)
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if got.SelectionMode == "embedding_semantic" {
+		t.Fatalf("expected embedding scoring to be skipped on dimension mismatch, got %+v", got)
+	}
+	if strings.TrimSpace(warning) == "" {
+		t.Fatal("expected warning when embeddings cannot be applied")
+	}
+}
+
+func TestRetrievePrefersSessionFreshnessWhenScoresTie(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "a-entry",
+		Title:  "Entry A",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "same semantic body",
+		Stage:  "pm",
+	}, policy)
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "b-entry",
+		Title:  "Entry B",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "same semantic body",
+		Stage:  "pm",
+	}, policy)
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{1.0, 0.0}})
+	}))
+	defer server.Close()
+
+	if _, err := IndexEntryEmbedding(root, "a-entry", server.URL, "sess-a"); err != nil {
+		t.Fatalf("index a-entry: %v", err)
+	}
+	if _, err := IndexEntryEmbedding(root, "b-entry", server.URL, "sess-b"); err != nil {
+		t.Fatalf("index b-entry: %v", err)
+	}
+
+	got, _, err := RetrieveWithEmbeddingEndpointAndSession(root, "same semantic body", "ops", server.URL, "sess-b")
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if got.SelectedID != "b-entry" {
+		t.Fatalf("expected session-fresh entry to win tie, got %+v", got)
 	}
 }
