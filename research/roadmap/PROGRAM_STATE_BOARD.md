@@ -7,9 +7,9 @@
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 3
+- `engineering_active_count`: 2
 - `engineering_qa_count`: 0
-- `engineering_done_story_count`: 23
+- `engineering_done_story_count`: 24
 - `architecture_intake_count`: 0
 - `architecture_active_count`: 0
 - `architecture_qa_count`: 0
@@ -21,12 +21,12 @@
 - `v0.3`: not started
 
 ## Now
-- Execute `STORY-20260222-dogfood-semantic-retrieval-hardening-v01` to improve semantic precision and trace completeness from baseline.
-- Keep release decision at `hold` until post-hardening KPI delta evidence is published and checkpoint risks are re-evaluated.
-- Run queued release-control stories in order: semantic hardening -> KPI delta snapshot -> release checkpoint refresh.
+- Execute `STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01` to publish post-hardening metric deltas vs baseline.
+- Keep release decision at `hold` until KPI delta evidence is published and checkpoint risks are re-evaluated.
+- Run queued release-control stories in order: KPI delta snapshot -> release checkpoint refresh.
 
 ## Next
-- If hardening and KPI evidence clear thresholds, update release bundle decision from `hold` to explicit `ship` with rationale.
+- If KPI evidence clears thresholds, update release bundle decision from `hold` to explicit `ship` with rationale.
 - Sequence deferred roadmap work only after v0.1 release checkpoint decision is finalized.
 - Rebaseline founder snapshot signals against the refreshed release bundle.
 
