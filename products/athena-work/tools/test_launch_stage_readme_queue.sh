@@ -8,6 +8,7 @@ launch_script="$root_dir/tools/launch_stage.sh"
 story_a="$root_dir/delivery-backlog/engineering/active/STORY-TEST-README-ORDER-A.md"
 story_b="$root_dir/delivery-backlog/engineering/active/STORY-TEST-README-ORDER-B.md"
 expected_story="delivery-backlog/engineering/active/STORY-TEST-README-ORDER-B.md"
+current_branch="$(git -C "$root_dir" branch --show-current)"
 
 tmp_dir="$(mktemp -d)"
 restore_readme() {
@@ -37,7 +38,7 @@ Ordered execution queue for engineering implementation.
 2. `STORY-TEST-README-ORDER-A.md`
 EOF
 
-output="$("$launch_script" engineering)"
+output="$(ATHENA_REQUIRED_BRANCH="$current_branch" "$launch_script" engineering)"
 if grep -Fq "story: $expected_story" <<<"$output"; then
   echo "PASS: launch_stage engineering honors Active README ordering"
 else

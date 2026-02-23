@@ -59,6 +59,25 @@ else
   exit 1
 fi
 
+if grep -Fq " --stage pm " "$args_log"; then
+  echo "PASS: observer uses pm policy stage for engineering-style cycle ids"
+else
+  echo "FAIL: observer did not use expected pm policy stage for engineering-style cycle id"
+  cat "$args_log"
+  exit 1
+fi
+
+plan_log="$tmp_dir/memory-cli.plan.args.log"
+plan_report="$tmp_dir/observer-report-plan.md"
+PATH="$stub_bin:$PATH" MEMORY_CLI_TEST_LOG="$plan_log" "$observer_script" --cycle-id PLAN-TEST-STAGE-INFERENCE --output "$plan_report" >/dev/null
+if grep -Fq " --stage planning " "$plan_log"; then
+  echo "PASS: observer infers planning policy stage from planning cycle id"
+else
+  echo "FAIL: observer did not infer planning policy stage"
+  cat "$plan_log"
+  exit 1
+fi
+
 warn_file="$tmp_dir/warn.log"
 MEMORY_CLI_BIN="memory-cli-missing-for-test" "$observer_script" --cycle-id STORY-TEST-MEMORY-MISSING --output "$tmp_dir/observer-report-missing.md" >/dev/null 2>"$warn_file"
 if grep -Fq "warning: episode write-back skipped" "$warn_file"; then

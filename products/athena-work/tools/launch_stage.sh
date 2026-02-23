@@ -8,7 +8,7 @@ active_dir="$root_dir/delivery-backlog/engineering/active"
 active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/delivery-backlog/architecture/active"
 arch_active_readme="$arch_active_dir/README.md"
-required_branch="dev"
+required_branch="${ATHENA_REQUIRED_BRANCH:-dev}"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
 
 if ! git -C "$root_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
