@@ -40,3 +40,12 @@
 - Fixed by adding directory-aware counting helper:
   - Missing lane directories now count as `0` instead of failing the entire test run.
 - File updated: `/products/athena-work/tools/test_program_state_consistency.sh`.
+
+## 2026-02-23T09:11:53Z — Decision: Corrupt embedding rows must not break global retrieval
+- Updated `/internal/index/sqlite_store.go`:
+  - `GetEmbeddingRecords` now skips malformed `vector_json` rows instead of returning an error for the full read.
+- Added regression test `/internal/index/index_test.go`:
+  - `TestGetEmbeddingRecordsSkipsCorruptVectors` seeds good+bad rows and verifies only valid vectors are returned.
+- Validation:
+  - `go test ./internal/index` passed.
+  - `go test ./...` passed after the change.

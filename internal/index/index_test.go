@@ -78,6 +78,56 @@ func TestGetEmbeddingsWithNilIDsReturnsAllRecords(t *testing.T) {
 	}
 }
 
+func TestGetEmbeddingRecordsSkipsCorruptVectors(t *testing.T) {
+	root := t.TempDir()
+	if err := UpsertEmbeddingRecord(root, types.EmbeddingRecord{
+		EntryID:     "entry-good",
+		Vector:      []float64{1, 0, 0},
+		ModelID:     "nomic-embed-text",
+		Provider:    "ollama",
+		Dim:         3,
+		ContentHash: "hash-good",
+		CommitSHA:   "commit-good",
+		SessionID:   "session-good",
+		GeneratedAt: "2026-02-23T00:00:00Z",
+	}); err != nil {
+		t.Fatalf("upsert good embedding: %v", err)
+	}
+	if err := UpsertEmbeddingRecord(root, types.EmbeddingRecord{
+		EntryID:     "entry-bad",
+		Vector:      []float64{0, 1, 0},
+		ModelID:     "nomic-embed-text",
+		Provider:    "ollama",
+		Dim:         3,
+		ContentHash: "hash-bad",
+		CommitSHA:   "commit-bad",
+		SessionID:   "session-bad",
+		GeneratedAt: "2026-02-23T00:00:01Z",
+	}); err != nil {
+		t.Fatalf("upsert bad embedding: %v", err)
+	}
+
+	if _, err := runSQLiteTx(root, []string{
+		"UPDATE embeddings SET vector_json='not-json' WHERE entry_id='entry-bad';",
+	}); err != nil {
+		t.Fatalf("corrupt embedding row: %v", err)
+	}
+
+	records, err := GetEmbeddingRecords(root, nil)
+	if err != nil {
+		t.Fatalf("get embeddings should skip bad rows, got err: %v", err)
+	}
+	if len(records) != 1 {
+		t.Fatalf("expected one valid record after skip, got %d", len(records))
+	}
+	if _, ok := records["entry-good"]; !ok {
+		t.Fatalf("expected valid embedding to remain available, got %+v", records)
+	}
+	if _, ok := records["entry-bad"]; ok {
+		t.Fatalf("expected corrupt embedding to be skipped, got %+v", records["entry-bad"])
+	}
+}
+
 func TestLoadIndexMigratesLegacyYAMLToSQLite(t *testing.T) {
 	root := t.TempDir()
 	now := "2026-02-23T00:00:00Z"
