@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "decisions-readme-be09ce4a",
+  "title": "Decisions Readme Be09ce4a",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:26Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:26Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}

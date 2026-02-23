@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "product-readme-b4a504bc",
+  "title": "Product Readme B4a504bc",
+  "status": "approved",
+  "updated_at": "2026-02-23T04:55:28Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T04:55:28Z",
+    "decision": "approved",
+    "decision_notes": "automated crawl"
+  }
+}
