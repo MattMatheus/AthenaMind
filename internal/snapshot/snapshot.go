@@ -27,7 +27,7 @@ func CreateSnapshot(root, createdBy, reason string) (types.SnapshotManifest, err
 	baseDir := filepath.Join(root, "snapshots", snapshotID)
 	payloadDir := filepath.Join(baseDir, "payload")
 
-	refs := collectSnapshotRefs(idx)
+	refs := collectSnapshotRefs(root, idx)
 	if len(refs) == 0 {
 		return types.SnapshotManifest{}, errors.New("ERR_SNAPSHOT_MANIFEST_INVALID: no payload references found for snapshot")
 	}
@@ -199,8 +199,11 @@ func verifySnapshotChecksums(root string, m types.SnapshotManifest) error {
 	return nil
 }
 
-func collectSnapshotRefs(idx types.IndexFile) []string {
+func collectSnapshotRefs(root string, idx types.IndexFile) []string {
 	refs := []string{"index.yaml"}
+	if _, err := os.Stat(filepath.Join(root, "index.db")); err == nil {
+		refs = append(refs, "index.db")
+	}
 	for _, e := range idx.Entries {
 		refs = append(refs, e.Path, e.MetadataPath)
 	}

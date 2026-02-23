@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-sqlite-index-store
 - `owner_persona`: personas/Product Manager - Maya.md
-- `status`: active
+- `status`: qa
 - `idea_id`: direct
 - `phase`: v0.2
 - `adr_refs`: [ADR-0005, ADR-0009, ADR-0010]

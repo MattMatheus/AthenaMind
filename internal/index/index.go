@@ -18,7 +18,18 @@ const (
 	SupportedMinor = 0
 )
 
+type indexStore interface {
+	Load(root string) (types.IndexFile, error)
+	Save(root string, idx types.IndexFile) error
+}
+
+var defaultIndexStore indexStore = sqliteIndexStore{}
+
 func LoadIndex(root string) (types.IndexFile, error) {
+	return defaultIndexStore.Load(root)
+}
+
+func loadIndexFromYAML(root string) (types.IndexFile, error) {
 	path := filepath.Join(root, "index.yaml")
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -45,6 +56,11 @@ func LoadIndex(root string) (types.IndexFile, error) {
 		return types.IndexFile{}, err
 	}
 	return idx, nil
+}
+
+func writeIndexYAMLMirror(root string, idx types.IndexFile) error {
+	sort.Slice(idx.Entries, func(i, j int) bool { return idx.Entries[i].ID < idx.Entries[j].ID })
+	return WriteJSONAsYAML(filepath.Join(root, "index.yaml"), idx)
 }
 
 func ValidateIndex(idx types.IndexFile, root string) error {
@@ -263,7 +279,10 @@ func UpsertEntry(root string, in types.UpsertEntryInput, policy types.WritePolic
 	}
 	sort.Slice(idx.Entries, func(i, j int) bool { return idx.Entries[i].ID < idx.Entries[j].ID })
 	idx.UpdatedAt = now
-	if err := WriteJSONAsYAML(filepath.Join(root, "index.yaml"), idx); err != nil {
+	if err := defaultIndexStore.Save(root, idx); err != nil {
+		return err
+	}
+	if err := writeIndexYAMLMirror(root, idx); err != nil {
 		return err
 	}
 
