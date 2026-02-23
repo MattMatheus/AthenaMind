@@ -3,7 +3,9 @@
 Single navigation entrypoint for operators and agents running the AthenaMind delivery cycle.
 
 ## First 5 Minutes
-1. Confirm branch safety: run `git branch --show-current` and verify `dev`.
+1. Confirm branch safety:
+   - run `git branch --show-current`
+   - ensure it matches `ATHENA_REQUIRED_BRANCH` (default: `dev`)
 2. Launch the stage you need:
    - `tools/launch_stage.sh planning`
    - `tools/launch_stage.sh architect`
@@ -21,9 +23,9 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
    - `knowledge-base/process/STAGE_EXIT_GATES.md`
 
 ## Branch Rule and Empty Active Behavior
-- Branch safety rule: launcher requires branch `dev`.
+- Branch safety rule: launcher requires branch `ATHENA_REQUIRED_BRANCH` (default `dev`).
 - If branch differs, launcher aborts:
-  - `abort: active branch is '<branch>'; expected 'dev'`
+  - `abort: active branch is '<branch>'; expected '<required-branch>'`
 - If engineering is launched with no active stories, the expected output is:
   - `no stories`
 

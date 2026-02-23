@@ -4,6 +4,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 observer_script="$root_dir/tools/run_observer_cycle.sh"
+repo_id="$(basename "$root_dir")"
 
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
@@ -51,7 +52,7 @@ else
   exit 1
 fi
 
-if grep -Fq "episode write --root $root_dir/memory --repo AthenaMind" "$args_log" && grep -Fq " --cycle-id STORY-TEST-MEMORY-INTEGRATION " "$args_log"; then
+if grep -Fq "episode write --root $root_dir/memory --repo $repo_id" "$args_log" && grep -Fq " --cycle-id STORY-TEST-MEMORY-INTEGRATION " "$args_log"; then
   echo "PASS: observer invokes memory-cli episode write with cycle data"
 else
   echo "FAIL: observer episode write args missing expected cycle metadata"

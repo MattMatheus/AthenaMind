@@ -5,6 +5,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 cd "$root_dir"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
+memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
+repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 
 cycle_id=""
 story_path=""
@@ -37,7 +39,6 @@ emit_episode_writeback() {
   local decisions_file="$4"
   local policy_stage="$5"
   local write_output
-  local repo_id
   local session_id
 
   if ! command -v "$memory_cli_bin" >/dev/null 2>&1; then
@@ -45,10 +46,9 @@ emit_episode_writeback() {
     return 0
   fi
 
-  repo_id="$(basename "$root_dir")"
   session_id="observer-$cycle_slug"
   if ! write_output="$("$memory_cli_bin" episode write \
-    --root "$root_dir/memory" \
+    --root "$memory_root" \
     --repo "$repo_id" \
     --session-id "$session_id" \
     --cycle-id "$cycle_id" \
