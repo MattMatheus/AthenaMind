@@ -11,6 +11,8 @@ valid_bug_status='intake|ready|active|qa|done|blocked'
 valid_bug_priority='P0|P1|P2|P3'
 
 failures=0
+tmp_ids="$(mktemp)"
+trap 'rm -f "$tmp_ids"' EXIT
 
 fail() {
   echo "FAIL: $1" >&2
@@ -87,6 +89,29 @@ for file in "$arch_intake"/*.md; do
     fail "engineering id found in architecture intake: $file"
   fi
 done
+
+for lane in "$eng_intake" "$arch_intake"; do
+  for file in "$lane"/*.md; do
+    [ -e "$file" ] || continue
+    base="$(basename "$file")"
+    case "$base" in
+      STORY_TEMPLATE.md|BUG_TEMPLATE.md|ARCH_STORY_TEMPLATE.md)
+        continue
+        ;;
+    esac
+    id_value="$(sed -n 's/^[[:space:]]*-[[:space:]]*`id`:[[:space:]]*\(.*\)$/\1/p' "$file" | head -n1 | tr -d '\r')"
+    id_value="$(printf '%s' "$id_value" | xargs)"
+    if [[ -n "$id_value" ]]; then
+      printf '%s\t%s\n' "$id_value" "$file" >>"$tmp_ids"
+    fi
+  done
+done
+
+if [[ -s "$tmp_ids" ]]; then
+  while IFS=$'\t' read -r duplicate_id files; do
+    fail "duplicate intake id '$duplicate_id' found in: $files"
+  done < <(sort "$tmp_ids" | awk -F'\t' '{seen[$1]=seen[$1] ? seen[$1] ", " $2 : $2; count[$1]++} END {for (id in count) if (count[id] > 1) print id "\t" seen[id]}')
+fi
 
 if [ "$failures" -ne 0 ]; then
   exit 1
