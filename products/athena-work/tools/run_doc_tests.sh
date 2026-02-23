@@ -23,6 +23,7 @@ root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$
 "$root_dir/tools/test_release_checkpoint_bundle_v01.sh"
 "$root_dir/tools/test_humans_agents_sync.sh"
 "$root_dir/tools/test_intake_validation.sh"
+"$root_dir/tools/test_validate_intake_duplicate_ids.sh"
 "$root_dir/tools/test_program_state_consistency.sh"
 "$root_dir/tools/test_stage_exit_pipeline.sh"
 "$root_dir/tools/test_go_toolchain_readiness.sh"
