@@ -64,8 +64,13 @@ func IsLatencyDegraded(elapsedMs int64) bool {
 	threshold := int64(700)
 	if v := strings.TrimSpace(os.Getenv("MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS")); v != "" {
 		var parsed int64
-		if _, err := fmt.Sscanf(v, "%d", &parsed); err == nil && parsed > 0 {
-			threshold = parsed
+		if _, err := fmt.Sscanf(v, "%d", &parsed); err == nil {
+			if parsed == 0 {
+				return false
+			}
+			if parsed > 0 {
+				threshold = parsed
+			}
 		}
 	}
 	return elapsedMs > threshold
