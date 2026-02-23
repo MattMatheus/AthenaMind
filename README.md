@@ -8,9 +8,9 @@ This repository now hosts two products:
 Legacy root paths are preserved via compatibility links.
 
 ## Product Roots
-- AthenaMind: `/Users/foundry/AthenaMind/products/athena-mind`
-- AthenaWork: `/Users/foundry/AthenaMind/products/athena-work`
-- Website scaffold: `/Users/foundry/AthenaMind/website/athena-homepage`
+- AthenaMind: `products/athena-mind`
+- AthenaWork: `products/athena-work`
+- Website scaffold: `website/athena-homepage`
 
 ## Root Entry Points
 - `README.md`: product and CLI quick orientation
@@ -25,8 +25,8 @@ Legacy root paths are preserved via compatibility links.
 - `product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`: phased execution plan
 
 ## Product Skills
-- AthenaMind skill: `/Users/foundry/AthenaMind/skills/athena-mind/SKILL.md`
-- AthenaWork skill: `/Users/foundry/AthenaMind/skills/athena-work/SKILL.md`
+- AthenaMind skill: `skills/athena-mind/SKILL.md`
+- AthenaWork skill: `skills/athena-work/SKILL.md`
 
 ## Documentation Hosting Model
 - Source-of-truth: markdown in this repository.
@@ -43,9 +43,9 @@ Legacy root paths are preserved via compatibility links.
 - Deterministic crawl ingestion for local docs
 
 ## Current Operating Model
-- Toolchain root: `/Users/foundry/Source/orchestrator/AthenaMind`
-- Active memory root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/core`
-- Optional work root: `/Users/foundry/Source/orchestrator/AthenaMind-Memory/work`
+- Toolchain root: repository root (`$ATHENA_REPO_ROOT`, defaults to current working directory)
+- Active memory root: `$ATHENA_MEMORY_ROOT` (default: `$ATHENA_REPO_ROOT/memory/core`)
+- Optional work root: `$ATHENA_WORK_MEMORY_ROOT` (default: `$ATHENA_REPO_ROOT/memory/work`)
 - Latency fallback policy: configurable with `MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS` (`0` disables latency fallback)
 
 ## Command Surface
@@ -65,18 +65,24 @@ Implemented command families in `cmd/memory-cli`:
 ## Practical Workflow
 1. Load environment:
 ```bash
-set -a; source /Users/foundry/Source/orchestrator/AthenaMind/.env; set +a
+if [ -f .env ]; then
+  set -a; source .env; set +a
+fi
+
+ATHENA_REPO_ROOT="${ATHENA_REPO_ROOT:-$(pwd)}"
+ATHENA_MEMORY_ROOT="${ATHENA_MEMORY_ROOT:-$ATHENA_REPO_ROOT/memory/core}"
+ATHENA_WORK_MEMORY_ROOT="${ATHENA_WORK_MEMORY_ROOT:-$ATHENA_REPO_ROOT/memory/work}"
 ```
 
 2. Ensure memory roots exist:
 ```bash
-mkdir -p /Users/foundry/Source/orchestrator/AthenaMind-Memory/core /Users/foundry/Source/orchestrator/AthenaMind-Memory/work
+mkdir -p "$ATHENA_MEMORY_ROOT" "$ATHENA_WORK_MEMORY_ROOT"
 ```
 
 3. Write a memory entry:
 ```bash
 go run ./cmd/memory-cli write \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --root "$ATHENA_MEMORY_ROOT" \
   --type prompt \
   --domain docs-crawl \
   --id intro-note \
@@ -88,8 +94,8 @@ go run ./cmd/memory-cli write \
 4. Crawl docs into memory (collision-safe IDs are path-based and deterministic):
 ```bash
 go run ./cmd/memory-cli crawl \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
-  --dir /Users/foundry/Source/orchestrator/AthenaMind/knowledge-base \
+  --root "$ATHENA_MEMORY_ROOT" \
+  --dir "$ATHENA_REPO_ROOT/knowledge-base" \
   --domain docs-crawl \
   --reviewer system
 ```
@@ -97,13 +103,13 @@ go run ./cmd/memory-cli crawl \
 5. Refresh index artifacts:
 ```bash
 go run ./cmd/memory-cli reindex-all \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core
+  --root "$ATHENA_MEMORY_ROOT"
 ```
 
 6. Retrieve:
 ```bash
 go run ./cmd/memory-cli retrieve \
-  --root /Users/foundry/Source/orchestrator/AthenaMind-Memory/core \
+  --root "$ATHENA_MEMORY_ROOT" \
   --query "memory lifecycle" \
   --domain docs-crawl
 ```
