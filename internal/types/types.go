@@ -209,3 +209,33 @@ type UpsertEntryInput struct {
 	BodyFile string
 	Stage    string
 }
+
+type BootstrapMemoryEntry struct {
+	ID            string  `json:"id"`
+	SelectionMode string  `json:"selection_mode"`
+	SourcePath    string  `json:"source_path"`
+	Confidence    float64 `json:"confidence"`
+	Reason        string  `json:"reason"`
+	Type          string  `json:"type"`
+	Domain        string  `json:"domain"`
+	Title         string  `json:"title"`
+}
+
+type EpisodeContext struct {
+	Repo      string `json:"repo"`
+	Scenario  string `json:"scenario"`
+	CycleID   string `json:"cycle_id,omitempty"`
+	StoryID   string `json:"story_id,omitempty"`
+	Outcome   string `json:"outcome,omitempty"`
+	Summary   string `json:"summary,omitempty"`
+	Timestamp string `json:"timestamp_utc,omitempty"`
+}
+
+type BootstrapPayload struct {
+	Repo          string                 `json:"repo"`
+	SessionID     string                 `json:"session_id"`
+	Scenario      string                 `json:"scenario"`
+	GeneratedAt   string                 `json:"generated_at"`
+	MemoryEntries []BootstrapMemoryEntry `json:"memory_entries"`
+	Episode       *EpisodeContext        `json:"episode,omitempty"`
+}

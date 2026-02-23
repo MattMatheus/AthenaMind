@@ -257,6 +257,85 @@ func runEvaluate(args []string) (err error) {
 	return nil
 }
 
+func runBootstrap(args []string) (err error) {
+	fs := flag.NewFlagSet("bootstrap", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+
+	root := fs.String("root", "memory", "memory root path")
+	repo := fs.String("repo", "", "repository identifier")
+	sessionID := fs.String("session-id", "", "telemetry session identifier")
+	scenario := fs.String("scenario", "", "scenario identifier")
+	memoryType := fs.String("memory-type", "state", "telemetry memory type: procedural|state|semantic")
+	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
+	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if strings.TrimSpace(*repo) == "" {
+		return errors.New("--repo is required")
+	}
+	if strings.TrimSpace(*sessionID) == "" {
+		return errors.New("--session-id is required")
+	}
+	if strings.TrimSpace(*scenario) == "" {
+		return errors.New("--scenario is required")
+	}
+
+	startedAt := time.Now().UTC()
+	traceID := fmt.Sprintf("trace-%d", startedAt.UnixNano())
+	telemetryResult := types.BootstrapPayload{}
+	defer func() {
+		result := "success"
+		errorCode := ""
+		reason := ""
+		selectedID := "__none__"
+		selectionMode := "bootstrap_empty"
+		sourcePath := "__none__"
+		if len(telemetryResult.MemoryEntries) > 0 {
+			selectedID = telemetryResult.MemoryEntries[0].ID
+			selectionMode = telemetryResult.MemoryEntries[0].SelectionMode
+			sourcePath = telemetryResult.MemoryEntries[0].SourcePath
+		}
+		if err != nil {
+			result = "fail"
+			errorCode = telemetry.TelemetryErrorCode(err)
+			reason = err.Error()
+		}
+		emitErr := telemetry.Emit(*root, *telemetryFile, types.TelemetryEvent{
+			EventName:       "memory.bootstrap",
+			EventVersion:    telemetry.EventSchema,
+			TimestampUTC:    time.Now().UTC().Format(time.RFC3339),
+			SessionID:       telemetry.NormalizeTelemetryValue(*sessionID, "session-local"),
+			TraceID:         traceID,
+			ScenarioID:      telemetry.NormalizeTelemetryValue(*scenario, "scenario-bootstrap"),
+			Operation:       "bootstrap",
+			Result:          result,
+			PolicyGate:      "none",
+			MemoryType:      telemetry.NormalizeMemoryType(*memoryType),
+			LatencyMS:       time.Since(startedAt).Milliseconds(),
+			SelectedID:      selectedID,
+			SelectionMode:   selectionMode,
+			SourcePath:      sourcePath,
+			OperatorVerdict: telemetry.NormalizeOperatorVerdict(*operatorVerdict),
+			ErrorCode:       errorCode,
+			Reason:          reason,
+		})
+		if err == nil && emitErr != nil {
+			err = emitErr
+		}
+	}()
+	if err := governance.EnforceConstraintChecks("retrieve", *sessionID, *scenario, traceID); err != nil {
+		return err
+	}
+
+	payload, err := retrieval.Bootstrap(*root, *repo, *sessionID, *scenario)
+	if err != nil {
+		return err
+	}
+	telemetryResult = payload
+	return printResult(payload)
+}
+
 func runServeReadGateway(args []string) error {
 	fs := flag.NewFlagSet("serve-read-gateway", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)

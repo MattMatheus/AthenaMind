@@ -5,7 +5,7 @@ Command reference for all currently supported `memory-cli` operations.
 
 ## Root Command
 ```bash
-memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate> [flags]
+memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap> [flags]
 ```
 
 ## `write`
@@ -90,5 +90,23 @@ Optional:
 - `--domain`
 - `--gateway-url`
 
+## `bootstrap`
+Builds a memory bootstrap payload for agent startup.
+
+Required:
+- `--repo`
+- `--session-id`
+- `--scenario`
+
+Optional:
+- `--root` (default `memory`)
+- telemetry flags (`--memory-type`, `--operator-verdict`, `--telemetry-file`)
+
+Bootstrap payload schema:
+- top-level: `repo`, `session_id`, `scenario`, `generated_at`, `memory_entries`, optional `episode`
+- `memory_entries[]`: `id`, `selection_mode`, `source_path`, `confidence`, `reason`, `type`, `domain`, `title`
+- `episode` (when available from episode store): `repo`, `scenario`, `cycle_id`, `story_id`, `outcome`, `summary`, `timestamp_utc`
+
 ## References
 - `cmd/memory-cli/main.go`
+- `cmd/memory-cli/commands.go`

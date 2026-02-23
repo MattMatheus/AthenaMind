@@ -868,3 +868,93 @@ func TestConstraintLatencyDegradationForcesFallback(t *testing.T) {
 		t.Fatalf("expected fallback_path_priority under latency degradation, got %s", result.SelectionMode)
 	}
 }
+
+func TestBootstrapEmptyStoreReturnsValidPayload(t *testing.T) {
+	root := t.TempDir()
+	err := runBootstrap([]string{
+		"--root", root,
+		"--repo", "AthenaMind",
+		"--session-id", "sess-bootstrap-empty",
+		"--scenario", "engineering",
+	})
+	if err != nil {
+		t.Fatalf("runBootstrap failed: %v", err)
+	}
+}
+
+func TestBootstrapSeededReturnsProceduralMatchesAndTelemetry(t *testing.T) {
+	root := t.TempDir()
+	telemetryPath := filepath.Join(root, "events.jsonl")
+	if err := runWrite([]string{
+		"--root", root,
+		"--id", "procedural-onboarding",
+		"--title", "Procedural Onboarding Guide",
+		"--type", "instruction",
+		"--domain", "athenamind",
+		"--body", "engineering startup checklist and repo workflow",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed bootstrap corpus",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("seed write failed: %v", err)
+	}
+
+	outPath := filepath.Join(root, "bootstrap.json")
+	oldStdout := os.Stdout
+	f, err := os.Create(outPath)
+	if err != nil {
+		t.Fatalf("create capture file: %v", err)
+	}
+	os.Stdout = f
+	defer func() { os.Stdout = oldStdout }()
+	defer f.Close()
+
+	if err := runBootstrap([]string{
+		"--root", root,
+		"--repo", "athenamind",
+		"--session-id", "sess-bootstrap-seeded",
+		"--scenario", "engineering",
+		"--telemetry-file", telemetryPath,
+	}); err != nil {
+		t.Fatalf("runBootstrap failed: %v", err)
+	}
+
+	if err := f.Close(); err != nil {
+		t.Fatalf("close capture file: %v", err)
+	}
+	data, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read capture file: %v", err)
+	}
+	var payload bootstrapPayload
+	if err := json.Unmarshal(data, &payload); err != nil {
+		t.Fatalf("parse bootstrap payload: %v", err)
+	}
+	if payload.Repo != "athenamind" || payload.SessionID != "sess-bootstrap-seeded" || payload.Scenario != "engineering" {
+		t.Fatalf("unexpected payload identity fields: %+v", payload)
+	}
+	if len(payload.MemoryEntries) == 0 {
+		t.Fatal("expected at least one bootstrap memory entry")
+	}
+	first := payload.MemoryEntries[0]
+	if first.ID == "" || first.SelectionMode == "" || first.SourcePath == "" {
+		t.Fatalf("expected selection metadata in bootstrap memory entry, got %+v", first)
+	}
+
+	events := readTelemetryEvents(t, telemetryPath)
+	seenBootstrap := false
+	for _, ev := range events {
+		if ev.Operation == "bootstrap" {
+			seenBootstrap = true
+			if ev.EventName != "memory.bootstrap" {
+				t.Fatalf("unexpected bootstrap event name: %+v", ev)
+			}
+		}
+	}
+	if !seenBootstrap {
+		t.Fatal("expected bootstrap telemetry event")
+	}
+}

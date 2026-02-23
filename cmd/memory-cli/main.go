@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate> [flags]"))
+		exitErr(errors.New("usage: memory-cli <write|retrieve|evaluate|bootstrap> [flags]"))
 	}
 
 	var err error
@@ -25,6 +25,8 @@ func main() {
 		err = runAPIRetrieve(os.Args[2:])
 	case "evaluate":
 		err = runEvaluate(os.Args[2:])
+	case "bootstrap":
+		err = runBootstrap(os.Args[2:])
 	default:
 		err = fmt.Errorf("unknown command: %s", os.Args[1])
 	}

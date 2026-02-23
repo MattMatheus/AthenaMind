@@ -22,3 +22,6 @@ type snapshotListRow = types.SnapshotListRow
 type snapshotAuditEvent = types.SnapshotAuditEvent
 type writePolicyInput = types.WritePolicyInput
 type writePolicyDecision = types.WritePolicyDecision
+type bootstrapMemoryEntry = types.BootstrapMemoryEntry
+type episodeContext = types.EpisodeContext
+type bootstrapPayload = types.BootstrapPayload
