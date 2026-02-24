@@ -38,7 +38,9 @@ func EvaluateSemanticHealth(root, query, domain, endpoint, sessionID string) (Se
 	if err != nil {
 		return SemanticHealthReport{}, err
 	}
-	semantic := result.SelectionMode == "embedding_semantic" || result.SelectionMode == "semantic"
+	semantic := result.SelectionMode == "embedding_semantic" ||
+		result.SelectionMode == "semantic" ||
+		result.SelectionMode == "hybrid_rrf"
 	coverageOK := missing == 0
 	return SemanticHealthReport{
 		IndexedEntries:    len(idx.Entries),

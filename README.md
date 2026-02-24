@@ -57,6 +57,7 @@ Implemented command families in `cmd/memory-cli`:
 - `verify`
 - `reindex-all`
 - `crawl`
+- `sync-qdrant`
 - `snapshot` (`create`, `list`, `restore`)
 - `episode` (`write`, `list`)
 - `serve-read-gateway`

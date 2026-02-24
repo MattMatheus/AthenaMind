@@ -38,14 +38,28 @@ type ReviewMeta struct {
 }
 
 type RetrieveResult struct {
-	SelectedID    string  `json:"selected_id"`
-	SelectionMode string  `json:"selection_mode"`
-	SourcePath    string  `json:"source_path"`
-	Confidence    float64 `json:"confidence"`
-	Reason        string  `json:"reason"`
-	FallbackUsed  bool    `json:"fallback_used,omitempty"`
-	SemanticHit   bool    `json:"semantic_hit,omitempty"`
-	PrecisionHint float64 `json:"precision_hint,omitempty"`
+	SelectedID    string              `json:"selected_id"`
+	SelectionMode string              `json:"selection_mode"`
+	SourcePath    string              `json:"source_path"`
+	Confidence    float64             `json:"confidence"`
+	Reason        string              `json:"reason"`
+	FallbackUsed  bool                `json:"fallback_used,omitempty"`
+	SemanticHit   bool                `json:"semantic_hit,omitempty"`
+	PrecisionHint float64             `json:"precision_hint,omitempty"`
+	Candidates    []RetrieveCandidate `json:"candidates,omitempty"`
+}
+
+type RetrieveCandidate struct {
+	ID             string  `json:"id"`
+	SourcePath     string  `json:"source_path"`
+	SelectionMode  string  `json:"selection_mode"`
+	Confidence     float64 `json:"confidence"`
+	LexicalScore   float64 `json:"lexical_score,omitempty"`
+	EmbeddingScore float64 `json:"embedding_score,omitempty"`
+	BackendScore   float64 `json:"backend_score,omitempty"`
+	FusedScore     float64 `json:"fused_score,omitempty"`
+	HasVector      bool    `json:"has_vector,omitempty"`
+	Reason         string  `json:"reason,omitempty"`
 }
 
 type EmbeddingRecord struct {
@@ -65,19 +79,23 @@ type APIRetrieveRequest struct {
 	Query     string `json:"query"`
 	Domain    string `json:"domain,omitempty"`
 	SessionID string `json:"session_id"`
+	Mode      string `json:"mode,omitempty"`
+	TopK      int    `json:"top_k,omitempty"`
+	Backend   string `json:"backend,omitempty"`
 }
 
 type APIRetrieveResponse struct {
-	SelectedID      string  `json:"selected_id"`
-	SelectionMode   string  `json:"selection_mode"`
-	SourcePath      string  `json:"source_path"`
-	Confidence      float64 `json:"confidence"`
-	Reason          string  `json:"reason"`
-	TraceID         string  `json:"trace_id"`
-	FallbackUsed    bool    `json:"fallback_used"`
-	FallbackCode    string  `json:"fallback_code,omitempty"`
-	FallbackReason  string  `json:"fallback_reason,omitempty"`
-	GatewayEndpoint string  `json:"gateway_endpoint,omitempty"`
+	SelectedID      string              `json:"selected_id"`
+	SelectionMode   string              `json:"selection_mode"`
+	SourcePath      string              `json:"source_path"`
+	Confidence      float64             `json:"confidence"`
+	Reason          string              `json:"reason"`
+	Candidates      []RetrieveCandidate `json:"candidates,omitempty"`
+	TraceID         string              `json:"trace_id"`
+	FallbackUsed    bool                `json:"fallback_used"`
+	FallbackCode    string              `json:"fallback_code,omitempty"`
+	FallbackReason  string              `json:"fallback_reason,omitempty"`
+	GatewayEndpoint string              `json:"gateway_endpoint,omitempty"`
 }
 
 type MutationAuditRecord struct {
@@ -127,7 +145,12 @@ type EvaluationReport struct {
 	CorpusID                string                `json:"corpus_id"`
 	QuerySetID              string                `json:"query_set_id"`
 	ConfigID                string                `json:"config_id"`
+	Strategy                string                `json:"strategy"`
+	AvgLatencyMS            float64               `json:"avg_latency_ms"`
+	LatencyP50MS            float64               `json:"latency_p50_ms"`
+	LatencyP95MS            float64               `json:"latency_p95_ms"`
 	Status                  string                `json:"status"`
+	Recommendation          string                `json:"recommendation"`
 	Top1UsefulRate          EvaluationMetric      `json:"top1_useful_rate"`
 	FallbackDeterminism     EvaluationMetric      `json:"fallback_determinism"`
 	SelectionModeReporting  EvaluationMetric      `json:"selection_mode_reporting"`

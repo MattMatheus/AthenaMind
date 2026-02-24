@@ -20,6 +20,18 @@ func TestIsSemanticConfident(t *testing.T) {
 	}
 }
 
+func TestIsEmbeddingSemanticConfident(t *testing.T) {
+	if IsEmbeddingSemanticConfident(0.19, 0.01) {
+		t.Fatal("expected low embedding confidence to fail")
+	}
+	if IsEmbeddingSemanticConfident(0.25, 0.24) {
+		t.Fatal("expected low embedding margin to fail")
+	}
+	if !IsEmbeddingSemanticConfident(0.25, 0.20) {
+		t.Fatal("expected embedding confidence gate to pass")
+	}
+}
+
 func TestRetrieveUsesEmbeddingSimilarityWhenAvailable(t *testing.T) {
 	root := t.TempDir()
 	policy := types.WritePolicyDecision{
@@ -115,6 +127,58 @@ func TestRetrieveFallsBackWhenEmbeddingEndpointUnavailable(t *testing.T) {
 	}
 	if got.SelectedID == "" {
 		t.Fatalf("expected a deterministic fallback selection, got %+v", got)
+	}
+}
+
+func TestFallbackPrefersHigherScoreThenPath(t *testing.T) {
+	cs := []candidate{
+		{
+			Entry: types.IndexEntry{ID: "b", Path: "z/path-b.md"},
+			Score: 0.61,
+		},
+		{
+			Entry: types.IndexEntry{ID: "a", Path: "a/path-a.md"},
+			Score: 0.61,
+		},
+		{
+			Entry: types.IndexEntry{ID: "c", Path: "b/path-c.md"},
+			Score: 0.42,
+		},
+	}
+	got := chooseDeterministicFallback(cs)
+	if got.Entry.ID != "a" {
+		t.Fatalf("expected path tie-break for top score candidates, got %+v", got.Entry)
+	}
+}
+
+func TestGenerateEmbeddingsChunksLongInputs(t *testing.T) {
+	var calls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		var req map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			t.Fatalf("decode request: %v", err)
+		}
+		prompt, _ := req["prompt"].(string)
+		if len(prompt) > 3000 {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(`{"error":"input length exceeds the context length"}`))
+			return
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{1.0, 3.0}})
+	}))
+	defer server.Close()
+
+	longText := strings.Repeat("very long markdown paragraph ", 600)
+	vecs, err := GenerateEmbeddings(server.URL, []string{longText})
+	if err != nil {
+		t.Fatalf("GenerateEmbeddings failed: %v", err)
+	}
+	if len(vecs) != 1 || len(vecs[0]) != 2 {
+		t.Fatalf("unexpected embedding shape: %+v", vecs)
+	}
+	if calls < 2 {
+		t.Fatalf("expected long input to be chunked across multiple requests, calls=%d", calls)
 	}
 }
 
@@ -286,5 +350,247 @@ func TestRetrievePrefersSessionFreshnessWhenScoresTie(t *testing.T) {
 	}
 	if got.SelectedID != "b-entry" {
 		t.Fatalf("expected session-fresh entry to win tie, got %+v", got)
+	}
+}
+
+func TestRetrieveHybridReturnsCandidates(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "alpha",
+		Title:  "Alpha Runbook",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "network runbook alpha",
+		Stage:  "pm",
+	}, policy)
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "beta",
+		Title:  "Beta Guide",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "incident restore beta",
+		Stage:  "pm",
+	}, policy)
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req map[string]any
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		prompt, _ := req["prompt"].(string)
+		p := strings.ToLower(prompt)
+		vec := []float64{1.0, 0.0}
+		if strings.Contains(p, "beta") || strings.Contains(p, "incident") {
+			vec = []float64{0.0, 1.0}
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": vec})
+	}))
+	defer server.Close()
+
+	if _, err := IndexEntryEmbedding(root, "alpha", server.URL, "sess-hybrid"); err != nil {
+		t.Fatalf("index alpha: %v", err)
+	}
+	if _, err := IndexEntryEmbedding(root, "beta", server.URL, "sess-hybrid"); err != nil {
+		t.Fatalf("index beta: %v", err)
+	}
+
+	got, warning, err := RetrieveWithOptionsAndEndpointAndSession(
+		root,
+		"incident restore",
+		"ops",
+		server.URL,
+		"sess-hybrid",
+		RetrieveOptions{Mode: "hybrid", TopK: 2},
+	)
+	if err != nil {
+		t.Fatalf("hybrid retrieve failed: %v", err)
+	}
+	if warning != "" {
+		t.Fatalf("unexpected warning: %s", warning)
+	}
+	if got.SelectionMode != "hybrid_rrf" {
+		t.Fatalf("expected hybrid_rrf, got %s", got.SelectionMode)
+	}
+	if len(got.Candidates) != 2 {
+		t.Fatalf("expected 2 candidates, got %d", len(got.Candidates))
+	}
+	if got.Candidates[0].ID == "" || got.Candidates[0].FusedScore <= 0 {
+		t.Fatalf("expected fused candidate scores, got %+v", got.Candidates[0])
+	}
+}
+
+func TestRetrieveHybridFallsBackWithoutSignal(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-a",
+		Title:  "Entry A",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "alpha alpha alpha",
+		Stage:  "pm",
+	}, policy)
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-b",
+		Title:  "Entry B",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "beta beta beta",
+		Stage:  "pm",
+	}, policy)
+
+	got, _, err := RetrieveWithOptionsAndEndpointAndSession(
+		root,
+		"qqqqq",
+		"ops",
+		"http://127.0.0.1:1",
+		"sess-hybrid-fallback",
+		RetrieveOptions{Mode: "hybrid", TopK: 3},
+	)
+	if err != nil {
+		t.Fatalf("hybrid fallback retrieve failed: %v", err)
+	}
+	if got.SelectionMode != "fallback_path_priority" {
+		t.Fatalf("expected deterministic fallback in no-signal hybrid, got %s", got.SelectionMode)
+	}
+	if len(got.Candidates) == 0 {
+		t.Fatal("expected candidate traces in fallback output")
+	}
+}
+
+func TestRetrieveQdrantBackendUnavailableFallsBackGracefully(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "net",
+		Title:  "Network Runbook",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "network rollback playbook",
+		Stage:  "pm",
+	}, policy)
+
+	embedServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{1.0, 0.0}})
+	}))
+	defer embedServer.Close()
+
+	if _, err := IndexEntryEmbedding(root, "net", embedServer.URL, "sess-qdrant"); err != nil {
+		t.Fatalf("index embedding failed: %v", err)
+	}
+
+	t.Setenv("ATHENA_QDRANT_URL", "http://127.0.0.1:1")
+	got, warning, err := RetrieveWithOptionsAndEndpointAndSession(
+		root,
+		"network rollback",
+		"ops",
+		embedServer.URL,
+		"sess-qdrant",
+		RetrieveOptions{
+			Mode:    "hybrid",
+			TopK:    3,
+			Backend: "qdrant",
+		},
+	)
+	if err != nil {
+		t.Fatalf("retrieve should succeed with qdrant fallback, got err: %v", err)
+	}
+	if strings.TrimSpace(warning) == "" || !strings.Contains(warning, "qdrant backend unavailable") {
+		t.Fatalf("expected qdrant fallback warning, got: %q", warning)
+	}
+	if got.SelectedID == "" {
+		t.Fatalf("expected fallback/local selection, got %+v", got)
+	}
+}
+
+func TestRetrieveNeo4jBackendBoostsCandidates(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-a",
+		Title:  "Entry A",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "alpha body",
+		Stage:  "pm",
+	}, policy)
+	_ = index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-b",
+		Title:  "Entry B",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "beta body",
+		Stage:  "pm",
+	}, policy)
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"results": []any{
+				map[string]any{
+					"data": []any{
+						map[string]any{"row": []any{"entry-a", 9}},
+						map[string]any{"row": []any{"entry-b", 1}},
+					},
+				},
+			},
+			"errors": []any{},
+		})
+	}))
+	defer server.Close()
+
+	t.Setenv("ATHENA_NEO4J_HTTP_URL", server.URL)
+	t.Setenv("ATHENA_NEO4J_USER", "neo4j")
+	t.Setenv("ATHENA_NEO4J_PASSWORD", "devpassword")
+	t.Setenv("ATHENA_NEO4J_DATABASE", "neo4j")
+
+	got, warning, err := RetrieveWithOptionsAndEndpointAndSession(
+		root,
+		"unrelated-token",
+		"ops",
+		"http://127.0.0.1:1",
+		"sess-neo",
+		RetrieveOptions{
+			Mode:    "hybrid",
+			TopK:    2,
+			Backend: "neo4j",
+		},
+	)
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if strings.TrimSpace(warning) == "" {
+		t.Fatal("expected embedding warning due unavailable endpoint")
+	}
+	if got.SelectionMode != "hybrid_rrf" {
+		t.Fatalf("expected hybrid mode selection, got %s", got.SelectionMode)
+	}
+	if len(got.Candidates) == 0 || got.Candidates[0].BackendScore <= 0 {
+		t.Fatalf("expected backend score in candidates, got %+v", got.Candidates)
+	}
+	if got.SelectedID != "entry-a" {
+		t.Fatalf("expected neo4j boosted candidate entry-a, got %s", got.SelectedID)
 	}
 }
