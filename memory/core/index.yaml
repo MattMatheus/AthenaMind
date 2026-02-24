@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-02-23T04:55:31Z",
+  "updated_at": "2026-02-23T12:32:22Z",
   "entries": [
     {
       "id": "agents-37dd6836",
@@ -51,6 +51,16 @@
       "status": "approved",
       "updated_at": "2026-02-23T04:55:25Z",
       "title": "Cli Readme Ea1491fd"
+    },
+    {
+      "id": "codex-onboard-check",
+      "type": "prompt",
+      "domain": "docs-crawl",
+      "path": "prompts/docs-crawl/codex-onboard-check.md",
+      "metadata_path": "metadata/codex-onboard-check.yaml",
+      "status": "approved",
+      "updated_at": "2026-02-23T12:32:22Z",
+      "title": "Codex onboard check"
     },
     {
       "id": "concepts-governance-1c616379",

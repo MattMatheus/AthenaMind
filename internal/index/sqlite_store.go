@@ -341,7 +341,7 @@ func GetEmbeddingRecords(root string, ids []string) (map[string]types.EmbeddingR
 	for _, r := range rows {
 		vec := []float64{}
 		if err := json.Unmarshal([]byte(r.VectorJSON), &vec); err != nil {
-			return nil, err
+			continue
 		}
 		out[r.EntryID] = types.EmbeddingRecord{
 			EntryID:     r.EntryID,
