@@ -12,7 +12,7 @@
 - A delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md
 - A delivery-backlog/engineering/done/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md
 - A tools/test_dogfood_semantic_hardening_v01.sh
-- A operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md
+- A operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md
 - D delivery-backlog/engineering/active/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md
 - M delivery-backlog/engineering/active/README.md
 - M product-research/roadmap/PROGRAM_STATE_BOARD.md

@@ -5,7 +5,7 @@
 
 ## Acceptance Criteria Validation
 1. A design brief exists for snapshot behavior and constraints.
-   - Evidence: `/Users/foundry/Source/orchestrator/AthenaMind/product-research/roadmap/MEMORY_SNAPSHOT_DESIGN_BRIEF_POST_V01.md`
+   - Evidence: `<repo>/product-research/roadmap/MEMORY_SNAPSHOT_DESIGN_BRIEF_POST_V01.md`
 2. Integration points with current memory modules are identified.
    - Evidence: brief section "Integration Points (Current Modules)" explicitly covers `state-memory`, `semantic-memory`, `procedural-memory`, `memory-governance`, `audit-telemetry`, and `orchestrator-api`.
 3. Rollout recommendation explicitly marks post-v0.1 priority.

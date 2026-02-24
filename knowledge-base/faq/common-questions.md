@@ -10,7 +10,7 @@ No. It is a memory layer. Runtime orchestration is intentionally out of scope fo
 
 ## What is AthenaWork in this slim repo?
 
-AthenaWork is the staged operational workflow system. In slim mode, the full operator pack is archived at `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`.
+AthenaWork is the staged operational workflow system and is fully available in this repository via `tools/`, `stage-prompts/`, `staff-personas/`, `delivery-backlog/`, and `operating-system/`.
 
 ## Does OTLP require a secret?
 

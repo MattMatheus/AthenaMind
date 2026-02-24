@@ -33,7 +33,7 @@
 - No known regressions in touched scope
 
 ## Dependencies
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
+- `knowledge-base/how-to/go-toolchain-setup.md`
 - `product-research/decisions/ADR-0007-memory-layer-scope-refinement.md`
 - `product-research/architecture/MEMORY_CLI_V1_ARCHITECTURE.md`
 

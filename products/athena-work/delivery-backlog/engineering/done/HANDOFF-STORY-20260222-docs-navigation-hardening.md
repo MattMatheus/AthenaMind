@@ -2,7 +2,7 @@
 
 ## What Changed
 - Added repo-root cycle navigation index:
-  - `knowledge-base/process/CYCLE_INDEX.md`
+  - `knowledge-base/process/cycle-index.md`
 - Included required operator guidance in index:
   - first 5 minutes steps
   - branch safety rule (`dev`)
@@ -41,7 +41,7 @@
 - The cycle index is static documentation; it can drift if canonical paths are changed without test updates.
 
 ## Recommended QA Focus Areas
-- Verify `knowledge-base/process/CYCLE_INDEX.md` is concise and complete for operator onboarding.
+- Verify `knowledge-base/process/cycle-index.md` is concise and complete for operator onboarding.
 - Verify branch/no-stories rules are accurately represented.
 - Verify linked paths in index resolve and match current repo structure.
 

@@ -4,7 +4,7 @@
 - Added versioned dogfooding scenario pack:
   - `operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md`
 - Added first-run scored artifact with KPI annotations and failure classification:
-  - `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md`
+  - `operating-system/metrics/dogfood-scenario-run-2026-02-22.md`
 - Generated prioritized follow-on action from weak-signal findings:
   - `delivery-backlog/engineering/intake/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md`
 - Added story-specific doc test coverage:
@@ -36,7 +36,7 @@
 - AC1 (versioned, multi-type scenario pack): PASS
   - `DOGFOOD_SCENARIO_PACK_V01.md` includes four scenarios across procedural/state/semantic memory.
 - AC2 (first run recorded with KPI annotations): PASS
-  - `DOGFOOD_SCENARIO_RUN_2026-02-22.md` includes KPI-relevant snapshot metrics and classification.
+  - `dogfood-scenario-run-2026-02-22.md` includes KPI-relevant snapshot metrics and classification.
 - AC3 (prioritized follow-on generated): PASS
   - Intake story created and prioritized as immediate retrieval hardening work.
 

@@ -5,7 +5,7 @@
 
 ## Acceptance Criteria Validation
 1. Release bundle artifact is created and references included stories/bugs and QA evidence.
-   - Evidence: `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md` includes scope, bug reference, and QA artifact links.
+   - Evidence: `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md` includes scope, bug reference, and QA artifact links.
 2. Decision field is explicit (`ship` or `hold`) with rationale.
    - Evidence: bundle records explicit `hold` decision with rationale and rollback direction.
 3. Program board links to the created release checkpoint evidence.

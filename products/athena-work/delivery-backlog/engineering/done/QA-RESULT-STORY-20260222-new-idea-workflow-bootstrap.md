@@ -5,15 +5,15 @@
 
 ## Acceptance Criteria Validation
 1. Validation commands detect missing metadata and invalid status values.
-   - Evidence: `/Users/foundry/Source/orchestrator/AthenaMind/tools/validate_intake_items.sh` enforces metadata/status checks for intake items.
+   - Evidence: `<repo>/tools/validate_intake_items.sh` enforces metadata/status checks for intake items.
 2. Lane-separation checks detect architecture-vs-engineering misfiling.
    - Evidence: validation script fails on `ARCH-*` ids in engineering intake and `STORY-*`/`BUG-*` ids in architecture intake.
 3. PM refinement documentation includes clear failure-handling instructions.
    - Evidence:
-     - `/Users/foundry/Source/orchestrator/AthenaMind/stage-prompts/active/pm-refinement-seed-prompt.md`
-     - `/Users/foundry/Source/orchestrator/AthenaMind/delivery-backlog/architecture/INTAKE_REFINEMENT_GUIDE.md`
-     - `/Users/foundry/Source/orchestrator/AthenaMind/HUMANS.md`
-     - `/Users/foundry/Source/orchestrator/AthenaMind/DEVELOPMENT_CYCLE.md`
+     - `<repo>/stage-prompts/active/pm-refinement-seed-prompt.md`
+     - `<repo>/delivery-backlog/architecture/INTAKE_REFINEMENT_GUIDE.md`
+     - `<repo>/HUMANS.md`
+     - `<repo>/DEVELOPMENT_CYCLE.md`
 
 ## Test and Regression Validation
 - Executed: `go test ./...`, `tools/run_doc_tests.sh`

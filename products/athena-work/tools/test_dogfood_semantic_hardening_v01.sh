@@ -5,8 +5,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
-hardening_run="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md"
-baseline_run="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md"
+hardening_run="$root_dir/operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md"
+baseline_run="$root_dir/operating-system/metrics/dogfood-scenario-run-2026-02-22.md"
 
 doc_test_init
 

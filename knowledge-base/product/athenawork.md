@@ -33,6 +33,6 @@ It is designed so non-technical users can steer agents through explicit stages, 
 
 ## Related Docs
 
-- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)
-- [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
-- [AthenaMind Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
+- [AthenaWork Operator Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork-operator-reference.md)
+- [AthenaWork Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/athenawork-quickstart.md)
+- [AthenaMind Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenamind.md)

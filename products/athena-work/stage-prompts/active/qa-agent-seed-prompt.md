@@ -27,5 +27,5 @@ Your task is to validate the top story in `delivery-backlog/engineering/qa/`.
 ## Constraints
 - No silent failures.
 - No direct reprioritization; PM handles refinement/ranking.
-- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
 - Do not commit before observer report is generated.

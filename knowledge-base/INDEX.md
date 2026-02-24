@@ -2,40 +2,40 @@
 
 ## Start Here
 
-- [Getting Started Overview](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/README.md)
-- [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
-- [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
-- [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
-- [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
+- [Getting Started Overview](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/README.md)
+- [Installation](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/installation.md)
+- [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
+- [AthenaMind Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
+- [AthenaWork Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/athenawork-quickstart.md)
 
 ## Product Guides
 
-- [AthenaMind Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
-- [AthenaWork Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
-- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)
+- [AthenaMind Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenamind.md)
+- [AthenaWork Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork.md)
+- [AthenaWork Operator Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork-operator-reference.md)
 
 ## Runtime and Tuning
 
-- [CLI Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/README.md)
-- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
-- [CLI Examples](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/examples.md)
-- [Workflows](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/README.md)
-- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
-- [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
+- [CLI Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/README.md)
+- [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
+- [CLI Examples](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/examples.md)
+- [Workflows](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/README.md)
+- [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)
+- [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
 
 
 ## Public Testing
 
-- [Program Overview](/Users/foundry/Experiments/Current/AthenaMind/PUBLIC_TESTING.md)
-- [Contributing](/Users/foundry/Experiments/Current/AthenaMind/CONTRIBUTING.md)
-- [Testing Guide](/Users/foundry/Experiments/Current/AthenaMind/TESTING.md)
-- [Support](/Users/foundry/Experiments/Current/AthenaMind/SUPPORT.md)
-- [Security](/Users/foundry/Experiments/Current/AthenaMind/SECURITY.md)
+- [Program Overview](https://github.com/MattMatheus/AthenaMind/blob/main/PUBLIC_TESTING.md)
+- [Contributing](https://github.com/MattMatheus/AthenaMind/blob/main/CONTRIBUTING.md)
+- [Testing Guide](https://github.com/MattMatheus/AthenaMind/blob/main/TESTING.md)
+- [Support](https://github.com/MattMatheus/AthenaMind/blob/main/SUPPORT.md)
+- [Security](https://github.com/MattMatheus/AthenaMind/blob/main/SECURITY.md)
 
 ## Support
 
-- [Troubleshooting](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/troubleshooting/README.md)
-- [FAQ](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/faq/common-questions.md)
+- [Troubleshooting](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/troubleshooting/README.md)
+- [FAQ](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/faq/common-questions.md)
 
 ## Slim Repo Notice
 

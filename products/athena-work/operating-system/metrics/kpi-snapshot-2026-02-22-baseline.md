@@ -11,7 +11,7 @@
 - Defect escape: `0%` (no post-done reopening observed in current sample)
 - Reopen rate: `0%` (no qa->active reopen in current sample)
 - Handoff completeness: `100%` (story + handoff + QA result + observer evidence present for sampled cycles)
-- Retrieval quality gate pass rate: `75%` (`3/4` scenarios passed gate in `DOGFOOD_SCENARIO_RUN_2026-02-22.md`)
+- Retrieval quality gate pass rate: `75%` (`3/4` scenarios passed gate in `dogfood-scenario-run-2026-02-22.md`)
 - Traceability completeness: `75%` (`3/4` scenarios with full trace evidence)
 
 ## Interpretation

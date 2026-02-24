@@ -42,7 +42,7 @@
 
 ## Outcome Signals
 - Baseline metric snapshot:
-  - `products/athena-work/operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+  - `products/athena-work/operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`
 - Expected trend direction:
   - Lower retrieval failure rate under partial corruption.
   - Lower operator friction in branch-isolated execution and observer cycle closure.

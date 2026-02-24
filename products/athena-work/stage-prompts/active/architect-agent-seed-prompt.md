@@ -33,5 +33,5 @@ Your task is to execute the top architecture story in `delivery-backlog/architec
 - Do not implement runtime-execution ownership in v0.1 scope.
 - Do not skip tests.
 - Do not move story directly to done.
-- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
 - Do not commit before observer report is generated.

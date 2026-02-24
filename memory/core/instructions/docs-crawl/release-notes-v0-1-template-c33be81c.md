@@ -25,6 +25,6 @@ User-facing summary of what changed in v0.1 and what to expect during adoption.
 - Stale notes after late-cycle scope changes.
 
 ## References
-- `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
+- `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md`
 - `knowledge-base/release-notes/README.md`
 - `knowledge-base/troubleshooting/README.md`

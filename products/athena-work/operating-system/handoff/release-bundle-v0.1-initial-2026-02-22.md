@@ -45,9 +45,9 @@
 
 ## Outcome Signals
 - Baseline metric snapshot:
-  - `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+  - `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`
 - Post-hardening delta snapshot:
-  - `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md`
+  - `operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md`
 - Expected trend direction:
   - Sustain `Green` proxy status for memory precision and trace completeness while maintaining governance adherence and bounded latency.
 

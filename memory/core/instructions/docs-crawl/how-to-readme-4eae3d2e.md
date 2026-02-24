@@ -9,4 +9,4 @@ Task-oriented walkthroughs for common workflows.
 - starting a cycle
 - running QA
 - PM refinement and ranking
-- Go toolchain setup for memory CLI: `GO_TOOLCHAIN_SETUP.md`
+- Go toolchain setup for memory CLI: `go-toolchain-setup.md`

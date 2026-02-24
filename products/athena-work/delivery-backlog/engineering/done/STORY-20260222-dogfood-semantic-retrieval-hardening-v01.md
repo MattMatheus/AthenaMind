@@ -34,7 +34,7 @@
 
 ## Dependencies
 - `operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md`
-- `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md`
+- `operating-system/metrics/dogfood-scenario-run-2026-02-22.md`
 - `product-research/architecture/MEMORY_TELEMETRY_EVENT_CONTRACT_V01.md`
 
 ## Notes

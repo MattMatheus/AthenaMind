@@ -5,9 +5,9 @@
 
 ## Acceptance Criteria Validation
 1. Release bundle scope and evidence links match current backlog states and completed artifacts.
-   - Evidence: `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md` now references current done artifacts and removes stale active-path references.
+   - Evidence: `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md` now references current done artifacts and removes stale active-path references.
 2. Bundle includes post-hardening KPI evidence and updated risk assessment.
-   - Evidence: bundle links `KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md` and updates risk/rollback statements.
+   - Evidence: bundle links `kpi-snapshot-2026-02-22-delta-post-hardening.md` and updates risk/rollback statements.
 3. Bundle decision is explicit (`ship` or `hold`) with rationale tied to ADR-0008 target bands.
    - Evidence: bundle records explicit `ship` decision with rationale tied to post-hardening Green proxy signals.
 

@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
-workflow_doc="$root_dir/knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md"
+workflow_doc="$root_dir/knowledge-base/process/operator-daily-workflow.md"
 
 doc_test_init
 

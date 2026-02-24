@@ -15,7 +15,7 @@
 - A delivery-backlog/engineering/intake/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md
 - A tools/test_dogfood_scenario_pack_v01.sh
 - A operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md
-- A operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md
+- A operating-system/metrics/dogfood-scenario-run-2026-02-22.md
 - D delivery-backlog/engineering/active/STORY-20260222-dogfood-scenario-pack-v01.md
 - M delivery-backlog/engineering/active/README.md
 - M product-research/roadmap/PROGRAM_STATE_BOARD.md

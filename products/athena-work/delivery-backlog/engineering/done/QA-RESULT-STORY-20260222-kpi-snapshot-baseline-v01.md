@@ -5,7 +5,7 @@
 
 ## Acceptance Criteria Validation
 1. Baseline KPI snapshot artifact exists with all template fields filled.
-   - Evidence: `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md` includes all template fields and metric values.
+   - Evidence: `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md` includes all template fields and metric values.
 2. Snapshot includes interpretation against ADR-0008 target bands.
    - Evidence: Interpretation section maps baseline values to ADR-0008 band thresholds.
 3. Program board and founder snapshot reference the published KPI artifact.

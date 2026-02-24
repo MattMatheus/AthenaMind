@@ -27,7 +27,7 @@
 
 ## Before/After Delta vs Baseline Run
 - Baseline reference:
-  - `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md`
+  - `operating-system/metrics/dogfood-scenario-run-2026-02-22.md`
 - `precision_at_3`: `66.7% -> 100%` (`+33.3pp`)
 - `trace_completeness_rate`: `75% -> 100%` (`+25pp`)
 - `wrong_memory_recall_rate`: `25% -> 0%` (`-25pp`)

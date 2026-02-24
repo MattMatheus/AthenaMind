@@ -25,7 +25,7 @@ All must pass:
 All must pass:
 1. Intake validation passes (`tools/validate_intake_items.sh`).
 2. Active queue is ranked and explicit in `delivery-backlog/engineering/active/README.md`.
-3. Product-first backlog weighting is applied per `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`.
+3. Product-first backlog weighting is applied per `knowledge-base/process/backlog-weighting-policy.md`.
 4. Active stories include traceability metadata (`idea_id`, `phase`, `adr_refs`, metric).
 5. Program board is updated (`product-research/roadmap/PROGRAM_STATE_BOARD.md`).
 6. PM TODO `Now` contains at least one actionable item.

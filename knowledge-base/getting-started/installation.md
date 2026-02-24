@@ -13,7 +13,7 @@ Install runtime prerequisites and verify the slim AthenaMind distribution is hea
 ## Install Steps
 
 1. Choose install method:
-   - Precompiled binary: [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
+   - Precompiled binary: [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
    - Build from source: continue below
 2. Clone and enter repo.
 3. Verify Go:

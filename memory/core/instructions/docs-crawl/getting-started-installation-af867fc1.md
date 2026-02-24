@@ -19,9 +19,9 @@ Install the minimum tooling and verify AthenaMind can run tests locally.
    - `tools/run_doc_tests.sh`
 
 ## Failure Modes
-- `go` missing or old: follow `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`.
+- `go` missing or old: follow `knowledge-base/how-to/go-toolchain-setup.md`.
 - Failing tests: resolve code-level issues before using docs workflows.
 
 ## References
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
+- `knowledge-base/how-to/go-toolchain-setup.md`
 - `cmd/memory-cli/main_test.go`

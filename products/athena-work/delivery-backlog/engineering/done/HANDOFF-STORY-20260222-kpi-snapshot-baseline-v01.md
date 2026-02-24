@@ -2,7 +2,7 @@
 
 ## What Changed
 - Created first dated KPI baseline artifact from template:
-  - `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+  - `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`
 - Included required retrieval/trace metrics and explicit ADR-0008 interpretation.
 - Updated program board to reference published KPI artifact:
   - `product-research/roadmap/PROGRAM_STATE_BOARD.md`
@@ -31,7 +31,7 @@
 
 ## Acceptance Criteria Trace
 - AC1 (artifact exists and template fields filled): PASS
-  - `KPI_SNAPSHOT_2026-02-22_BASELINE.md` includes all template metric fields.
+  - `kpi-snapshot-2026-02-22-baseline.md` includes all template metric fields.
 - AC2 (ADR-0008 interpretation present): PASS
   - Interpretation section maps current values to ADR-0008 bands.
 - AC3 (board + founder references): PASS

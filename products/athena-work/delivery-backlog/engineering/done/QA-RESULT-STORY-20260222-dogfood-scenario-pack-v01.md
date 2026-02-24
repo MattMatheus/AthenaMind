@@ -7,7 +7,7 @@
 1. Scenario pack is versioned and covers multiple memory types.
    - Evidence: `operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md` defines version metadata and scenarios spanning `procedural`, `state`, and `semantic` memory types.
 2. First run is executed and results are captured with KPI-relevant annotations.
-   - Evidence: `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md` records run outcomes, KPI annotations, and failure classes.
+   - Evidence: `operating-system/metrics/dogfood-scenario-run-2026-02-22.md` records run outcomes, KPI annotations, and failure classes.
 3. At least one prioritized follow-on action is generated from observed failures or weak signals.
    - Evidence: `delivery-backlog/engineering/intake/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md` created from `SCN-SEM-01` weak signal.
 

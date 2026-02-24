@@ -6,7 +6,7 @@ root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
 template="$root_dir/operating-system/metrics/KPI_SNAPSHOT_TEMPLATE.md"
-snapshot="$root_dir/operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md"
+snapshot="$root_dir/operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md"
 program_board="$root_dir/product-research/roadmap/PROGRAM_STATE_BOARD.md"
 founder_snapshot="$root_dir/product-research/roadmap/FOUNDER_SNAPSHOT.md"
 
@@ -26,7 +26,7 @@ doc_assert_contains "$snapshot" "Traceability completeness:" "KPI baseline inclu
 doc_assert_contains "$snapshot" "ADR-0008" "KPI baseline includes ADR-0008 interpretation"
 doc_assert_contains "$snapshot" "## Actions" "KPI baseline includes actions"
 
-doc_assert_contains "$program_board" "operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md" "Program board references KPI baseline snapshot"
-doc_assert_contains "$founder_snapshot" "operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md" "Founder snapshot references KPI baseline snapshot"
+doc_assert_contains "$program_board" "operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md" "Program board references KPI baseline snapshot"
+doc_assert_contains "$founder_snapshot" "operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md" "Founder snapshot references KPI baseline snapshot"
 
 doc_test_finish

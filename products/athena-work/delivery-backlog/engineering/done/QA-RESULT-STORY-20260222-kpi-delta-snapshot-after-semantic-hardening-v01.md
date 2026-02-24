@@ -5,7 +5,7 @@
 
 ## Acceptance Criteria Validation
 1. Follow-up KPI snapshot artifact exists and references hardening run evidence.
-   - Evidence: `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md` exists and links `DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md`.
+   - Evidence: `operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md` exists and links `dogfood-scenario-run-2026-02-22-hardening.md`.
 2. Snapshot includes explicit before/after deltas for memory precision and trace completeness.
    - Evidence: delta table includes `66.7% -> 100%` (precision) and `75% -> 100%` (trace completeness).
 3. Snapshot includes updated `Red/Yellow/Green` interpretation against ADR-0008 targets.

@@ -15,7 +15,7 @@ Run this cycle when QA has created intake bugs or when `delivery-backlog/enginee
    - rerun `tools/validate_intake_items.sh` until it passes.
 4. Refine each item into clear, actionable stories/bug cards.
 5. Rank and move refined items to `delivery-backlog/engineering/active/` in execution order.
-   - Apply product-first weighting from `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`.
+   - Apply product-first weighting from `knowledge-base/process/backlog-weighting-policy.md`.
    - Process stories may outrank product work only when a broken process is blocking delivery or gate enforcement.
 6. Update `delivery-backlog/engineering/active/README.md` Active Sequence.
    - Verify queue/order updates remain consistent with `delivery-backlog/STATE_TRANSITION_CHECKLIST.md`.
@@ -31,5 +31,5 @@ Run this cycle when QA has created intake bugs or when `delivery-backlog/enginee
 - Preserve QA priority intent (`P0` highest urgency).
 - Keep stories small, testable, and explicit.
 - Do not implement fixes in PM mode.
-- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
 - Do not commit before observer report is generated.

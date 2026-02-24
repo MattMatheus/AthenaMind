@@ -2,4 +2,4 @@
 
 Use this section for dense lookup material and configuration details.
 
-- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
+- [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)

@@ -5,11 +5,11 @@
 
 ## Acceptance Criteria Validation
 1. `SCN-SEM-01` precision_at_3 improves and no materially incorrect recall is observed.
-   - Evidence: `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md` reports `precision_at_3 = 3/3 = 100%` and `wrong_memory_recall_rate = 0/4 = 0%`.
+   - Evidence: `operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md` reports `precision_at_3 = 3/3 = 100%` and `wrong_memory_recall_rate = 0/4 = 0%`.
 2. Trace completeness for semantic retrieval events is >= 95%.
    - Evidence: hardening run reports `trace_completeness_rate = 4/4 = 100%`.
 3. Updated dogfood run artifact records before/after KPI comparison.
-   - Evidence: hardening run includes explicit baseline-vs-hardening deltas against `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md`.
+   - Evidence: hardening run includes explicit baseline-vs-hardening deltas against `operating-system/metrics/dogfood-scenario-run-2026-02-22.md`.
 
 ## Test and Regression Validation
 - Executed: `tools/run_doc_tests.sh`

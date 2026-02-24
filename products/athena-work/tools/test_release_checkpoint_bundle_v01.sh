@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
-bundle="$root_dir/operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md"
+bundle="$root_dir/operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md"
 board="$root_dir/product-research/roadmap/PROGRAM_STATE_BOARD.md"
 
 doc_test_init
@@ -23,6 +23,6 @@ doc_assert_contains "$bundle" "QA result artifacts" "Release bundle includes QA 
 doc_assert_contains "$bundle" "Validation commands/results" "Release bundle includes validation evidence"
 doc_assert_contains "$bundle" "Rollback direction" "Release bundle includes rollback direction"
 
-doc_assert_contains "$board" "RELEASE_BUNDLE_v0.1-initial-2026-02-22.md" "Program board references release checkpoint bundle"
+doc_assert_contains "$board" "release-bundle-v0.1-initial-2026-02-22.md" "Program board references release checkpoint bundle"
 
 doc_test_finish

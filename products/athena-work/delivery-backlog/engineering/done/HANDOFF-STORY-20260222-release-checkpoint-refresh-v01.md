@@ -2,7 +2,7 @@
 
 ## What Changed
 - Refreshed release bundle artifact with current scope/evidence and explicit decision:
-  - `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
+  - `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md`
 - Updated release-bundle test to validate explicit `ship|hold` decision semantics:
   - `tools/test_release_checkpoint_bundle_v01.sh`
 - Reconciled stale status metadata in release-bundle origin story:
@@ -25,7 +25,7 @@
 1. Release bundle scope and evidence links match current backlog states and completed artifacts.
    - PASS: bundle scope now references hardening and KPI-delta stories in `done`, and removes stale `active` references.
 2. Bundle includes post-hardening KPI evidence and updated risk assessment.
-   - PASS: bundle links `KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md` and updates risk/rollback sections.
+   - PASS: bundle links `kpi-snapshot-2026-02-22-delta-post-hardening.md` and updates risk/rollback sections.
 3. Bundle decision is explicit (`ship` or `hold`) with rationale tied to ADR-0008 target bands.
    - PASS: decision set to `ship` with rationale grounded in post-hardening `Green` proxy signals and scoped founder-early-alpha boundary.
 

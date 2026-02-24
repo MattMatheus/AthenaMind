@@ -53,8 +53,8 @@ Root compatibility links (`tools`, `stage-prompts`, `staff-personas`, `delivery-
 - Commit once per cycle using `cycle-<cycle-id>`.
 - Include observer report in cycle commit: `operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
 - Keep resume context current: `operating-system/observer/RESUME_CONTEXT.md`.
-- Apply stage exits: `knowledge-base/process/STAGE_EXIT_GATES.md`.
-- Apply backlog weighting policy: `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`.
+- Apply stage exits: `knowledge-base/process/stage-exit-gates.md`.
+- Apply backlog weighting policy: `knowledge-base/process/backlog-weighting-policy.md`.
 - Treat `done` as QA-complete, not auto-shipped; use release bundles in `operating-system/handoff/`.
 - Prioritize by value/risk/dependency; do not add time estimates.
 - Repository markdown is source of truth.

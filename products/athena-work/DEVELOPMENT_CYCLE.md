@@ -56,7 +56,7 @@ Helper commands:
 - Run `tools/run_stage_tests.sh` before handoff.
 - Push/non-PR scope: docs + targeted Go tests.
 - PR scope: docs + `go test ./...`.
-- Apply stage exit criteria in `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Apply stage exit criteria in `knowledge-base/process/stage-exit-gates.md`.
 
 ## Documentation Sync Rule
 
