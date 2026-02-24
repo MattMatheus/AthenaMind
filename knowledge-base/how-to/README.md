@@ -1,12 +1,10 @@
-# How-To Docs
+# How-To Guides
 
-## Summary
-Task-oriented walkthroughs for common workflows.
+## Core Setup
 
-## Include
-- starting a cycle
-- running QA
-- PM refinement and ranking
-- Go toolchain setup for memory CLI: `GO_TOOLCHAIN_SETUP.md`
-- OpenTelemetry setup for memory CLI: `MEMORY_CLI_OTEL_SETUP.md`
-- Local Podman experiment infra: `LOCAL_EXPERIMENT_INFRA.md`
+- [Go Toolchain Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md)
+- [OTel and OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
+
+## Infra and Backends
+
+- [Local Experiment Infra (Qdrant/Neo4j/Pgvector)](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/LOCAL_EXPERIMENT_INFRA.md)

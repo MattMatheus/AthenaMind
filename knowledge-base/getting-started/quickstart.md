@@ -1,45 +1,55 @@
-# Quickstart
+# AthenaMind Quickstart
 
-## Summary
-Create one memory entry, retrieve it, and confirm deterministic output fields.
+## Goal
 
-## Preconditions
-- Tooling validated via `installation.md`.
-- Working directory at repository root.
+Run a full governed write -> retrieve -> evaluate -> snapshot cycle.
 
-## Main Flow
-1. Write one approved memory entry:
+## 1. Write One Entry
+
 ```bash
 go run ./cmd/memory-cli write \
   --root memory \
-  --id getting-started \
-  --title "Getting Started Prompt" \
+  --id onboarding-guide \
+  --title "Onboarding Guide" \
   --type prompt \
-  --domain onboarding \
-  --body "Use this prompt to onboard a new engineer quickly." \
+  --domain engineering \
+  --body "Use deterministic fallbacks and always include source_path in retrieval outputs." \
   --stage planning \
   --reviewer maya \
   --decision approved \
-  --reason "onboarding baseline" \
-  --risk "low; rollback by git revert" \
-  --notes "approved in docs quickstart"
+  --reason "bootstrap baseline" \
+  --risk "low" \
+  --notes "approved"
 ```
-2. Retrieve using natural language:
+
+## 2. Retrieve It
+
 ```bash
 go run ./cmd/memory-cli retrieve \
   --root memory \
-  --query "onboard engineer prompt"
+  --query "fallback and source path policy" \
+  --domain engineering
 ```
-3. Confirm response contains:
-   - `selected_id`
-   - `selection_mode`
-   - `source_path`
 
-## Failure Modes
-- `ERR_MUTATION_STAGE_INVALID`: use `--stage planning|architect|pm`.
-- `ERR_MUTATION_EVIDENCE_REQUIRED`: provide `--reason --risk --notes`.
-- `--query is required`: include `--query`.
+Confirm response includes `selected_id`, `selection_mode`, and `source_path`.
 
-## References
-- `knowledge-base/cli/commands.md`
-- `knowledge-base/workflows/write-retrieve-baseline.md`
+## 3. Evaluate Quality Gate
+
+```bash
+go run ./cmd/memory-cli evaluate --root memory
+```
+
+Inspect `top1_useful_rate`, `fallback_determinism`, and latency metrics.
+
+## 4. Create Snapshot
+
+```bash
+go run ./cmd/memory-cli snapshot create \
+  --root memory \
+  --created-by operator \
+  --reason "post-quickstart checkpoint"
+```
+
+## 5. (Optional) Export OTel Traces
+
+See [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md).

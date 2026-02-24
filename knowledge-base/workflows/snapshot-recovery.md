@@ -1,42 +1,24 @@
 # Snapshot Recovery Workflow
 
-## Summary
-Capture a full snapshot and restore it through policy-governed review.
+## Goal
 
-## Preconditions
-- Existing memory corpus.
-- Reviewer available to approve restore evidence.
+Create a safe rollback point and restore if memory corpus quality regresses.
 
-## Steps
-1. Create snapshot:
+## Flow
+
+1. Create snapshot.
+2. List snapshots.
+3. Restore with governance evidence.
+
+## Commands
+
 ```bash
-go run ./cmd/memory-cli snapshot create \
-  --root memory \
-  --created-by clara \
-  --reason "checkpoint before high-risk edits"
-```
-2. List snapshots:
-```bash
+go run ./cmd/memory-cli snapshot create --root memory --created-by operator --reason "checkpoint"
 go run ./cmd/memory-cli snapshot list --root memory
-```
-3. Restore snapshot:
-```bash
-go run ./cmd/memory-cli snapshot restore \
-  --root memory \
-  --snapshot-id <snapshot-id> \
-  --stage pm \
-  --reviewer maya \
-  --decision approved \
-  --reason "recover known-good corpus" \
-  --risk "low; checksum validation enforced" \
-  --notes "approved restore"
+go run ./cmd/memory-cli snapshot restore --root memory --snapshot-id <id> --stage pm --reviewer maya --decision approved --reason "recover" --risk "low" --notes "approved"
 ```
 
-## Expected Behavior
-- Restore blocks on schema incompatibility.
-- Restore blocks on invalid checksums.
-- Snapshot audit events are written to `memory/audits/`.
+## Validation
 
-## References
-- `delivery-backlog/engineering/done/STORY-20260222-memory-snapshot-mvp-implementation-v02.md`
-- `delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-memory-snapshot-mvp-implementation-v02.md`
+- Snapshot manifest exists.
+- Restore succeeds only with valid policy evidence and compatibility.

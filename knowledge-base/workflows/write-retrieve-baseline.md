@@ -1,22 +1,23 @@
 # Write/Retrieve Baseline Workflow
 
-## Summary
-Create a memory artifact and retrieve it with predictable selection metadata.
+## Goal
 
-## Preconditions
-- `knowledge-base/getting-started/installation.md` completed.
+Validate governed memory write and deterministic retrieval metadata.
 
 ## Steps
-1. Write entry with approved review evidence.
-2. Retrieve by natural language query.
-3. Confirm `selection_mode`, `selected_id`, and `source_path` are present.
-4. Re-run query to confirm deterministic behavior when fallback is used.
 
-## Expected Evidence
-- Created files under `memory/prompts|instructions` and `memory/metadata`.
-- Updated `memory/index.yaml`.
-- JSON retrieval output with required fields.
+1. Write an approved entry.
+2. Retrieve with natural language query.
+3. Confirm output includes `selected_id`, `selection_mode`, `source_path`.
+4. Repeat query to confirm deterministic fallback behavior on low-confidence paths.
 
-## References
-- `delivery-backlog/engineering/done/STORY-20260222-memory-cli-v1-write-retrieve-baseline.md`
-- `delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-memory-cli-v1-write-retrieve-baseline.md`
+## Success Criteria
+
+- Entry files exist under memory root.
+- Retrieval output includes required fields.
+- No policy violations.
+
+## Related Docs
+
+- [Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
+- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)

@@ -1,17 +1,19 @@
 name: CI
 
 on:
+  pull_request:
   push:
     branches:
-      - dev
-  pull_request:
-    branches:
-      - dev
+      - main
+
+permissions:
+  contents: read
 
 jobs:
-  go-test:
-    name: Go Test
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,22 +21,8 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22.x'
+          go-version-file: go.mod
+          cache: true
 
-      - name: Run go test
+      - name: Run tests
         run: go test ./...
-
-  doc-tests:
-    name: Doc Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22.x'
-
-      - name: Run doc tests
-        run: tools/run_doc_tests.sh

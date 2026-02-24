@@ -1,26 +1,23 @@
-# Project Docs
+# Athena Documentation
 
-This is the wiki-facing documentation root.
+This `knowledge-base/` directory is the source-of-truth documentation set for the slim Athena distribution.
 
-## Rule: Markdown Only
-- Only `.md` files are allowed in this tree.
+## Audience
 
-## Rule: Progressive Disclosure (Required)
-- Start every topic with a short summary.
-- Then provide implementation details.
-- Then provide deep references and edge cases.
-- Do not force readers into deep detail first.
+- Engineers and data scientists operating or tuning AthenaMind.
+- Technical operators running AthenaWork stage workflows.
+- Teams onboarding new contributors.
 
-## Start Here
-- `AGENTS.md`
-- `getting-started/README.md`
-- `concepts/README.md`
-- `cli/README.md`
-- `workflows/README.md`
-- `troubleshooting/README.md`
-- `faq/README.md`
-- `release-notes/README.md`
-- `process/README.md`
-- `architecture/README.md`
-- `product/README.md`
-- `operations/README.md`
+## Read Order
+
+1. [Docs Index](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/INDEX.md)
+2. [Getting Started](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/README.md)
+3. [AthenaMind Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
+4. [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+
+## Slim Distribution Notice
+
+Some deep internal process/research artifacts were intentionally moved to an archive pack to keep this repo user-focused.
+
+Archive location:
+- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24`

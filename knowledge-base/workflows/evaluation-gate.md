@@ -1,30 +1,32 @@
 # Evaluation Gate Workflow
 
-## Summary
-Run `evaluate` to verify semantic usefulness and deterministic safety gates.
+## Goal
 
-## Preconditions
-- Memory corpus populated with representative entries.
-- Query set available (default: `cmd/memory-cli/testdata/eval-query-set-v1.json`).
+Evaluate retrieval usefulness and safety gates on a fixed query set.
 
-## Steps
-1. Run:
+## Command
+
 ```bash
 go run ./cmd/memory-cli evaluate --root memory
 ```
-2. Inspect JSON output:
-   - `status` (`PASS`, `WATCH`, or `FAIL`)
-   - `top1_useful_rate`
-   - `fallback_determinism`
-   - `selection_mode_reporting`
-   - `source_trace_completeness`
-3. Investigate `failing_queries` if status is not `PASS`.
 
-## Pass Criteria
-- At least 50 evaluated queries.
-- Useful rate >= 80%.
-- Determinism and trace metrics at 100%.
+## Key Fields To Review
 
-## References
-- `product-research/decisions/ADR-0012-semantic-retrieval-quality-gates-v1.md`
-- `cmd/memory-cli/main.go`
+- `status`
+- `top1_useful_rate`
+- `fallback_determinism`
+- `selection_mode_reporting`
+- `source_trace_completeness`
+- `latency_p95_ms`
+
+## Typical Gate Expectations
+
+- query set size >= 50
+- useful rate >= 0.80
+- fallback determinism == 1.0
+- selection/source completeness == 1.0
+
+## Related Docs
+
+- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
+- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
