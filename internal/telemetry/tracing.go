@@ -8,6 +8,8 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -45,6 +47,11 @@ func InitOTel(ctx context.Context) (func(context.Context) error, error) {
 		if err != nil {
 			return nil, err
 		}
+		opts = append(opts, sdktrace.WithBatcher(exporter))
+	}
+	if exporter, err := otlpExporterFromEnv(ctx); err != nil {
+		return nil, err
+	} else if exporter != nil {
 		opts = append(opts, sdktrace.WithBatcher(exporter))
 	}
 
@@ -99,4 +106,22 @@ func parseBoolEnv(v string) bool {
 	default:
 		return false
 	}
+}
+
+func otlpExporterFromEnv(ctx context.Context) (sdktrace.SpanExporter, error) {
+	otlpEndpoint := strings.TrimSpace(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT"))
+	otlpTracesEndpoint := strings.TrimSpace(os.Getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"))
+	if otlpEndpoint == "" && otlpTracesEndpoint == "" {
+		return nil, nil
+	}
+
+	protocol := strings.ToLower(strings.TrimSpace(os.Getenv("OTEL_EXPORTER_OTLP_TRACES_PROTOCOL")))
+	if protocol == "" {
+		protocol = strings.ToLower(strings.TrimSpace(os.Getenv("OTEL_EXPORTER_OTLP_PROTOCOL")))
+	}
+
+	if strings.Contains(protocol, "http") {
+		return otlptracehttp.New(ctx)
+	}
+	return otlptracegrpc.New(ctx)
 }

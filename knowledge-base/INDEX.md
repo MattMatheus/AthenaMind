@@ -21,7 +21,7 @@
 - [CLI Examples](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/examples.md)
 - [Workflows](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/README.md)
 - [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)
-- [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
+- [OTel/OTLP Setup (includes local Maple OSS on Podman)](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
 
 
 ## Public Testing

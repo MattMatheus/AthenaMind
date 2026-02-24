@@ -21,6 +21,7 @@ This repository is a **slim product distribution** focused on user-facing runtim
 - Capture episodes for cross-session continuity.
 - Run local read gateway and API retrieval fallback.
 - Export telemetry events and OpenTelemetry traces (including OTLP collectors).
+- Monitor local OTLP telemetry with Maple OSS (recommended for Podman-based testing).
 
 ## Quick Start
 
@@ -28,7 +29,7 @@ This repository is a **slim product distribution** focused on user-facing runtim
 2. Download precompiled binaries: [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
 3. Run first end-to-end flow: [Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
 4. Learn command surface: [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
-5. Configure observability: [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
+5. Configure observability (including local Maple on Podman): [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
 
 ## Documentation Map
 

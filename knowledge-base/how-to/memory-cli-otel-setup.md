@@ -39,6 +39,36 @@ export ATHENA_OTEL_STDOUT=1
 go run ./cmd/memory-cli retrieve --root memory --query "trace check"
 ```
 
+## Local Maple (Podman)
+
+Maple open source provides a local OTLP ingest gateway and UI.
+
+```bash
+git clone https://github.com/makisuo/maple.git /tmp/maple
+cp /tmp/maple/.env.example /tmp/maple/.env
+podman compose -f /tmp/maple/docker-compose.yml up --build -d
+```
+
+Maple local endpoints:
+- UI: `http://localhost:3471`
+- API: `http://localhost:3472`
+- Ingest gateway: `http://localhost:3474`
+
+Send AthenaMind traces to Maple ingest:
+
+```bash
+export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:3474"
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_EXPORTER_OTLP_HEADERS="x-maple-ingest-key=<your-ingest-key>"
+export ATHENA_OTEL_SAMPLE_RATE="1.0"
+go run ./cmd/memory-cli retrieve --root memory --query "maple local test"
+```
+
+Notes:
+- Use the ingestion key from Maple Settings.
+- `Authorization=Bearer <key>` is also accepted by Maple ingest.
+- For direct collector testing (bypassing Maple ingest), point to `http://localhost:4318`.
+
 ## Security Guidance
 
 - Never commit collector tokens.
