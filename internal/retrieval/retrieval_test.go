@@ -184,6 +184,96 @@ func TestGenerateEmbeddingsChunksLongInputs(t *testing.T) {
 	}
 }
 
+func TestGenerateEmbeddingsUsesExplicitEndpointEvenWhenAzureEnvSet(t *testing.T) {
+	t.Setenv("AZURE_OPENAI_ENDPOINT", "https://azure.example.invalid")
+	t.Setenv("AZURE_OPENAI_DEPLOYMENT_NAME", "test-deployment")
+	t.Setenv("AZURE_OPENAI_API_KEY", "test-key")
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"embedding": []float64{2.0, 4.0}})
+	}))
+	defer server.Close()
+
+	vecs, err := GenerateEmbeddings(server.URL, []string{"short text"})
+	if err != nil {
+		t.Fatalf("GenerateEmbeddings failed: %v", err)
+	}
+	if len(vecs) != 1 || len(vecs[0]) != 2 {
+		t.Fatalf("unexpected embedding shape: %+v", vecs)
+	}
+}
+
+func TestLoadEmbeddingsCachedDoesNotCollideAcrossCandidateSets(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	if err := index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-a",
+		Title:  "Entry A",
+		Type:   "prompt",
+		Domain: "ops-a",
+		Body:   "entry a",
+		Stage:  "pm",
+	}, policy); err != nil {
+		t.Fatalf("seed entry-a failed: %v", err)
+	}
+	if err := index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "entry-b",
+		Title:  "Entry B",
+		Type:   "prompt",
+		Domain: "ops-b",
+		Body:   "entry b",
+		Stage:  "pm",
+	}, policy); err != nil {
+		t.Fatalf("seed entry-b failed: %v", err)
+	}
+	if err := index.UpsertEmbedding(root, "entry-a", []float64{1, 0}); err != nil {
+		t.Fatalf("seed embedding entry-a failed: %v", err)
+	}
+	if err := index.UpsertEmbedding(root, "entry-b", []float64{0, 1}); err != nil {
+		t.Fatalf("seed embedding entry-b failed: %v", err)
+	}
+
+	idx, err := index.LoadIndex(root)
+	if err != nil {
+		t.Fatalf("load index failed: %v", err)
+	}
+
+	var entryA, entryB types.IndexEntry
+	for _, e := range idx.Entries {
+		switch e.ID {
+		case "entry-a":
+			entryA = e
+		case "entry-b":
+			entryB = e
+		}
+	}
+	clearRetrievalCaches()
+	first, err := loadEmbeddingsCached(root, idx, []candidate{{Entry: entryA}})
+	if err != nil {
+		t.Fatalf("first loadEmbeddingsCached failed: %v", err)
+	}
+	if _, ok := first["entry-a"]; !ok {
+		t.Fatalf("expected entry-a in first embedding set, got %+v", first)
+	}
+
+	second, err := loadEmbeddingsCached(root, idx, []candidate{{Entry: entryB}})
+	if err != nil {
+		t.Fatalf("second loadEmbeddingsCached failed: %v", err)
+	}
+	if _, ok := second["entry-b"]; !ok {
+		t.Fatalf("expected entry-b in second embedding set, got %+v", second)
+	}
+	if _, wrong := second["entry-a"]; wrong {
+		t.Fatalf("unexpected entry-a leak in second embedding set: %+v", second)
+	}
+}
+
 func TestEmbeddingScoringImprovesOverTokenBaseline(t *testing.T) {
 	root := t.TempDir()
 	policy := types.WritePolicyDecision{

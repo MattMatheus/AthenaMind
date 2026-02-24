@@ -138,7 +138,16 @@ func EvaluateRetrievalWithOptionsAndEmbeddingEndpoint(
 		report.FallbackDeterminism = metric(fallbackStable, fallbackChecks)
 	}
 
-	maxP95 := float64(1500)
+	maxP95 := float64(700)
+	if env := strings.TrimSpace(os.Getenv("MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS")); env != "" {
+		if parsed, err := strconv.ParseFloat(env, 64); err == nil {
+			if parsed == 0 {
+				maxP95 = 1e12
+			} else if parsed > 0 {
+				maxP95 = parsed
+			}
+		}
+	}
 	if env := strings.TrimSpace(os.Getenv("MEMORY_EVAL_MAX_P95_MS")); env != "" {
 		if parsed, err := strconv.ParseFloat(env, 64); err == nil && parsed > 0 {
 			maxP95 = parsed
