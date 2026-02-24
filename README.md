@@ -1,9 +1,9 @@
-# Athena Platform (Slim)
+# Athena Platform
 
 Athena is split into two products:
 
 - `AthenaMind`: memory layer for agentic coding workflows (primary runtime in this repo).
-- `AthenaWork`: staged operating system for planning/engineering/QA/PM loops (documented here, operator pack archived externally).
+- `AthenaWork`: staged operating system for planning/engineering/QA/PM loops (fully available in this repo).
 
 This repository is a **slim product distribution** focused on user-facing runtime and docs.
 
@@ -36,12 +36,13 @@ This repository is a **slim product distribution** focused on user-facing runtim
 - AthenaMind product docs: [knowledge-base/product/athenamind.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
 - AthenaWork product docs: [knowledge-base/product/athenawork.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
 
-## Slim Boundary
+## AthenaWork Operator Paths
 
-Non user-facing research/process content was moved out of this repo to keep distribution focused.
-
-Archived internal pack location:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24`
+- Human operator guide: [HUMANS.md](/Users/foundry/Experiments/Current/AthenaMind/HUMANS.md)
+- Agent rules: [AGENTS.md](/Users/foundry/Experiments/Current/AthenaMind/AGENTS.md)
+- Stage launcher: [tools/launch_stage.sh](/Users/foundry/Experiments/Current/AthenaMind/tools/launch_stage.sh)
+- Specialist directory: [staff-personas/STAFF_DIRECTORY.md](/Users/foundry/Experiments/Current/AthenaMind/staff-personas/STAFF_DIRECTORY.md)
+- Queue and work-system artifacts: [delivery-backlog](/Users/foundry/Experiments/Current/AthenaMind/delivery-backlog), [operating-system](/Users/foundry/Experiments/Current/AthenaMind/operating-system)
 
 
 ## Public Testing

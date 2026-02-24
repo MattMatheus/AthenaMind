@@ -2,35 +2,38 @@
 
 ## Summary
 
-AthenaWork is the staged operating workflow (planning/engineering/qa/pm). In this slim repo, the full operator pack is archived; this page explains how to run it and where to find full docs.
+AthenaWork is available directly in this repository for operator-driven workflows.
 
-## Where AthenaWork Lives
+## Start Here
 
-Archived operator pack:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
+1. Read `HUMANS.md` for operator expectations.
+2. Launch planning or engineering stage.
+3. Follow launcher checklist output.
 
-## Core Stages
+## Minimal Cycle
 
-- `planning`: clarify/shape work.
-- `engineering`: implement top-ranked story.
-- `qa`: validate gates and regressions.
-- `pm`: refine queues and update priorities.
-- `cycle`: continuous engineering+qa loop.
-
-## Typical Run (Operator Pack)
-
-From the archived AthenaWork root:
+From repo root:
 
 ```bash
 ./tools/launch_stage.sh engineering
 ./tools/launch_stage.sh qa
-./tools/run_observer_cycle.sh --cycle-id <id>
+./tools/run_observer_cycle.sh --cycle-id <story-id>
 ```
 
-## Why It Matters To AthenaMind Users
+Then commit once for the cycle:
 
-AthenaWork provides the disciplined workflow around AthenaMind changes: queueing, gate checks, QA evidence, and cycle closure.
+```bash
+git commit -m "cycle-<cycle-id>"
+```
 
-## Full AthenaWork Guide
+## Non-Technical Operator Pattern
 
-See [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md).
+1. Pick stage goal in plain language.
+2. Select or confirm specialist role from `staff-personas/STAFF_DIRECTORY.md`.
+3. Ask agent to execute only the stage checklist.
+4. Require observer report before accepting completion.
+
+## Related Docs
+
+- [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)

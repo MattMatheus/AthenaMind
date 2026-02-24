@@ -39,5 +39,5 @@
 
 ## Slim Repo Notice
 
-Archived internal pack:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24`
+Research and ideation archives may live outside this repo.
+AthenaMind runtime and AthenaWork operator system are both maintained in this repository.

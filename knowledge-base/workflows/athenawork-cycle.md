@@ -2,21 +2,33 @@
 
 ## Summary
 
-This is the high-level loop used to run governed delivery cycles around AthenaMind changes.
+AthenaWork runs a governed delivery cycle to keep agent behavior constrained and auditable.
 
 ## Cycle Steps
 
-1. Plan or intake work.
-2. Execute engineering changes.
-3. Run QA validation.
-4. Record observer/report outcomes.
-5. Refine queue priorities.
+1. Planning/PM intake defines and ranks work.
+2. Engineering executes top active story.
+3. QA validates acceptance criteria and regressions.
+4. Observer records cycle report and continuity state.
+5. PM reprioritizes queue for next cycle.
 
-## Operator Pack
+## Commands
 
-In slim mode, AthenaWork execution scripts and full queue artifacts are archived at:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
+```bash
+./tools/launch_stage.sh engineering
+./tools/launch_stage.sh qa
+./tools/run_observer_cycle.sh --cycle-id <cycle-id>
+```
 
-## Practical Guidance
+For continuous loop:
 
-Use AthenaMind workflows in this repo for user-facing validation, and run full AthenaWork stage scripts from the archived pack when you need full operational control-plane behavior.
+```bash
+./tools/launch_stage.sh cycle
+```
+
+## Artifacts You Should Expect
+
+- story/bug docs in `delivery-backlog/engineering/`
+- architecture artifacts in `delivery-backlog/architecture/`
+- observer report in `operating-system/observer/`
+- release decision artifacts in `operating-system/handoff/`

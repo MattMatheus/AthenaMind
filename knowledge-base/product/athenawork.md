@@ -2,43 +2,37 @@
 
 ## What AthenaWork Is
 
-AthenaWork is the staged operational workflow used to plan, execute, verify, and refine work around Athena products.
+AthenaWork is the operator-facing workflow system that constrains how agents execute work around AthenaMind.
 
-## Why AthenaMind Users Should Care
+It is designed so non-technical users can steer agents through explicit stages, queue policies, and evidence checkpoints.
 
-AthenaMind quality depends on disciplined operating loops. AthenaWork provides:
-- queueing and prioritization,
-- explicit stage gates,
-- QA validation,
-- cycle closure discipline.
+## Why It Matters
 
-## Stage Model
+- Provides stage guardrails (`planning`, `architect`, `engineering`, `qa`, `pm`, `cycle`).
+- Enforces queue discipline and handoff structure.
+- Captures observer evidence and cycle continuity.
+- Reduces agent drift by routing execution through canonical prompts and specialist roles.
 
-- `planning`: shape ambiguous work.
-- `architect`: define architecture contracts.
-- `engineering`: implement queued work.
-- `qa`: verify behavior and regressions.
-- `pm`: refine intake and reprioritize queue.
-- `cycle`: engineering+qa repeat loop.
+## Canonical Operator Assets
 
-## Operator Pack Location (Slim Repo)
-
-Full AthenaWork operator files are archived at:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
-
-## What Is Preserved In This Repo
-
-- User-facing documentation that explains how AthenaWork relates to AthenaMind usage.
-- Cross-links to onboarding and workflow guidance.
+- Root operator guide: `HUMANS.md`
+- Agent rules: `AGENTS.md`
+- Stage prompts: `stage-prompts/active/`
+- Specialist directory: `staff-personas/STAFF_DIRECTORY.md`
+- Queue system: `delivery-backlog/`
+- Work OS artifacts: `operating-system/`
+- Stage launchers and checks: `tools/`
 
 ## Typical Use Pattern
 
-1. Use AthenaMind quickstart and workflows to validate behavior.
-2. Run AthenaWork stage loops from the archived operator pack for governed delivery.
-3. Feed results back into AthenaMind configuration and tests.
+1. Start a stage with `./tools/launch_stage.sh <stage>`.
+2. Execute queue item under that stage prompt.
+3. Validate with `./tools/run_stage_tests.sh`.
+4. Run observer: `./tools/run_observer_cycle.sh --cycle-id <cycle-id>`.
+5. Commit once per cycle.
 
 ## Related Docs
 
+- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)
+- [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
 - [AthenaMind Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
-- [Workflows](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/README.md)
-- [Common Questions](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/faq/common-questions.md)
