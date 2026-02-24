@@ -2,14 +2,22 @@
 
 ## Summary
 
-This section describes the AthenaWork operating model at a user-facing level.
+AthenaWork process assets are in-repo and are part of the supported operator workflow.
 
-## Slim Mode Note
+## Core Process Entrypoints
 
-In this repository, full AthenaWork execution assets (backlogs, prompts, observer artifacts, tooling scripts) were moved to archive to keep distribution focused.
+- `HUMANS.md`
+- `DEVELOPMENT_CYCLE.md`
+- `tools/launch_stage.sh`
+- `tools/run_observer_cycle.sh`
+- `tools/run_stage_tests.sh`
 
-Archived pack:
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
+## Work-System Assets
+
+- Stage prompts: `stage-prompts/active/`
+- Specialist roles: `staff-personas/`
+- Delivery backlog lanes: `delivery-backlog/`
+- Operating-system evidence and handoff: `operating-system/`
 
 ## Start Here
 

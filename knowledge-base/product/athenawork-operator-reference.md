@@ -2,21 +2,19 @@
 
 ## Purpose
 
-Provide a compact, technical reference for operators running AthenaWork from the archived pack.
+Operational reference for running AthenaWork directly in this repository.
 
-## Operator Pack Root
-
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
-
-## Key Files
+## Operator Root Paths
 
 - `HUMANS.md`
 - `DEVELOPMENT_CYCLE.md`
-- `tools/launch_stage.sh`
-- `tools/run_observer_cycle.sh`
-- `tools/run_stage_tests.sh`
+- `tools/`
+- `stage-prompts/active/`
+- `delivery-backlog/`
+- `operating-system/`
+- `staff-personas/`
 
-## Stage Commands
+## Stage Launch Commands
 
 ```bash
 ./tools/launch_stage.sh planning
@@ -33,19 +31,23 @@ Observer:
 ./tools/run_observer_cycle.sh --cycle-id <cycle-id>
 ```
 
-## Operating Rules (Condensed)
+## Required Execution Rules
 
-- Stage order: planning/architect as needed, then engineering -> qa -> pm.
-- Respect queue model; do not invent work when active queue is empty.
-- Run observer at cycle boundary.
-- Commit once per completed cycle with cycle-aligned artifact bundle.
+- Respect lane boundaries (`engineering` vs `architecture`).
+- Run `./tools/run_stage_tests.sh` before handoff.
+- Run observer after completed cycles.
+- Commit exactly once per cycle (`cycle-<cycle-id>`).
+- Treat `done` as QA-complete, not auto-shipped.
 
-## Recommended Pairing With AthenaMind
+## Human/Non-Technical Steering Model
 
-- Use AthenaMind CLI retrieval before stage transitions for current memory context.
-- Use AthenaMind episode/snapshot features for continuity and rollback evidence.
+- Non-technical operators choose stage + goal.
+- Stage prompt and specialist persona constrain agent behavior.
+- Queue artifacts provide explicit acceptance criteria.
+- Observer and release-handoff artifacts provide auditability.
 
 ## Related
 
 - [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+- [AthenaWork Cycle Overview](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/athenawork-cycle.md)
 - [AthenaMind Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)

@@ -1,16 +1,12 @@
-# AthenaWork Quick Start (Slim)
+# AthenaWork Quick Start
 
 ## Summary
 
-Run AthenaWork stage loops from the archived operator pack while using AthenaMind in this repo for runtime memory behavior.
-
-## Operator Pack Location
-
-- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
+Run AthenaWork stage loops directly from this repository.
 
 ## Minimal Stage Loop
 
-From the archived AthenaWork root:
+From repo root:
 
 ```bash
 ./tools/launch_stage.sh engineering
@@ -20,8 +16,8 @@ From the archived AthenaWork root:
 
 ## Practical Pairing
 
-- AthenaWork: governs the delivery loop.
-- AthenaMind: powers memory operations and quality checks.
+- AthenaWork constrains the execution workflow.
+- AthenaMind provides memory context, retrieval, and evaluation.
 
 ## Related
 
