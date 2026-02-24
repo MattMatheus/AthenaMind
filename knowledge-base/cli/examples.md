@@ -26,6 +26,9 @@ go run ./cmd/memory-cli write \
 go run ./cmd/memory-cli retrieve \
   --root memory \
   --query "handoff instruction template" \
+  --mode hybrid \
+  --top-k 10 \
+  --retrieval-backend qdrant \
   --embedding-endpoint http://localhost:11434
 ```
 
@@ -36,6 +39,9 @@ go run ./cmd/memory-cli evaluate \
   --query-file cmd/memory-cli/testdata/eval-query-set-v1.json \
   --corpus-id memory-corpus-v1 \
   --query-set-id query-set-v1 \
+  --mode hybrid \
+  --top-k 10 \
+  --retrieval-backend sqlite \
   --embedding-endpoint http://localhost:11434
 ```
 
@@ -51,6 +57,15 @@ go run ./cmd/memory-cli verify health \
   --query "memory lifecycle" \
   --domain docs-crawl \
   --session-id docs-session-1
+```
+
+## Sync Embeddings To Qdrant
+```bash
+go run ./cmd/memory-cli sync-qdrant \
+  --root memory \
+  --qdrant-url http://localhost:6333 \
+  --collection athena_memories \
+  --batch-size 128
 ```
 
 ## Snapshot Create/List/Restore
@@ -83,5 +98,8 @@ go run ./cmd/memory-cli api-retrieve \
   --root memory \
   --query "handoff instruction template" \
   --session-id docs-session-1 \
+  --mode hybrid \
+  --top-k 10 \
+  --retrieval-backend qdrant \
   --gateway-url http://127.0.0.1:8788
 ```

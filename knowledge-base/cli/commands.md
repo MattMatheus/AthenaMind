@@ -5,7 +5,7 @@ Command reference for all currently supported `memory-cli` operations.
 
 ## Root Command
 ```bash
-memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap|reindex-all|crawl|verify|episode> [flags]
+memory-cli <write|retrieve|snapshot|serve-read-gateway|api-retrieve|evaluate|bootstrap|reindex-all|crawl|reembed-changed|sync-qdrant|verify|episode|telemetry> [flags]
 ```
 
 ## `write`
@@ -45,6 +45,9 @@ Optional:
 - `--root` (default `memory`)
 - `--domain`
 - `--embedding-endpoint` (default `http://localhost:11434`)
+- `--mode classic|hybrid` (default `classic`)
+- `--top-k` (default `5`)
+- `--retrieval-backend sqlite|qdrant|neo4j` (default `sqlite`)
 - `--session-id`
 - `--scenario-id`
 - `--memory-type`
@@ -61,6 +64,9 @@ Optional:
 - `--query-set-id`
 - `--config-id`
 - `--embedding-endpoint` (default `http://localhost:11434`)
+- `--mode classic|hybrid` (default `classic`)
+- `--top-k` (default `5`)
+- `--retrieval-backend sqlite|qdrant|neo4j` (default `sqlite`)
 - telemetry flags (`--session-id`, `--scenario-id`, `--memory-type`, `--operator-verdict`, `--telemetry-file`)
 
 ## `snapshot`
@@ -92,6 +98,9 @@ Optional:
 - `--root` (default `memory`)
 - `--domain`
 - `--gateway-url`
+- `--mode classic|hybrid` (default `classic`)
+- `--top-k` (default `5`)
+- `--retrieval-backend sqlite|qdrant|neo4j` (default `sqlite`)
 
 ## `bootstrap`
 Builds a memory bootstrap payload for agent startup.
@@ -139,6 +148,29 @@ Optional:
 - `--reviewer` (default `system`)
 - `--embedding-endpoint` (default `http://localhost:11434`)
 
+## `reembed-changed`
+Re-indexes and re-embeds changed markdown files for incremental consistency after cycle changes.
+
+Required:
+- `--files-changed` (comma-separated file paths)
+
+Optional:
+- `--root` (default `memory`)
+- `--repo-root` (default `.`)
+- `--domain` (default `auto-crawled`, used for newly discovered files)
+- `--reviewer` (default `system`)
+- `--session-id`
+- `--embedding-endpoint` (default `http://localhost:11434`)
+
+## `sync-qdrant`
+Pushes local embedding records into a Qdrant collection for backend experiments.
+
+Optional:
+- `--root` (default `memory`)
+- `--qdrant-url` (default env `ATHENA_QDRANT_URL` or `http://localhost:6333`)
+- `--collection` (default env `ATHENA_QDRANT_COLLECTION` or `athena_memories`)
+- `--batch-size` (default `128`)
+
 ## `verify`
 Verification subcommands:
 - `verify embeddings`
@@ -147,6 +179,18 @@ Verification subcommands:
 - `verify health`
   - optional: `--root`, `--query`, `--domain`, `--session-id`, `--embedding-endpoint`
   - runs semantic retrieval health check and reports pass/fail
+
+## `telemetry`
+Telemetry subcommands:
+- `telemetry tail`
+  - optional: `--root` (default `memory`)
+  - optional: `--lines` (default `20`, recent records per source)
+  - optional: `--source events|retrieval|both` (default `events`)
+  - optional filters: `--operation`, `--result`, `--session-id`
+  - optional live mode: `--follow` (stream new records), `--follow-poll-ms` (default `500`), `--follow-seconds` (default `0`, run until interrupted)
+  - optional: `--telemetry-file` (default `<root>/telemetry/events.jsonl`)
+  - optional: `--retrieval-metrics-file` (default `<root>/telemetry/retrieval-metrics.jsonl`)
+  - prints a JSON payload with recent records from local telemetry files; when `--follow` is set, streams additional JSON lines as new records are written
 
 ## References
 - `cmd/memory-cli/main.go`
