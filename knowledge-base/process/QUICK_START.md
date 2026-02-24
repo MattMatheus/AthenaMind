@@ -1,49 +1,29 @@
-# Quick Start Guide
+# AthenaWork Quick Start (Slim)
 
-This page exists to help agents that need a concise, deterministic next step rather than wading through the full workflow manuals. Follow the numbered checklist below before launching any stage.
+## Summary
 
-## 1. Branch and workspace check
-- Confirm branch policy before running any `launch_stage` scripts.
-  - Default required branch is `dev`.
-  - Override with `ATHENA_REQUIRED_BRANCH=<branch>` for isolated workflows.
-- If you need to explore a side effort, create a feature branch prefixed with `codex/` (e.g., `codex/experiment2`).
+Run AthenaWork stage loops from the archived operator pack while using AthenaMind in this repo for runtime memory behavior.
 
-## 2. Command palette
-- `./tools/launch_stage.sh engineering` (after verifying there are active stories) and `./tools/launch_stage.sh qa|pm|architect|cycle` for their respective stages.
-- `./tools/run_stage_tests.sh` to auto-run docs + correct Go scope for push vs PR context.
-- `./tools/run_observer_cycle.sh --cycle-id <cycle-id>` once per cycle, then commit with `cycle-<cycle-id>` and include `operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
-- Run docs tests + targeted tests before pushing; full `go test ./...` is required during pull-request validation.
+## Operator Pack Location
 
-## 3. Queue signal interpretation
-1. Read `product-research/roadmap/PROGRAM_STATE_BOARD.md`. If any queue count is non-zero, follow the `Now` section before launching another stage.
-2. If the engineering active queue is empty, trigger PM refinement (`./tools/launch_stage.sh pm`) before re-running engineering.
-3. If a launch script replies `no stories`, stop and feed PM/architect to replenish the intake queue. Do not invent work.
+- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`
 
-## 4. Memory layer reminder (AthenaMind skill)
-- If using Codex sandbox, add `~/.athena` as a writable root in Codex config for persistent memory across sessions.
-- If that is not possible, set `ATHENA_MEMORY_ROOT` to a workspace path before running memory commands.
-- Whenever context matters (intake decisions, QA evidence, release rationale), run a memory CLI command to fetch the latest snapshot:
-  ```bash
-  ATHENA_MEMORY_ROOT="${ATHENA_MEMORY_ROOT:-$PWD/.athena/memory/$(basename "$PWD")}"
-  go run ./cmd/memory-cli retrieve \
-    --root "$ATHENA_MEMORY_ROOT" \
-    --query "current cycle context"
-  ```
-- Verify embeddings or health when unsure about retrieval quality:
-  ```bash
-  go run ./products/athena-mind/cmd/memory-cli verify embeddings --root ...
-  ```
-- Use the AthenaMind skill whenever the task hinges on memory indexing, retrieval, or CLI behavior. It collapses the context so less capable agents do not lose track.
+## Minimal Stage Loop
 
-## 5. Work-system sync points
-- Stage exit gates: `knowledge-base/process/STAGE_EXIT_GATES.md` (pass each gate before transitioning). Failure means repeat the current stage.
-- Backlog weighting policy: `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md` (product-first ranking without estimates).
-- Documents that change workflow or tooling rules (e.g., commit format, exit gates, stage commands) must be updated in `HUMANS.md`, `AGENTS.md`, and any affected `stage-prompts/active/` files.
+From the archived AthenaWork root:
 
-## 6. Simplified run-through (for cases when you just need to proceed)
-1. Verify `PROGRAM_STATE_BOARD.md` for open queues.
-2. If there is work, run `launch_stage` for that domain (engineering → QA). If there is none, run PM refinement to refill active stories.
-3. After QA finishes a cycle, run the observer, build the release bundle evidence if needed, and commit `cycle-<cycle-id>`.
-4. Always include memory CLI context captures when the next steps rely on aggregated knowledge.
+```bash
+./tools/launch_stage.sh engineering
+./tools/launch_stage.sh qa
+./tools/run_observer_cycle.sh --cycle-id <cycle-id>
+```
 
-Use this quick guide whenever you need a deterministic action and are unsure which long-form doc to read next.
+## Practical Pairing
+
+- AthenaWork: governs the delivery loop.
+- AthenaMind: powers memory operations and quality checks.
+
+## Related
+
+- [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)

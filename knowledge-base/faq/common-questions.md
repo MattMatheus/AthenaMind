@@ -1,31 +1,25 @@
 # Common Questions
 
-## What is in scope for v0.1?
-Memory-layer behavior only: file-backed write/retrieve, governance, and quality gates.
+## What is AthenaMind focused on?
 
-Reference: `product-research/decisions/ADR-0007-memory-layer-scope-refinement.md`
+A governable memory layer for agentic coding workflows: write/retrieve/evaluate/snapshot/episode flows with deterministic safety behavior.
 
-## Does `done` mean shipped?
-No. `done` is QA-complete. Shipping requires release checkpoint bundle approval.
+## Is AthenaMind a runtime orchestration platform?
 
-Reference: `knowledge-base/process/STAGE_EXIT_GATES.md`
+No. It is a memory layer. Runtime orchestration is intentionally out of scope for v0.1 product focus.
 
-## Can autonomous agents write memory directly?
-No. Mutation is blocked in autonomous runs and requires reviewer evidence.
+## What is AthenaWork in this slim repo?
 
-Reference: `knowledge-base/concepts/governance.md`
+AthenaWork is the staged operational workflow system. In slim mode, the full operator pack is archived at `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24/products/athena-work`.
 
-## How do I recover from a bad corpus update?
-Use snapshot restore with policy approval and compatibility checks.
+## Does OTLP require a secret?
 
-Reference: `knowledge-base/workflows/snapshot-recovery.md`
+Sometimes. Local/open collectors may not require auth; managed remote collectors usually require token headers or mTLS.
 
-## Why did retrieval return a fallback result?
-Semantic confidence gate likely failed, so deterministic fallback was applied.
+## Why did retrieval return fallback mode?
 
-Reference: `knowledge-base/concepts/retrieval-and-quality.md`
+Semantic confidence was insufficient or latency degradation policy forced deterministic fallback.
 
-## How do I report a docs or behavior issue?
-Create an intake bug with reproducible commands and outputs.
+## How do I tune retrieval behavior?
 
-Reference: `delivery-backlog/engineering/intake/BUG_TEMPLATE.md`
+Adjust mode/backend/top-k, embedding endpoint, and quality query sets; then re-run `evaluate`.

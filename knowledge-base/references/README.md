@@ -1,4 +1,5 @@
 # Reference Docs
 
-## Summary
-Fast lookup material: conventions, templates, and command references.
+Use this section for dense lookup material and configuration details.
+
+- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)

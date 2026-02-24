@@ -1,30 +1,58 @@
 # Installation
 
 ## Summary
-Install the minimum tooling and verify AthenaMind can run tests locally.
 
-## Preconditions
-- Repository cloned locally.
-- macOS or Linux terminal access.
+Install runtime prerequisites and verify the slim AthenaMind distribution is healthy.
 
-## Steps
-1. Install Go 1.22+ (source of truth: `go.mod`).
-2. Configure writable memory storage:
-   - Default runtime path is `~/.athena/memory/<repo-id>`.
-   - In Codex sandbox, add `~/.athena` to writable roots in Codex config.
-   - Fallback option: set `ATHENA_MEMORY_ROOT` to a writable workspace path.
-3. Validate the toolchain:
-   - `tools/check_go_toolchain.sh`
-4. Run baseline tests:
-   - `tools/run_stage_tests.sh --mode push`
-5. Run documentation gates:
-   - `tools/run_doc_tests.sh`
+## Prerequisites
 
-## Failure Modes
-- `go` missing or old: follow `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`.
-- Memory path permission denied in Codex: add `~/.athena` to writable roots or export `ATHENA_MEMORY_ROOT` to a writable workspace path.
-- Failing tests: resolve code-level issues before using docs workflows.
+- macOS or Linux shell.
+- Go 1.22+.
+- Network access if pulling new Go modules.
 
-## References
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
-- `cmd/memory-cli/main_test.go`
+## Install Steps
+
+1. Clone and enter repo.
+2. Verify Go:
+```bash
+go version
+```
+3. Download modules:
+```bash
+go mod download
+```
+4. Run full tests:
+```bash
+go test ./...
+```
+
+## Optional Services
+
+### Ollama embeddings
+```bash
+podman compose -f docker-compose.ollama.yml up -d
+```
+
+### Retrieval backend experiments
+```bash
+podman compose -f docker-compose.experiment.yml up -d
+```
+
+## Memory Storage Defaults
+
+- Default root for examples: `memory`
+- Recommended for real use: set explicit root per environment and persist on durable storage.
+
+## Observability Defaults
+
+- Local telemetry events: `<root>/telemetry/events.jsonl`
+- Retrieval metrics: `<root>/telemetry/retrieval-metrics.jsonl`
+- OTel tracing enabled in CLI runtime, with OTLP/collector config via env vars.
+
+## Verify Runtime
+
+```bash
+go run ./cmd/memory-cli retrieve --root memory --query "health check"
+```
+
+If index is empty, you should see a clear error indicating no entries exist yet.

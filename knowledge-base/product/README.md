@@ -1,10 +1,5 @@
 # Product Docs
 
-## Summary
-Product requirements, goals, and user outcome definitions.
-
-## Include
-- v0.1 goals and scorecard
-- roadmap narratives
-- persona-driven workflows
-- long-term vision (`VISION.md`)
+- [AthenaMind Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
+- [AthenaWork Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+- [Long-Term Vision](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/VISION.md)

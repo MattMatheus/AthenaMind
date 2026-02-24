@@ -1,34 +1,22 @@
 # Getting Started
 
 ## Summary
-Start here to install prerequisites and run AthenaMind memory CLI workflows end to end.
 
-## Intended Audience
-- New users evaluating AthenaMind v0.1 memory-layer capabilities.
-- Internal operators onboarding to user-facing product workflows.
+This section gets you from zero to a working AthenaMind memory workflow quickly, then branches into AthenaWork operating flows.
 
-## Preconditions
-- Local clone of this repository.
-- Go toolchain installed (`go.mod` minimum applies).
-- Terminal access on macOS or Linux.
+## Audience
 
-## Main Flow
-1. Complete environment setup in `installation.md`.
-2. Run the first successful path in `quickstart.md`.
-3. Continue with command depth in `../cli/README.md`.
-4. Use `../troubleshooting/README.md` for failures.
+- Engineers and data scientists who want to run or tune memory-assisted coding workflows.
+- Technical operators preparing telemetry and governance gates for real usage.
 
-## Failure Modes
-- Toolchain version mismatch blocks command execution.
-- Missing environment setup causes test failures.
-- Ambiguous workflow intent causes invalid command usage.
+## Paths
 
-## References
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
-- `knowledge-base/cli/README.md`
-- `knowledge-base/troubleshooting/README.md`
-- `product-research/decisions/ADR-0009-file-memory-cli-v1-architecture.md`
+1. [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
+2. [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
+3. [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
 
-## Pages
-- `installation.md`
-- `quickstart.md`
+## Next Steps
+
+- Command deep dive: [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
+- End-to-end flows: [Workflows](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/README.md)
+- Telemetry export setup: [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)

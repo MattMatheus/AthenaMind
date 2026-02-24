@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security or sensitive incident
+    url: ./SECURITY.md
+    about: Please use private escalation for security-sensitive reports.

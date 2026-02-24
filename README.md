@@ -1,128 +1,78 @@
-# Athena Platform Repository
+# Athena Platform (Slim)
 
-This repository now hosts two products:
+Athena is split into two products:
 
-- AthenaMind: memory system and retrieval runtime
-- AthenaWork: staged work-system and operational workflow
+- `AthenaMind`: memory layer for agentic coding workflows (primary runtime in this repo).
+- `AthenaWork`: staged operating system for planning/engineering/QA/PM loops (documented here, operator pack archived externally).
 
-Legacy root paths are preserved via compatibility links.
+This repository is a **slim product distribution** focused on user-facing runtime and docs.
 
-## Product Roots
-- AthenaMind: `products/athena-mind`
-- AthenaWork: `products/athena-work`
-- Website scaffold: `website/athena-homepage`
+## Who This Is For
 
-## Root Entry Points
-- `README.md`: product and CLI quick orientation
-- `HUMANS.md`: operator quick guide
-- `AGENTS.md`: agent operating and stage rules
-- `DEVELOPMENT_CYCLE.md`: canonical workflow and launch behavior
-- `knowledge-base/process/CYCLE_INDEX.md`: cycle navigation and first-5-minutes flow
-- `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`: day-to-day execution loop
-- `knowledge-base/process/PM-TODO.md`: PM control-plane checklist
-- `knowledge-base/process/PRE_CODING_PATH.md`: coding readiness gate path
-- `knowledge-base/product/VISION.md`: preserved long-term product direction
-- `product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`: phased execution plan
+- Engineers and data scientists operating memory-assisted coding agents.
+- Technical operators tuning retrieval quality, governance controls, and telemetry export.
+- Teams evaluating local-first memory workflows before broader deployment.
 
-## Product Skills
-- AthenaMind skill: `skills/athena-mind/SKILL.md`
-- AthenaWork skill: `skills/athena-work/SKILL.md`
+## What You Can Do Today
 
-## Documentation Hosting Model
-- Source-of-truth: markdown in this repository.
-- Published site: `athena.teamorchestrator.com/docs/`.
-- Local build command: `tools/build_docs_site.sh`.
-- CI publish workflow: `.github/workflows/docs-publish.yml`.
-- Policy reference: `knowledge-base/process/DOCS_PUBLISH_POLICY.md`.
+- Write and retrieve governed memory entries.
+- Evaluate retrieval quality with deterministic fallback checks.
+- Use snapshots for rollback and recovery.
+- Capture episodes for cross-session continuity.
+- Run local read gateway and API retrieval fallback.
+- Export telemetry events and OpenTelemetry traces (including OTLP collectors).
 
-## What v0.1 Delivers Today
-- Local-first memory write and retrieve workflow
-- Governance-aware mutation lifecycle
-- Snapshot lifecycle (`create`, `list`, `restore`)
-- Episode write-back and retrieval support
-- Deterministic crawl ingestion for local docs
+## Quick Start
 
-## Current Operating Model
-- Toolchain root: repository root (`$ATHENA_REPO_ROOT`, defaults to current working directory)
-- Active memory root: `$ATHENA_MEMORY_ROOT` (default: `$ATHENA_REPO_ROOT/memory/core`)
-- Optional work root: `$ATHENA_WORK_MEMORY_ROOT` (default: `$ATHENA_REPO_ROOT/memory/work`)
-- Latency fallback policy: configurable with `MEMORY_CONSTRAINT_LATENCY_P95_RETRIEVAL_MS` (`0` disables latency fallback)
+1. Install prerequisites: [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
+2. Run first end-to-end flow: [Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
+3. Learn command surface: [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
+4. Configure observability: [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
 
-## Command Surface
-Implemented command families in `cmd/memory-cli`:
+## Documentation Map
+
+- Full docs index: [knowledge-base/INDEX.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/INDEX.md)
+- AthenaMind product docs: [knowledge-base/product/athenamind.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
+- AthenaWork product docs: [knowledge-base/product/athenawork.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
+
+## Slim Boundary
+
+Non user-facing research/process content was moved out of this repo to keep distribution focused.
+
+Archived internal pack location:
+- `/Users/foundry/Experiments/Archived/AthenaMind-internal-2026-02-24`
+
+
+## Public Testing
+
+- Program: [PUBLIC_TESTING.md](/Users/foundry/Experiments/Current/AthenaMind/PUBLIC_TESTING.md)
+- Contribution guide: [CONTRIBUTING.md](/Users/foundry/Experiments/Current/AthenaMind/CONTRIBUTING.md)
+- Testing protocol: [TESTING.md](/Users/foundry/Experiments/Current/AthenaMind/TESTING.md)
+- Security and support: [SECURITY.md](/Users/foundry/Experiments/Current/AthenaMind/SECURITY.md), [SUPPORT.md](/Users/foundry/Experiments/Current/AthenaMind/SUPPORT.md)
+
+## Runtime Commands
+
+`cmd/memory-cli` supports:
+
 - `write`
 - `retrieve`
 - `evaluate`
 - `bootstrap`
 - `verify`
-- `reindex-all`
+- `snapshot` (`create|list|restore`)
+- `episode` (`write|list`)
 - `crawl`
+- `reindex-all`
+- `reembed-changed`
 - `sync-qdrant`
-- `snapshot` (`create`, `list`, `restore`)
-- `episode` (`write`, `list`)
 - `serve-read-gateway`
 - `api-retrieve`
+- `telemetry tail`
 
-## Practical Workflow
-1. Load environment:
-```bash
-if [ -f .env ]; then
-  set -a; source .env; set +a
-fi
+## Current Validation Status
 
-ATHENA_REPO_ROOT="${ATHENA_REPO_ROOT:-$(pwd)}"
-ATHENA_MEMORY_ROOT="${ATHENA_MEMORY_ROOT:-$ATHENA_REPO_ROOT/memory/core}"
-ATHENA_WORK_MEMORY_ROOT="${ATHENA_WORK_MEMORY_ROOT:-$ATHENA_REPO_ROOT/memory/work}"
-```
+- `go test ./...` passes in this repo.
 
-2. Ensure memory roots exist:
-```bash
-mkdir -p "$ATHENA_MEMORY_ROOT" "$ATHENA_WORK_MEMORY_ROOT"
-```
+## License
 
-3. Write a memory entry:
-```bash
-go run ./cmd/memory-cli write \
-  --root "$ATHENA_MEMORY_ROOT" \
-  --type prompt \
-  --domain docs-crawl \
-  --id intro-note \
-  --title "Intro note" \
-  --content "AthenaMind write path smoke check." \
-  --reviewer system
-```
-
-4. Crawl docs into memory (collision-safe IDs are path-based and deterministic):
-```bash
-go run ./cmd/memory-cli crawl \
-  --root "$ATHENA_MEMORY_ROOT" \
-  --dir "$ATHENA_REPO_ROOT/knowledge-base" \
-  --domain docs-crawl \
-  --reviewer system
-```
-
-5. Refresh index artifacts:
-```bash
-go run ./cmd/memory-cli reindex-all \
-  --root "$ATHENA_MEMORY_ROOT"
-```
-
-6. Retrieve:
-```bash
-go run ./cmd/memory-cli retrieve \
-  --root "$ATHENA_MEMORY_ROOT" \
-  --query "memory lifecycle" \
-  --domain docs-crawl
-```
-
-## Test Status
-| Gate | Status | Notes |
-|---|---|---|
-| Targeted governance and memory-cli tests | ✔ PASS | `go test ./internal/governance` and targeted `./cmd/memory-cli` tests are passing |
-| Full memory-cli package | ✖ FAIL | Known failing test: `TestSemanticConfidenceGate` |
-| Full repository suite (`go test ./...`) | ✖ FAIL | Not currently green due to the memory-cli package failure above |
-
-## References
-- Scope boundary: `product-research/decisions/ADR-0007-memory-layer-scope-refinement.md`
-- CLI docs: `knowledge-base/cli/commands.md`, `knowledge-base/cli/examples.md`
-- Process docs: `knowledge-base/process/STAGE_EXIT_GATES.md`, `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`
+See [LICENSE](/Users/foundry/Experiments/Current/AthenaMind/LICENSE).
