@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "agent_section": {
+    "name": "AthenaWork Agent Operations",
+    "layout": {
+      "operator_entrypoint": "HUMANS.md",
+      "agent_entrypoint": "AGENTS.md",
+      "core_paths": {
+        "delivery_backlog": "delivery-backlog/",
+        "operating_system": "operating-system/",
+        "product_research": "product-research/",
+        "knowledge_base": "knowledge-base/",
+        "tools": "tools/"
+      }
+    },
+    "user_content_prune": {
+      "confirmation_token": "PRUNE_USER_CONTENT",
+      "delete_globs": [
+        "product-research/briefs/SESSION-BRIEFING-*.md",
+        "product-research/planning/sessions/PLAN-*.md",
+        "product-research/product/VISION_WORKSHOP_*.md",
+        "product-research/competitive/*.md",
+        "product-research/references/*.md"
+      ],
+      "delete_paths": [
+        "product-research/planning/IDEAS_BIN.md",
+        "product-research/roadmap/FOUNDER_SNAPSHOT.md",
+        "product-research/roadmap/PROGRAM_STATE_BOARD.md",
+        "product-research/roadmap/RESEARCH_BACKLOG.md"
+      ],
+      "placeholders": [
+        {
+          "path": "product-research/roadmap/FOUNDER_SNAPSHOT.md",
+          "content": "# Founder Snapshot\n\nThis public repository does not store private founder notes.\n\nUse internal/private workspace for live founder snapshots.\n"
+        },
+        {
+          "path": "product-research/roadmap/PROGRAM_STATE_BOARD.md",
+          "content": "# Program State Board\n\nThis public repository does not store live internal board state.\n\nUse internal/private workspace for current program status.\n"
+        },
+        {
+          "path": "product-research/roadmap/RESEARCH_BACKLOG.md",
+          "content": "# Research Backlog\n\nThis public repository does not store private research backlog entries.\n\nUse internal/private workspace for active backlog management.\n"
+        },
+        {
+          "path": "product-research/planning/IDEAS_BIN.md",
+          "content": "# Ideas Bin\n\nThis file is intentionally sanitized in the public repository.\n\nCapture exploratory ideas in private workspace, then promote only approved outputs here.\n"
+        },
+        {
+          "path": "product-research/planning/sessions/.gitkeep",
+          "content": ""
+        },
+        {
+          "path": "product-research/competitive/README.md",
+          "content": "# Competitive Research\n\nDetailed competitive notes are maintained in a private workspace.\n\nOnly approved summary outputs should be published in this repository.\n"
+        },
+        {
+          "path": "product-research/references/README.md",
+          "content": "# Research References\n\nRaw research references and excerpts are maintained in a private workspace.\n\nOnly curated, approved references should be published in this repository.\n"
+        }
+      ]
+    }
+  }
+}

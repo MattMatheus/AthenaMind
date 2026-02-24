@@ -35,6 +35,7 @@ Compatibility links are kept at repo root for existing commands.
 - Product/architecture decisions: `product-research/decisions/`
 - Architecture backlog lane: `delivery-backlog/architecture/README.md`
 - Process-improvement system: `operating-system/README.md`
+- Work-system layout contract: `operating-system/system.json`
 - Observer artifacts: `operating-system/observer/README.md`
 - Wiki docs root: `knowledge-base/INDEX.md`
 
@@ -55,6 +56,15 @@ Compatibility links are kept at repo root for existing commands.
 - Keep Azure DevOps CI gate green (`go test ./...` on push/PR via `azure-pipelines.yml`).
 - Treat repository markdown as the documentation source of truth; do not edit published docs directly.
 - Ensure docs changes remain publishable through `.github/workflows/docs-publish.yml`.
+
+## User Content Removal Protocol
+When a user asks to remove private research/idea content from this repository:
+1. Use `tools/prune_user_content.sh` (do not manually cherry-pick paths first).
+2. Always offer backup export before deletion:
+   - `tools/prune_user_content.sh --export-zip /writable/path/user-content-backup.zip`
+3. Destructive execution requires explicit confirmation token in the script prompt unless `--yes` is provided.
+4. If export path fails due sandbox/permission restriction, re-run with elevated permissions instead of skipping export.
+5. Review git diff, commit only the prune change-set, then push a review branch.
 
 ## Documentation Sync Rule
 When work-system behavior changes (stage flow, handoff rules, commit conventions, state transitions, launch commands):
