@@ -1,13 +1,13 @@
 # Program State Board
 
 ## Metadata
-- `updated_at`: 2026-02-23
+- `updated_at`: 2026-02-24
 - `owner`: staff-personas/Product Manager - Maya.md
 - `policy`: no time estimates; quality-gated flow only
 
 ## Queue Snapshot
 - `engineering_intake_count`: 0
-- `engineering_active_count`: 0
+- `engineering_active_count`: 1
 - `engineering_qa_count`: 0
 - `engineering_done_story_count`: 43
 - `architecture_intake_count`: 0
@@ -21,9 +21,9 @@
 - `v0.3`: not started
 
 ## Now
-- Run QA closure for `STORY-20260223-embedding-retrieval-via-ollama`.
+- Execute `STORY-20260223-self-check-helper` from engineering active.
 - Keep weekly KPI monitoring active while queue throughput resumes.
-- Trigger PM refinement because engineering active queue is currently empty.
+- Run QA closure for the current in-flight engineering story.
 
 ## Next
 - Replenish ranked engineering active queue from intake after QA closure.

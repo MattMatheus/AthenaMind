@@ -75,14 +75,24 @@ func Write(root string, in types.WriteEpisodeInput, policy types.WritePolicyDeci
 
 	latest := types.EpisodeContext{
 		Repo:      repo,
-		Scenario:  "episode",
+		Scenario:  strings.TrimSpace(in.Stage),
 		CycleID:   record.CycleID,
 		StoryID:   record.StoryID,
 		Outcome:   record.Outcome,
 		Summary:   record.Summary,
 		Timestamp: record.CreatedAt,
 	}
+	if latest.Scenario == "" {
+		latest.Scenario = "episode"
+	}
 	if err := index.WriteJSONAsYAML(filepath.Join(dir, "latest.json"), latest); err != nil {
+		return types.EpisodeRecord{}, err
+	}
+	scenarioDir := filepath.Join(dir, normalizeKey(latest.Scenario))
+	if err := os.MkdirAll(scenarioDir, 0o755); err != nil {
+		return types.EpisodeRecord{}, err
+	}
+	if err := index.WriteJSONAsYAML(filepath.Join(scenarioDir, "latest.json"), latest); err != nil {
 		return types.EpisodeRecord{}, err
 	}
 

@@ -6,6 +6,7 @@ root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$
 launch_script="$root_dir/tools/launch_stage.sh"
 current_branch="$(git -C "$root_dir" branch --show-current)"
 repo_id="$(basename "$root_dir")"
+default_memory_root="$HOME/.athena/memory/$repo_id"
 
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
@@ -36,7 +37,7 @@ else
   exit 1
 fi
 
-if grep -Fq "bootstrap --root $root_dir/memory --repo $repo_id" "$args_log" && grep -Fq " --scenario pm" "$args_log"; then
+if grep -Fq "bootstrap --root $default_memory_root --repo $repo_id" "$args_log" && grep -Fq " --scenario pm" "$args_log"; then
   echo "PASS: launch_stage invokes memory-cli bootstrap with stage scenario"
 else
   echo "FAIL: launch_stage bootstrap invocation missing expected args"

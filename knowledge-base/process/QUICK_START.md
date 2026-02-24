@@ -10,8 +10,9 @@ This page exists to help agents that need a concise, deterministic next step rat
 
 ## 2. Command palette
 - `./tools/launch_stage.sh engineering` (after verifying there are active stories) and `./tools/launch_stage.sh qa|pm|architect|cycle` for their respective stages.
+- `./tools/run_stage_tests.sh` to auto-run docs + correct Go scope for push vs PR context.
 - `./tools/run_observer_cycle.sh --cycle-id <cycle-id>` once per cycle, then commit with `cycle-<cycle-id>` and include `operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
-- `go test ./...` keeps the Azure DevOps gate green; run locally before pushing.
+- Run docs tests + targeted tests before pushing; full `go test ./...` is required during pull-request validation.
 
 ## 3. Queue signal interpretation
 1. Read `product-research/roadmap/PROGRAM_STATE_BOARD.md`. If any queue count is non-zero, follow the `Now` section before launching another stage.
@@ -19,10 +20,12 @@ This page exists to help agents that need a concise, deterministic next step rat
 3. If a launch script replies `no stories`, stop and feed PM/architect to replenish the intake queue. Do not invent work.
 
 ## 4. Memory layer reminder (AthenaMind skill)
+- If using Codex sandbox, add `~/.athena` as a writable root in Codex config for persistent memory across sessions.
+- If that is not possible, set `ATHENA_MEMORY_ROOT` to a workspace path before running memory commands.
 - Whenever context matters (intake decisions, QA evidence, release rationale), run a memory CLI command to fetch the latest snapshot:
   ```bash
-  ATHENA_MEMORY_ROOT="${ATHENA_MEMORY_ROOT:-./memory/core}"
-  go run ./products/athena-mind/cmd/memory-cli retrieve \
+  ATHENA_MEMORY_ROOT="${ATHENA_MEMORY_ROOT:-$PWD/.athena/memory/$(basename "$PWD")}"
+  go run ./cmd/memory-cli retrieve \
     --root "$ATHENA_MEMORY_ROOT" \
     --query "current cycle context"
   ```

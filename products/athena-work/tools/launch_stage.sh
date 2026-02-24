@@ -9,9 +9,69 @@ active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/delivery-backlog/architecture/active"
 arch_active_readme="$arch_active_dir/README.md"
 required_branch="${ATHENA_REQUIRED_BRANCH:-dev}"
-memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
 repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
+preflight_mode="${ATHENA_PREFLIGHT_MODE:-enforce}"
+resume_context_file="$root_dir/operating-system/observer/RESUME_CONTEXT.md"
+
+default_memory_root() {
+  if [ -n "${ATHENA_MEMORY_ROOT:-}" ]; then
+    printf '%s\n' "$ATHENA_MEMORY_ROOT"
+    return 0
+  fi
+  if [ "${ATHENA_MEMORY_IN_REPO:-0}" = "1" ]; then
+    printf '%s\n' "$root_dir/memory"
+    return 0
+  fi
+  printf '%s\n' "${HOME}/.athena/memory/$repo_id"
+}
+
+memory_root="$(default_memory_root)"
+
+abort_or_warn() {
+  local message="$1"
+  if [ "$preflight_mode" = "warn" ]; then
+    echo "warning: $message" >&2
+    return 0
+  fi
+  echo "abort: $message" >&2
+  exit 1
+}
+
+ensure_resume_context_if_needed() {
+  if [ "$stage" = "planning" ]; then
+    return 0
+  fi
+
+  if ! compgen -G "$root_dir/operating-system/observer/OBSERVER-REPORT-*.md" >/dev/null; then
+    return 0
+  fi
+
+  if [ ! -f "$resume_context_file" ]; then
+    abort_or_warn "resume context missing at operating-system/observer/RESUME_CONTEXT.md; run tools/run_observer_cycle.sh once to seed operator context"
+  fi
+}
+
+validate_story_readiness() {
+  local story_path="$1"
+  local lane_name="$2"
+
+  if ! grep -Eq '^## Metadata' "$story_path"; then
+    abort_or_warn "$lane_name story '$story_path' is missing '## Metadata' section"
+  fi
+  if ! grep -Eq '`idea_id`:' "$story_path"; then
+    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'idea_id'"
+  fi
+  if ! grep -Eq '`phase`:' "$story_path"; then
+    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'phase'"
+  fi
+  if ! grep -Eq '`adr_refs`:' "$story_path"; then
+    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'adr_refs'"
+  fi
+  if ! grep -Eq '^## Acceptance Criteria' "$story_path"; then
+    abort_or_warn "$lane_name story '$story_path' is missing '## Acceptance Criteria' section"
+  fi
+}
 
 if ! git -C "$root_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "abort: not a git repository at $root_dir" >&2
@@ -23,6 +83,8 @@ if [ "$current_branch" != "$required_branch" ]; then
   echo "abort: active branch is '$current_branch'; expected '$required_branch'" >&2
   exit 1
 fi
+
+ensure_resume_context_if_needed
 
 select_top_story_from_lane() {
   local lane_dir="$1"
@@ -92,6 +154,7 @@ case "$stage" in
       echo "abort: top active story not found at '$top_story'" >&2
       exit 1
     fi
+    validate_story_readiness "$top_story" "engineering"
 
     rel_story="${top_story#"$root_dir"/}"
     cat <<EOF
@@ -102,7 +165,7 @@ checklist:
   1) read story and clarify open questions
   2) implement required changes
   3) update tests
-  4) run tests (must pass)
+  4) run tools/run_stage_tests.sh (must pass); add story-specific tests as needed
   5) prepare handoff package
   6) move story to delivery-backlog/engineering/qa
   7) do not commit yet (cycle-level commit after observer step)
@@ -158,6 +221,7 @@ EOF
       exit 0
     fi
 
+    validate_story_readiness "$top_arch_story" "architecture"
     rel_arch_story="${top_arch_story#"$root_dir"/}"
     cat <<EOF
 launch: stage-prompts/active/architect-agent-seed-prompt.md

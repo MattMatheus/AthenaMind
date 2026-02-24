@@ -19,9 +19,12 @@ Quick launch helper:
 - `tools/launch_stage.sh qa`
 - `tools/launch_stage.sh pm`
 - `tools/launch_stage.sh cycle`
+- `tools/run_stage_tests.sh` (auto: docs + targeted on push/non-PR, docs + full suite on PR)
 - `tools/run_observer_cycle.sh --cycle-id <cycle-id>`
 - `tools/build_docs_site.sh` (local docs-site build)
-- CI gate (Azure DevOps): `go test ./...` runs on push and PR via `azure-pipelines.yml`.
+- CI gate (Azure DevOps):
+  - Push/non-PR: targeted tests (`go test ./internal/governance ./internal/episode ./cmd/memory-cli`) + docs tests.
+  - Pull request: full suite (`go test ./...`) + docs tests.
 - Docs publish gate (GitHub Actions): `.github/workflows/docs-publish.yml` publishes docs artifacts.
 
 Documentation source-of-truth rule:
@@ -30,7 +33,18 @@ Documentation source-of-truth rule:
 Memory integration (soft dependency):
 - `launch_stage.sh` invokes `memory-cli bootstrap` and appends bootstrap context to stage output when available.
 - `run_observer_cycle.sh` invokes `memory-cli episode write` after observer report generation when available.
+- Default memory root is external to the repo: `~/.athena/memory/<repo-id>`.
+- Set `ATHENA_MEMORY_IN_REPO=1` to use `<repo>/memory` for local compatibility.
+- Set `ATHENA_MEMORY_ROOT` to fully override memory storage location.
 - Missing/failed `memory-cli` calls must not block stage flow; scripts emit warnings and proceed.
+
+Preflight gate enforcement:
+- `launch_stage.sh` enforces story readiness for engineering/architecture before launch output:
+  - `## Metadata` section must exist.
+  - metadata must include `idea_id`, `phase`, and `adr_refs`.
+  - `## Acceptance Criteria` section must exist.
+- If prior observer reports exist, `operating-system/observer/RESUME_CONTEXT.md` must exist before stage launch.
+- Default mode is hard gate (`ATHENA_PREFLIGHT_MODE=enforce`); use `ATHENA_PREFLIGHT_MODE=warn` for warning-only behavior.
 
 ## Doc Validation Standard
 - Canonical docs validation command: `tools/run_doc_tests.sh`
@@ -49,6 +63,8 @@ Memory integration (soft dependency):
 1. PM ensures ranked stories exist in `delivery-backlog/engineering/active/`.
 2. Architect executes top architecture story in `delivery-backlog/architecture/active/`.
 3. Engineering executes top story, runs tests, prepares handoff package, and moves story to `delivery-backlog/engineering/qa/`.
+   - Required during stage execution: docs tests + targeted tests for touched scope.
+   - Required during PR validation: full suite `go test ./...`.
 4. QA validates and either:
    - moves story to `delivery-backlog/engineering/done/`, or
    - files prioritized bugs to `delivery-backlog/engineering/intake/` and returns story to `delivery-backlog/engineering/active/`.
