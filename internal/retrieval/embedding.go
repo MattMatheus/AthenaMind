@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -55,16 +56,7 @@ type EmbeddingProfile struct {
 }
 
 func ActiveEmbeddingProfile(endpoint string) EmbeddingProfile {
-	if strings.TrimSpace(os.Getenv("AZURE_OPENAI_ENDPOINT")) != "" {
-		deployment := strings.TrimSpace(os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME"))
-		if deployment == "" {
-			deployment = "text-embedding-3-small"
-		}
-		return EmbeddingProfile{
-			Provider: "azure_openai",
-			ModelID:  deployment,
-		}
-	}
+	_ = endpoint
 	return EmbeddingProfile{
 		Provider: "ollama",
 		ModelID:  "nomic-embed-text",
@@ -87,15 +79,6 @@ func GenerateEmbeddings(endpoint string, texts []string) ([][]float64, error) {
 		return nil, nil
 	}
 
-	// Try Azure first if configured
-	if azureEndpoint := os.Getenv("AZURE_OPENAI_ENDPOINT"); azureEndpoint != "" {
-		vecs, err := generateAzureEmbeddings(azureEndpoint, texts)
-		if err == nil {
-			return vecs, nil
-		}
-		// Fall through to Ollama if Azure fails
-	}
-
 	endpoint = strings.TrimSpace(endpoint)
 	if endpoint == "" {
 		endpoint = DefaultEmbeddingEndpoint
@@ -109,39 +92,146 @@ func GenerateEmbeddings(endpoint string, texts []string) ([][]float64, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	for i, text := range texts {
-		body, err := json.Marshal(ollamaEmbeddingRequest{
-			Model:  "nomic-embed-text",
-			Prompt: text,
-		})
+		embedding, err := generateOllamaEmbeddingWithChunkFallback(client, endpoint, text)
 		if err != nil {
 			return nil, err
 		}
-		url := strings.TrimRight(endpoint, "/") + "/api/embeddings"
-		req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
-		if err != nil {
-			return nil, err
-		}
-		req.Header.Set("Content-Type", "application/json")
-
-		resp, err := client.Do(req)
-		if err != nil {
-			markEndpointUnavailable(endpoint)
-			return nil, err
-		}
-		defer resp.Body.Close()
-		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			markEndpointUnavailable(endpoint)
-			return nil, fmt.Errorf("embedding endpoint returned status %d", resp.StatusCode)
-		}
-
-		var parsed ollamaEmbeddingResponse
-		if err := json.NewDecoder(resp.Body).Decode(&parsed); err != nil {
-			markEndpointUnavailable(endpoint)
-			return nil, err
-		}
-		results[i] = parsed.Embedding
+		results[i] = embedding
 	}
 	return results, nil
+}
+
+func generateOllamaEmbeddingWithChunkFallback(client *http.Client, endpoint, text string) ([]float64, error) {
+	embedding, statusCode, responseBody, err := requestOllamaEmbedding(client, endpoint, text)
+	if err == nil {
+		return embedding, nil
+	}
+
+	if shouldChunkForContextLimit(statusCode, responseBody) {
+		chunks := chunkTextByBytes(text, 2800)
+		if len(chunks) <= 1 {
+			return nil, err
+		}
+		parts := make([][]float64, 0, len(chunks))
+		for _, chunk := range chunks {
+			part, _, _, chunkErr := requestOllamaEmbedding(client, endpoint, chunk)
+			if chunkErr != nil {
+				markEndpointUnavailable(endpoint)
+				return nil, chunkErr
+			}
+			parts = append(parts, part)
+		}
+		return averageEmbeddings(parts), nil
+	}
+
+	if statusCode > 0 || err != nil {
+		markEndpointUnavailable(endpoint)
+	}
+	return nil, err
+}
+
+func requestOllamaEmbedding(client *http.Client, endpoint, text string) ([]float64, int, string, error) {
+	body, err := json.Marshal(ollamaEmbeddingRequest{
+		Model:  "nomic-embed-text",
+		Prompt: text,
+	})
+	if err != nil {
+		return nil, 0, "", err
+	}
+	url := strings.TrimRight(endpoint, "/") + "/api/embeddings"
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
+	if err != nil {
+		return nil, 0, "", err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, "", err
+	}
+	data, readErr := io.ReadAll(resp.Body)
+	_ = resp.Body.Close()
+	if readErr != nil {
+		return nil, resp.StatusCode, "", readErr
+	}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, resp.StatusCode, strings.TrimSpace(string(data)), fmt.Errorf("embedding endpoint returned status %d", resp.StatusCode)
+	}
+
+	var parsed ollamaEmbeddingResponse
+	if err := json.Unmarshal(data, &parsed); err != nil {
+		return nil, resp.StatusCode, "", err
+	}
+	return parsed.Embedding, resp.StatusCode, "", nil
+}
+
+func shouldChunkForContextLimit(statusCode int, responseBody string) bool {
+	if statusCode < http.StatusBadRequest {
+		return false
+	}
+	msg := strings.ToLower(strings.TrimSpace(responseBody))
+	return strings.Contains(msg, "context length") || strings.Contains(msg, "input length exceeds")
+}
+
+func chunkTextByBytes(text string, maxChunkBytes int) []string {
+	if maxChunkBytes <= 0 || len(text) <= maxChunkBytes {
+		return []string{text}
+	}
+	parts := strings.Fields(text)
+	if len(parts) == 0 {
+		return []string{text}
+	}
+	chunks := make([]string, 0, len(parts))
+	var builder strings.Builder
+	for _, part := range parts {
+		next := part
+		if builder.Len() > 0 {
+			next = " " + part
+		}
+		if builder.Len()+len(next) > maxChunkBytes && builder.Len() > 0 {
+			chunks = append(chunks, builder.String())
+			builder.Reset()
+			builder.WriteString(part)
+			continue
+		}
+		builder.WriteString(next)
+	}
+	if builder.Len() > 0 {
+		chunks = append(chunks, builder.String())
+	}
+	if len(chunks) == 0 {
+		return []string{text}
+	}
+	return chunks
+}
+
+func averageEmbeddings(vectors [][]float64) []float64 {
+	if len(vectors) == 0 {
+		return nil
+	}
+	dim := len(vectors[0])
+	if dim == 0 {
+		return nil
+	}
+	out := make([]float64, dim)
+	count := 0
+	for _, vector := range vectors {
+		if len(vector) != dim {
+			continue
+		}
+		for i := 0; i < dim; i++ {
+			out[i] += vector[i]
+		}
+		count++
+	}
+	if count == 0 {
+		return nil
+	}
+	denom := float64(count)
+	for i := range out {
+		out[i] /= denom
+	}
+	return out
 }
 
 func generateAzureEmbeddings(endpoint string, texts []string) ([][]float64, error) {

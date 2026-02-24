@@ -304,7 +304,21 @@ func RetrieveWithOptionsAndEndpointAndSession(
 		confident = IsEmbeddingSemanticConfident(top.Score, second)
 	}
 
-	// Preserve high-confidence semantic picks even when degraded.
+	if governance.IsLatencyDegraded(time.Since(startedAt).Milliseconds()) {
+		chosen := chooseDeterministicFallback(candidates)
+		return types.RetrieveResult{
+			SelectedID:    chosen.Entry.ID,
+			SelectionMode: "fallback_path_priority",
+			SourcePath:    chosen.Entry.Path,
+			Confidence:    chosen.Score,
+			Reason:        "latency degradation policy forced deterministic fallback",
+			FallbackUsed:  true,
+			SemanticHit:   false,
+			PrecisionHint: 0,
+			Candidates:    toRetrieveCandidates(candidates, "classic", options.TopK),
+		}, joinWarnings(warnings), nil
+	}
+
 	if confident {
 		mode := "semantic"
 		if embeddingScoresApplied {
@@ -320,21 +334,6 @@ func RetrieveWithOptionsAndEndpointAndSession(
 			SemanticHit:   true,
 			PrecisionHint: 1,
 			Candidates:    toRetrieveCandidates(candidates, mode, options.TopK),
-		}, joinWarnings(warnings), nil
-	}
-
-	if governance.IsLatencyDegraded(time.Since(startedAt).Milliseconds()) {
-		chosen := chooseDeterministicFallback(candidates)
-		return types.RetrieveResult{
-			SelectedID:    chosen.Entry.ID,
-			SelectionMode: "fallback_path_priority",
-			SourcePath:    chosen.Entry.Path,
-			Confidence:    chosen.Score,
-			Reason:        "latency degradation policy forced deterministic fallback",
-			FallbackUsed:  true,
-			SemanticHit:   false,
-			PrecisionHint: 0,
-			Candidates:    toRetrieveCandidates(candidates, "classic", options.TopK),
 		}, joinWarnings(warnings), nil
 	}
 
@@ -522,7 +521,7 @@ func loadEmbeddingsCached(
 	idx types.IndexFile,
 	candidates []candidate,
 ) (map[string]types.EmbeddingRecord, error) {
-	cacheKey := fmt.Sprintf("%s|%s|%d", root, idx.UpdatedAt, len(candidates))
+	cacheKey := embeddingCacheKey(root, idx.UpdatedAt, candidates)
 	retrievalCacheState.mu.RLock()
 	if cached, ok := retrievalCacheState.embeddingByKey[cacheKey]; ok {
 		retrievalCacheState.mu.RUnlock()
@@ -542,6 +541,15 @@ func loadEmbeddingsCached(
 	retrievalCacheState.embeddingByKey[cacheKey] = cachedEmbeddings{embeddings: records}
 	retrievalCacheState.mu.Unlock()
 	return records, nil
+}
+
+func embeddingCacheKey(root, updatedAt string, candidates []candidate) string {
+	ids := make([]string, 0, len(candidates))
+	for _, c := range candidates {
+		ids = append(ids, c.Entry.ID)
+	}
+	sort.Strings(ids)
+	return fmt.Sprintf("%s|%s|%s", root, updatedAt, strings.Join(ids, ","))
 }
 
 func applyExperimentalBackendScores(candidates *[]candidate, queryEmbedding []float64, options RetrieveOptions) string {
