@@ -18,6 +18,7 @@ This section documents the full `memory-cli` command surface for AthenaMind user
 
 ## Related Docs
 
+- [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
 - [AthenaMind Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
 - [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
 - [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)

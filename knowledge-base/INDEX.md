@@ -4,6 +4,7 @@
 
 - [Getting Started Overview](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/README.md)
 - [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
+- [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
 - [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
 - [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
 

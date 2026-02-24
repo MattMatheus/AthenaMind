@@ -12,16 +12,19 @@ Install runtime prerequisites and verify the slim AthenaMind distribution is hea
 
 ## Install Steps
 
-1. Clone and enter repo.
-2. Verify Go:
+1. Choose install method:
+   - Precompiled binary: [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
+   - Build from source: continue below
+2. Clone and enter repo.
+3. Verify Go:
 ```bash
 go version
 ```
-3. Download modules:
+4. Download modules:
 ```bash
 go mod download
 ```
-4. Run full tests:
+5. Run full tests:
 ```bash
 go test ./...
 ```

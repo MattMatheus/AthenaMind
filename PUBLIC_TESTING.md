@@ -14,7 +14,7 @@ Collect high-quality real-world feedback from engineers and data scientists oper
 
 ## Program Workflow
 
-1. Onboard via [knowledge-base/getting-started/README.md](knowledge-base/getting-started/README.md)
+1. Install via [knowledge-base/getting-started/binaries.md](knowledge-base/getting-started/binaries.md) or source setup docs
 2. Run [knowledge-base/workflows/README.md](knowledge-base/workflows/README.md)
 3. Configure traces via [knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md](knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
 4. Submit findings via issue templates
