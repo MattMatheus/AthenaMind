@@ -20,7 +20,7 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
    - `tools/run_observer_cycle.sh --cycle-id <cycle-id>`
    - `git commit -m "cycle-<cycle-id>"`
 7. Apply stage and cycle gates:
-   - `knowledge-base/process/STAGE_EXIT_GATES.md`
+   - `knowledge-base/process/stage-exit-gates.md`
 
 ## Branch Rule and Empty Active Behavior
 - Branch safety rule: launcher requires branch `ATHENA_REQUIRED_BRANCH` (default `dev`).
@@ -59,7 +59,7 @@ Single navigation entrypoint for operators and agents running the AthenaMind del
   - `delivery-backlog/engineering/active/README.md`
 - Program control plane:
   - `product-research/roadmap/PROGRAM_STATE_BOARD.md`
-  - `knowledge-base/process/PROGRAM_OPERATING_SYSTEM.md`
+  - `knowledge-base/process/program-operating-system.md`
 - Observer artifacts:
   - `operating-system/observer/README.md`
   - `operating-system/observer/OBSERVER_REPORT_TEMPLATE.md`

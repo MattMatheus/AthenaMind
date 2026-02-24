@@ -34,4 +34,4 @@ Your task is to execute the top story in `delivery-backlog/engineering/active/`.
 - Do not move story to done directly from active.
 - Respect accepted ADRs and memory-layer scope.
 - If a gap is discovered, log a new intake story before handoff.
-- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
+- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.

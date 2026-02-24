@@ -25,10 +25,10 @@ Diagnosis and recovery paths for common user-facing setup and workflow failures.
 - Known issue is rediscovered because docs are stale.
 
 ## References
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
+- `knowledge-base/how-to/go-toolchain-setup.md`
 - `knowledge-base/cli/README.md`
 - `delivery-backlog/engineering/intake/BUG_TEMPLATE.md`
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `knowledge-base/process/stage-exit-gates.md`
 
 ## Pages
 - `common-errors.md`

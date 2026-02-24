@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 pack="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md"
-run="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md"
+run="$root_dir/operating-system/metrics/dogfood-scenario-run-2026-02-22.md"
 follow_on_story_id="STORY-20260222-dogfood-semantic-retrieval-hardening-v01"
 
 doc_test_init

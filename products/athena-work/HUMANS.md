@@ -49,8 +49,8 @@ Use launcher scripts so operators do not need to memorize deep process details.
 - One commit per completed cycle.
 - Run observer before cycle commit.
 - Architecture work stays in architecture lane, not engineering lane.
-- Apply process gates from `knowledge-base/process/STAGE_EXIT_GATES.md`.
-- Apply backlog weighting from `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`.
+- Apply process gates from `knowledge-base/process/stage-exit-gates.md`.
+- Apply backlog weighting from `knowledge-base/process/backlog-weighting-policy.md`.
 
 ## Memory Integration
 

@@ -5,11 +5,11 @@
 
 ## Acceptance Criteria Validation
 1. Memory mutation attempts outside allowed stage contexts are rejected.
-   - Evidence: `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main.go` enforces stage restrictions with deterministic errors.
+   - Evidence: `<repo>/cmd/memory-cli/main.go` enforces stage restrictions with deterministic errors.
 2. Approved and rejected paths both produce required audit evidence fields.
    - Evidence: mutation audit artifacts are generated with decision metadata and required context fields before apply/block decision.
 3. Tests verify approval/rejection/missing-evidence failure paths.
-   - Evidence: `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main_test.go` includes missing-evidence and rejected-decision coverage.
+   - Evidence: `<repo>/cmd/memory-cli/main_test.go` includes missing-evidence and rejected-decision coverage.
 
 ## Test and Regression Validation
 - Executed: `go test ./...`, `tools/run_doc_tests.sh`

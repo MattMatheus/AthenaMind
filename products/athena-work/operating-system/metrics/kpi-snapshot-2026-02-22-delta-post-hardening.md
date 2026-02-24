@@ -7,9 +7,9 @@
 
 ## Baseline Reference
 - Baseline KPI snapshot:
-  - `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+  - `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`
 - Hardening run evidence:
-  - `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md`
+  - `operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md`
 
 ## Before/After Deltas (Impacted Metrics)
 | metric | baseline | post-hardening | delta |

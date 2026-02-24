@@ -2,11 +2,11 @@
 
 ## What Changed
 - Added post-v0.1 memory snapshot design brief:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/product-research/roadmap/MEMORY_SNAPSHOT_DESIGN_BRIEF_POST_V01.md`
+  - `<repo>/product-research/roadmap/MEMORY_SNAPSHOT_DESIGN_BRIEF_POST_V01.md`
 - Added story-specific validation test:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/tools/test_memory_snapshot_plan.sh`
+  - `<repo>/tools/test_memory_snapshot_plan.sh`
 - Updated canonical docs test runner to include the new test:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/tools/run_doc_tests.sh`
+  - `<repo>/tools/run_doc_tests.sh`
 - Moved story from `delivery-backlog/active/` to `delivery-backlog/qa/`, updated status to `qa`, and updated active queue.
 
 ## Why It Changed
@@ -14,8 +14,8 @@
 - The design now captures use cases, restore semantics, data/versioning implications, module integration points, and explicit rollout timing after v0.1.
 
 ## Test Updates Made
-- Added: `/Users/foundry/Source/orchestrator/AthenaMind/tools/test_memory_snapshot_plan.sh`
-- Updated: `/Users/foundry/Source/orchestrator/AthenaMind/tools/run_doc_tests.sh`
+- Added: `<repo>/tools/test_memory_snapshot_plan.sh`
+- Updated: `<repo>/tools/run_doc_tests.sh`
 
 ## Test Run Results
 - Command: `tools/run_doc_tests.sh`

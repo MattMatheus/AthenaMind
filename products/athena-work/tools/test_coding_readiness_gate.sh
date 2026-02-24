@@ -6,7 +6,7 @@ root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$
 source "$root_dir/tools/lib/doc_test_harness.sh"
 checklist="$root_dir/product-research/roadmap/CODING_READINESS_GATE_CHECKLIST.md"
 decision="$root_dir/product-research/roadmap/CODING_READINESS_DECISION_2026-02-22.md"
-path_doc="$root_dir/knowledge-base/process/PRE_CODING_PATH.md"
+path_doc="$root_dir/knowledge-base/process/pre-coding-path.md"
 
 assert_story_tracked() {
   local story="$1"

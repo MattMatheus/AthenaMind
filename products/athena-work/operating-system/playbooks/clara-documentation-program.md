@@ -45,8 +45,8 @@ Execution brief for building and maintaining comprehensive user-facing documenta
 
 ## References
 - `staff-personas/Technical Writer - Clara.md`
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
-- `knowledge-base/process/DOCS_PUBLISH_POLICY.md`
+- `knowledge-base/process/stage-exit-gates.md`
+- `knowledge-base/process/docs-publish-policy.md`
 - `tools/run_observer_cycle.sh`
 - `tools/build_docs_site.sh`
 - `operating-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`

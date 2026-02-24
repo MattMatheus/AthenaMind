@@ -2,7 +2,7 @@
 
 ## What Changed
 - Created first release checkpoint bundle artifact:
-  - `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
+  - `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md`
 - Populated bundle with explicit decision, scope, QA evidence links, validation command results, and rollback direction.
 - Linked release checkpoint bundle from program board evidence:
   - `product-research/roadmap/PROGRAM_STATE_BOARD.md`

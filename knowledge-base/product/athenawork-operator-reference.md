@@ -48,6 +48,6 @@ Observer:
 
 ## Related
 
-- [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
-- [AthenaWork Cycle Overview](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/athenawork-cycle.md)
-- [AthenaMind Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
+- [AthenaWork Product Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork.md)
+- [AthenaWork Cycle Overview](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/athenawork-cycle.md)
+- [AthenaMind Product Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenamind.md)

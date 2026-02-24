@@ -26,7 +26,7 @@ Start here to install prerequisites and run AthenaMind memory CLI workflows end 
 - Ambiguous workflow intent causes invalid command usage.
 
 ## References
-- `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
+- `knowledge-base/how-to/go-toolchain-setup.md`
 - `knowledge-base/cli/README.md`
 - `knowledge-base/troubleshooting/README.md`
 - `product-research/decisions/ADR-0009-file-memory-cli-v1-architecture.md`

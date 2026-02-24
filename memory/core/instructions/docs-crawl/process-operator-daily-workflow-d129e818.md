@@ -13,7 +13,7 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - Run `git branch --show-current`
    - If branch is not `dev`, switch/fix before running stages.
 2. Check current cycle context:
-   - Read `knowledge-base/process/CYCLE_INDEX.md`
+   - Read `knowledge-base/process/cycle-index.md`
    - Read `DEVELOPMENT_CYCLE.md`
 3. Run baseline docs checks:
    - `tools/run_doc_tests.sh`

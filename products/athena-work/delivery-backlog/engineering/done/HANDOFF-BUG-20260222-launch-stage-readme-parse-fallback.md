@@ -2,22 +2,22 @@
 
 ## What Changed
 - Fixed Active README sequence parsing in launcher to be portable across BSD and GNU sed:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/tools/launch_stage.sh`
+  - `<repo>/tools/launch_stage.sh`
 - Fixed path resolution for README entries that are bare filenames so they resolve under `delivery-backlog/active/` instead of repository root.
 - Added regression test that verifies engineering launch respects README queue order:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/tools/test_launch_stage_readme_queue.sh`
+  - `<repo>/tools/test_launch_stage_readme_queue.sh`
 - Updated canonical docs test runner to include the new regression test:
-  - `/Users/foundry/Source/orchestrator/AthenaMind/tools/run_doc_tests.sh`
+  - `<repo>/tools/run_doc_tests.sh`
 - Moved bug card from `delivery-backlog/active/` to `delivery-backlog/qa/` and updated status to `qa`.
-- Updated active queue ordering in `/Users/foundry/Source/orchestrator/AthenaMind/delivery-backlog/active/README.md`.
+- Updated active queue ordering in `<repo>/delivery-backlog/active/README.md`.
 
 ## Why It Changed
 - Engineering stage launch could ignore PM-ranked queue ordering because the previous sed expression was not portable in BSD sed.
 - After enabling README parsing, bare filename queue entries also needed correct path resolution to avoid false "story not found" failures.
 
 ## Test Updates Made
-- Added: `/Users/foundry/Source/orchestrator/AthenaMind/tools/test_launch_stage_readme_queue.sh`
-- Updated: `/Users/foundry/Source/orchestrator/AthenaMind/tools/run_doc_tests.sh`
+- Added: `<repo>/tools/test_launch_stage_readme_queue.sh`
+- Updated: `<repo>/tools/run_doc_tests.sh`
 
 ## Test Run Results
 - Command: `tools/run_doc_tests.sh`

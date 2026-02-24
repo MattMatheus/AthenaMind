@@ -28,5 +28,5 @@ go run ./cmd/memory-cli evaluate --root memory
 
 ## Related Docs
 
-- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
-- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
+- [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)
+- [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)

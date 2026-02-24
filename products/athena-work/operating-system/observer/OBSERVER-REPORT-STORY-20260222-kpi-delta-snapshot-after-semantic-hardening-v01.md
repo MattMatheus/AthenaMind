@@ -12,7 +12,7 @@
 - A delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01.md
 - A delivery-backlog/engineering/done/STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01.md
 - A tools/test_kpi_snapshot_delta_post_hardening_v01.sh
-- A operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md
+- A operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md
 - D delivery-backlog/engineering/active/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md
 - D delivery-backlog/engineering/active/STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01.md
 - M delivery-backlog/engineering/active/README.md

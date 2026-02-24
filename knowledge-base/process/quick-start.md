@@ -21,5 +21,5 @@ From repo root:
 
 ## Related
 
-- [AthenaWork Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork.md)
-- [AthenaWork Operator Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenawork-operator-reference.md)
+- [AthenaWork Product Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork.md)
+- [AthenaWork Operator Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork-operator-reference.md)

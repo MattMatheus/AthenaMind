@@ -2,7 +2,7 @@
 
 ## What Changed
 - Added follow-up KPI delta snapshot artifact:
-  - `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md`
+  - `operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md`
 - Added story-specific KPI delta test coverage:
   - `tools/test_kpi_snapshot_delta_post_hardening_v01.sh`
 - Updated canonical doc test runner:
@@ -27,7 +27,7 @@
 
 ## Acceptance Criteria Trace
 1. Follow-up KPI snapshot exists and references hardening run evidence.
-   - PASS: `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md` references `DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md`.
+   - PASS: `operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md` references `dogfood-scenario-run-2026-02-22-hardening.md`.
 2. Snapshot includes explicit before/after deltas for memory precision and trace completeness.
    - PASS: delta table includes `66.7% -> 100%` precision and `75% -> 100%` trace completeness.
 3. Snapshot includes updated `Red/Yellow/Green` interpretation against ADR-0008.

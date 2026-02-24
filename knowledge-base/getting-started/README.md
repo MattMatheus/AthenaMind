@@ -11,13 +11,13 @@ This section gets you from zero to a working AthenaMind memory workflow quickly,
 
 ## Paths
 
-1. [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
-2. [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
-3. [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
-4. [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
+1. [Installation](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/installation.md)
+2. [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
+3. [AthenaMind Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
+4. [AthenaWork Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/athenawork-quickstart.md)
 
 ## Next Steps
 
-- Command deep dive: [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
-- End-to-end flows: [Workflows](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/README.md)
-- Telemetry export setup: [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
+- Command deep dive: [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
+- End-to-end flows: [Workflows](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/README.md)
+- Telemetry export setup: [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)

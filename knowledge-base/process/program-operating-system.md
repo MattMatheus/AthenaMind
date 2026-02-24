@@ -6,7 +6,7 @@ This is the control-plane contract for strategic alignment and execution traceab
 - Program state board: `product-research/roadmap/PROGRAM_STATE_BOARD.md`
 - Phase plan: `product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md`
 - PM backlog notes: `knowledge-base/process/PM-TODO.md`
-- Stage exit gates: `knowledge-base/process/STAGE_EXIT_GATES.md`
+- Stage exit gates: `knowledge-base/process/stage-exit-gates.md`
 - Observer report stream: `operating-system/observer/`
 
 ## Control-Plane Rules

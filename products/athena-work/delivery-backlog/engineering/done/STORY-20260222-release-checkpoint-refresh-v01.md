@@ -15,7 +15,7 @@
 
 ## Scope
 - In:
-  - Refresh `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md` with current included/excluded scope.
+  - Refresh `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md` with current included/excluded scope.
   - Link post-hardening KPI and QA evidence.
   - Record explicit ship/hold decision with updated rationale and rollback direction.
 - Out:
@@ -34,8 +34,8 @@
 
 ## Dependencies
 - `delivery-backlog/engineering/active/STORY-20260222-kpi-delta-snapshot-after-semantic-hardening-v01.md`
-- `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md`
+- `knowledge-base/process/stage-exit-gates.md`
 
 ## Notes
 - Keep `done` vs `shipped` boundary explicit; this story is the v0.1 release-decision control-plane gate.

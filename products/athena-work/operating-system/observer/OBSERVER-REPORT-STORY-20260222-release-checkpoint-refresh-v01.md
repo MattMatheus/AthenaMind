@@ -16,7 +16,7 @@
 - M delivery-backlog/engineering/done/STORY-20260222-release-checkpoint-bundle-v01.md
 - M product-research/roadmap/PROGRAM_STATE_BOARD.md
 - M tools/test_release_checkpoint_bundle_v01.sh
-- M operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md
+- M operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md
 
 ## Workflow-Sync Checks
 - [ ] If workflow behavior changed, confirm HUMANS.md, AGENTS.md, and DEVELOPMENT_CYCLE.md were updated.

@@ -54,4 +54,4 @@ go run ./cmd/memory-cli snapshot create \
 
 ## 5. (Optional) Export OTel Traces
 
-See [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md).
+See [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md).

@@ -10,7 +10,7 @@ Reference: `product-research/decisions/ADR-0007-memory-layer-scope-refinement.md
 ## Does `done` mean shipped?
 No. `done` is QA-complete. Shipping requires release checkpoint bundle approval.
 
-Reference: `knowledge-base/process/STAGE_EXIT_GATES.md`
+Reference: `knowledge-base/process/stage-exit-gates.md`
 
 ## Can autonomous agents write memory directly?
 No. Mutation is blocked in autonomous runs and requires reviewer evidence.

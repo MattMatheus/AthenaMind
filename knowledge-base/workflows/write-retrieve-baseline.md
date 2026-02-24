@@ -19,5 +19,5 @@ Validate governed memory write and deterministic retrieval metadata.
 
 ## Related Docs
 
-- [Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
-- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
+- [Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
+- [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)

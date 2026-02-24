@@ -2,10 +2,10 @@
 
 ## AthenaMind Workflows
 
-- [Write/Retrieve Baseline](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/write-retrieve-baseline.md)
-- [Evaluation Gate](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/evaluation-gate.md)
-- [Snapshot Recovery](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/snapshot-recovery.md)
+- [Write/Retrieve Baseline](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/write-retrieve-baseline.md)
+- [Evaluation Gate](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/evaluation-gate.md)
+- [Snapshot Recovery](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/snapshot-recovery.md)
 
 ## AthenaWork Operator Workflow
 
-- [AthenaWork Cycle Overview](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/workflows/athenawork-cycle.md)
+- [AthenaWork Cycle Overview](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/athenawork-cycle.md)

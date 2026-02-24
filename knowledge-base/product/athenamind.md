@@ -50,7 +50,7 @@ Out of scope for v0.1:
 
 ## Start Here
 
-- [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
-- [Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
-- [CLI Commands](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
-- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
+- [Installation](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/installation.md)
+- [Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
+- [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
+- [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)

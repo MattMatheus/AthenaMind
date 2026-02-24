@@ -5,11 +5,11 @@
 
 ## Acceptance Criteria Validation
 1. A cycle index doc exists at repo root.
-   - Evidence: `knowledge-base/process/CYCLE_INDEX.md`
+   - Evidence: `knowledge-base/process/cycle-index.md`
 2. It links backlog states, prompts, launcher script, personas directory, and handoff docs.
-   - Evidence: `knowledge-base/process/CYCLE_INDEX.md` contains all required canonical links.
+   - Evidence: `knowledge-base/process/cycle-index.md` contains all required canonical links.
 3. It includes “first 5 minutes” operator instructions.
-   - Evidence: `knowledge-base/process/CYCLE_INDEX.md` includes a dedicated first-5-minutes section.
+   - Evidence: `knowledge-base/process/cycle-index.md` includes a dedicated first-5-minutes section.
 
 ## Test and Regression Validation
 - Executed: `tools/run_doc_tests.sh`

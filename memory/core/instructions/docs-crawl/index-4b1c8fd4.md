@@ -20,8 +20,8 @@
 - `product/README.md`
 - `operations/README.md`
 - `process/README.md`
-- `process/STAGE_EXIT_GATES.md`
-- `process/PROGRAM_OPERATING_SYSTEM.md`
+- `process/stage-exit-gates.md`
+- `process/program-operating-system.md`
 - `how-to/README.md`
 - `references/README.md`
 - `decisions/README.md`

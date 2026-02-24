@@ -4,13 +4,13 @@
 - Added Go toolchain preflight script:
   - `tools/check_go_toolchain.sh`
 - Added setup/how-to guidance for local engineering and QA:
-  - `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md`
+  - `knowledge-base/how-to/go-toolchain-setup.md`
 - Added regression guard test for toolchain readiness docs and version alignment:
   - `tools/test_go_toolchain_readiness.sh`
 - Wired the new readiness test into canonical docs test runner:
   - `tools/run_doc_tests.sh`
 - Updated operator workflow startup routine to include Go preflight before cycle execution:
-  - `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`
+  - `knowledge-base/process/operator-daily-workflow.md`
 - Updated how-to index to include the new setup guide:
   - `knowledge-base/how-to/README.md`
 - Minor consistency fix to satisfy existing doc gate:

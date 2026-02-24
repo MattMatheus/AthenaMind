@@ -16,7 +16,7 @@
 ## Scope
 - In:
   - Publish a new KPI snapshot artifact after semantic hardening.
-  - Compare results against `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`.
+  - Compare results against `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`.
   - Update scorecard band interpretations for impacted metrics.
 - Out:
   - New runtime feature implementation beyond metric collection and interpretation.
@@ -34,7 +34,7 @@
 
 ## Dependencies
 - `delivery-backlog/engineering/active/STORY-20260222-dogfood-semantic-retrieval-hardening-v01.md`
-- `operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md`
+- `operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md`
 - `product-research/decisions/ADR-0008-v01-goals-and-scorecard-target-bands.md`
 
 ## Notes

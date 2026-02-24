@@ -8,7 +8,7 @@
 - Applied checklist to current pre-coding state and recorded outcome (`NO-GO`).
 - Recorded blocker set as ranked existing backlog stories in active queue.
 - Updated pre-coding path to reference gate artifacts:
-  - `knowledge-base/process/PRE_CODING_PATH.md`
+  - `knowledge-base/process/pre-coding-path.md`
 - Added validation test script:
   - `tools/test_coding_readiness_gate.sh`
 - Moved story from `delivery-backlog/active/` to `delivery-backlog/qa/` and updated status to `qa`.
@@ -24,7 +24,7 @@
   - checklist and decision artifacts exist
   - checklist applied-run and result summary are present
   - decision includes explicit `NO-GO` and blocker section
-  - `knowledge-base/process/PRE_CODING_PATH.md` references gate artifacts
+  - `knowledge-base/process/pre-coding-path.md` references gate artifacts
   - blocker stories are present in active queue ranking
 
 ## Test Run Results
@@ -44,7 +44,7 @@
 ## Recommended QA Focus Areas
 - Verify checklist application accurately reflects current backlog completion state.
 - Verify `NO-GO` decision is justified and blocker list matches active ranked queue.
-- Verify gate artifacts are correctly referenced from `knowledge-base/process/PRE_CODING_PATH.md`.
+- Verify gate artifacts are correctly referenced from `knowledge-base/process/pre-coding-path.md`.
 - Confirm no new blockers were omitted from documented decision.
 
 ## New Gaps Discovered During Implementation

@@ -34,7 +34,7 @@
 
 ## Dependencies
 - `operating-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `knowledge-base/process/stage-exit-gates.md`
 - `product-research/decisions/ADR-0008-v01-goals-and-scorecard-target-bands.md`
 
 ## Notes

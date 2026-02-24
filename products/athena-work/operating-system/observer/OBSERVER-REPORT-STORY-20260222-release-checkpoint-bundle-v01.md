@@ -13,7 +13,7 @@
 - A delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-release-checkpoint-bundle-v01.md
 - A delivery-backlog/engineering/done/STORY-20260222-release-checkpoint-bundle-v01.md
 - A tools/test_release_checkpoint_bundle_v01.sh
-- A operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md
+- A operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md
 - D delivery-backlog/engineering/active/STORY-20260222-release-checkpoint-bundle-v01.md
 - M delivery-backlog/engineering/active/README.md
 - M product-research/roadmap/FOUNDER_SNAPSHOT.md

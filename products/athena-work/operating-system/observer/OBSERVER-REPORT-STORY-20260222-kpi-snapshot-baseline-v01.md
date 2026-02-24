@@ -13,7 +13,7 @@
 - A delivery-backlog/engineering/done/QA-RESULT-STORY-20260222-kpi-snapshot-baseline-v01.md
 - A delivery-backlog/engineering/done/STORY-20260222-kpi-snapshot-baseline-v01.md
 - A tools/test_kpi_snapshot_baseline_v01.sh
-- A operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md
+- A operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md
 - D delivery-backlog/engineering/active/STORY-20260222-kpi-snapshot-baseline-v01.md
 - M delivery-backlog/engineering/active/README.md
 - M product-research/roadmap/FOUNDER_SNAPSHOT.md

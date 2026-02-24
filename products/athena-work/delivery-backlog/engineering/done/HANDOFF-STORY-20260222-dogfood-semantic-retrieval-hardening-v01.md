@@ -2,7 +2,7 @@
 
 ## What Changed
 - Added post-hardening dogfood run evidence artifact:
-  - `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md`
+  - `operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md`
 - Added story-specific doc test coverage for semantic hardening acceptance evidence:
   - `tools/test_dogfood_semantic_hardening_v01.sh`
 - Updated canonical doc test runner:
@@ -30,11 +30,11 @@
 
 ## Acceptance Criteria Trace
 1. `SCN-SEM-01` precision_at_3 improves and no materially incorrect recall is observed.
-   - PASS: `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md` records `precision_at_3 = 3/3 = 100%` and `wrong_memory_recall_rate = 0/4 = 0%`.
+   - PASS: `operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md` records `precision_at_3 = 3/3 = 100%` and `wrong_memory_recall_rate = 0/4 = 0%`.
 2. Trace completeness for semantic retrieval events is >= 95%.
    - PASS: hardening run records `trace_completeness_rate = 4/4 = 100%`.
 3. Updated dogfood run artifact records before/after KPI comparison.
-   - PASS: hardening run includes explicit before/after deltas vs `operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md`.
+   - PASS: hardening run includes explicit before/after deltas vs `operating-system/metrics/dogfood-scenario-run-2026-02-22.md`.
 
 ## Open Risks/Questions
 - Hardening evidence is currently captured through document-scored run artifacts; runtime-level instrumentation should continue to be expanded for richer automatic trend confidence.

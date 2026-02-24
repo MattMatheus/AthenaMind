@@ -5,7 +5,7 @@
 
 ## Acceptance Criteria Validation
 1. A concise operator workflow doc exists.
-   - Evidence: `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`
+   - Evidence: `knowledge-base/process/operator-daily-workflow.md`
 2. It references `launch_stage.sh` and required prompts.
    - Evidence: workflow doc references `tools/launch_stage.sh` and active stage prompts.
 3. It includes explicit “if X then Y” instructions for empty backlog and QA failures.

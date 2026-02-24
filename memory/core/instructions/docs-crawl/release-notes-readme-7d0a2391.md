@@ -26,9 +26,9 @@ Versioned release communication for user-visible behavior, known limits, and upg
 
 ## References
 - `operating-system/handoff/RELEASE_BUNDLE_TEMPLATE.md`
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
+- `knowledge-base/process/stage-exit-gates.md`
 - `delivery-backlog/engineering/done/QA-RESULT-STORY-*.md`
-- `operating-system/handoff/RELEASE_BUNDLE_v0.1-initial-2026-02-22.md`
+- `operating-system/handoff/release-bundle-v0.1-initial-2026-02-22.md`
 
 ## Pages
 - `v0.1-template.md`

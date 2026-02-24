@@ -11,7 +11,7 @@
 2. Preflight documentation or scripts clearly report when toolchain setup is incomplete.
    - Evidence:
      - `tools/check_go_toolchain.sh` emits explicit failure guidance when `go` is missing or below required version.
-     - `knowledge-base/how-to/GO_TOOLCHAIN_SETUP.md` includes install/verify/preflight flow and troubleshooting.
+     - `knowledge-base/how-to/go-toolchain-setup.md` includes install/verify/preflight flow and troubleshooting.
 3. CI/local instructions are aligned with required Go version for the memory CLI module.
    - Evidence:
      - `tools/test_go_toolchain_readiness.sh` parses required Go version from `go.mod` and asserts the setup doc matches it.

@@ -6,15 +6,15 @@
 ## Acceptance Criteria Validation
 1. CLI supports create/update and retrieve flows for memory entries in approved file layout.
    - Evidence:
-     - `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main.go` implements write and retrieve flows.
-     - `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main_test.go` covers write path and retrieval behavior.
+     - `<repo>/cmd/memory-cli/main.go` implements write and retrieve flows.
+     - `<repo>/cmd/memory-cli/main_test.go` covers write path and retrieval behavior.
 2. Retrieval supports semantic lookup and deterministic fallback results.
    - Evidence:
-     - `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main.go` enforces semantic confidence gate and fallback order (`exact-key` then `path-priority`).
-     - `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main_test.go` validates fallback determinism.
+     - `<repo>/cmd/memory-cli/main.go` enforces semantic confidence gate and fallback order (`exact-key` then `path-priority`).
+     - `<repo>/cmd/memory-cli/main_test.go` validates fallback determinism.
 3. Memory updates are constrained to reviewed workflows outside autonomous runs.
    - Evidence:
-     - `/Users/foundry/Source/orchestrator/AthenaMind/cmd/memory-cli/main.go` enforces stage restrictions, review evidence requirements, and autonomous-run mutation blocking.
+     - `<repo>/cmd/memory-cli/main.go` enforces stage restrictions, review evidence requirements, and autonomous-run mutation blocking.
 
 ## Test and Regression Validation
 - Executed: `go test ./...`, `tools/run_doc_tests.sh`

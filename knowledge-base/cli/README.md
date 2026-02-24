@@ -6,8 +6,8 @@ This section documents the full `memory-cli` command surface for AthenaMind user
 
 ## What You Get
 
-- Exhaustive command/flag reference: [commands.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/commands.md)
-- Copy/paste operational examples: [examples.md](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/cli/examples.md)
+- Exhaustive command/flag reference: [commands.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
+- Copy/paste operational examples: [examples.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/examples.md)
 
 ## Best Usage Pattern
 
@@ -18,7 +18,7 @@ This section documents the full `memory-cli` command surface for AthenaMind user
 
 ## Related Docs
 
-- [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
-- [AthenaMind Product Guide](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/product/athenamind.md)
-- [Configuration Reference](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/references/configuration.md)
-- [OTel/OTLP Setup](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/how-to/MEMORY_CLI_OTEL_SETUP.md)
+- [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
+- [AthenaMind Product Guide](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenamind.md)
+- [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)
+- [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)

@@ -5,9 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 
-delta_snapshot="$root_dir/operating-system/metrics/KPI_SNAPSHOT_2026-02-22_DELTA_POST_HARDENING.md"
-baseline_snapshot="$root_dir/operating-system/metrics/KPI_SNAPSHOT_2026-02-22_BASELINE.md"
-hardening_run="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md"
+delta_snapshot="$root_dir/operating-system/metrics/kpi-snapshot-2026-02-22-delta-post-hardening.md"
+baseline_snapshot="$root_dir/operating-system/metrics/kpi-snapshot-2026-02-22-baseline.md"
+hardening_run="$root_dir/operating-system/metrics/dogfood-scenario-run-2026-02-22-hardening.md"
 
 doc_test_init
 
@@ -22,6 +22,6 @@ doc_assert_contains "$delta_snapshot" "+33.3pp" "Delta snapshot records precisio
 doc_assert_contains "$delta_snapshot" "+25pp" "Delta snapshot records trace completeness delta"
 doc_assert_contains "$delta_snapshot" "Updated ADR-0008 Band Interpretation" "Delta snapshot includes updated target-band interpretation"
 doc_assert_contains "$delta_snapshot" 'Post-hardening: `Green`' "Delta snapshot records Green-band interpretation after hardening"
-doc_assert_contains "$delta_snapshot" "DOGFOOD_SCENARIO_RUN_2026-02-22-HARDENING.md" "Delta snapshot references hardening evidence artifact"
+doc_assert_contains "$delta_snapshot" "dogfood-scenario-run-2026-02-22-hardening.md" "Delta snapshot references hardening evidence artifact"
 
 doc_test_finish

@@ -15,10 +15,10 @@ Documentation for how the team improves and governs the work system.
 - program operating system and control-plane rules
 
 ## Core Docs
-- `knowledge-base/process/STAGE_EXIT_GATES.md`
-- `knowledge-base/process/PROGRAM_OPERATING_SYSTEM.md`
-- `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`
-- `knowledge-base/process/CYCLE_INDEX.md`
-- `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`
+- `knowledge-base/process/stage-exit-gates.md`
+- `knowledge-base/process/program-operating-system.md`
+- `knowledge-base/process/backlog-weighting-policy.md`
+- `knowledge-base/process/cycle-index.md`
+- `knowledge-base/process/operator-daily-workflow.md`
 - `knowledge-base/process/PM-TODO.md`
-- `knowledge-base/process/PRE_CODING_PATH.md`
+- `knowledge-base/process/pre-coding-path.md`
