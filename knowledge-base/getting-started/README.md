@@ -12,8 +12,9 @@ This section gets you from zero to a working AthenaMind memory workflow quickly,
 ## Paths
 
 1. [Installation](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/installation.md)
-2. [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
-3. [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
+2. [Precompiled Binaries](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/binaries.md)
+3. [AthenaMind Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/quickstart.md)
+4. [AthenaWork Quickstart](/Users/foundry/Experiments/Current/AthenaMind/knowledge-base/getting-started/athenawork-quickstart.md)
 
 ## Next Steps
 

@@ -4,6 +4,8 @@
 
 Run a full governed write -> retrieve -> evaluate -> snapshot cycle.
 
+If you installed a precompiled binary, replace `go run ./cmd/memory-cli` with `memory-cli` in each command.
+
 ## 1. Write One Entry
 
 ```bash
