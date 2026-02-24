@@ -12,5 +12,6 @@ Observer reports are generated once per completed cycle, before the cycle commit
 
 ## Required Artifact
 - `operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`
+- `operating-system/observer/RESUME_CONTEXT.md` (updated each observer run for next-stage reconstruction)
 
 Use `OBSERVER_REPORT_TEMPLATE.md` as the structural contract for manual edits or review.

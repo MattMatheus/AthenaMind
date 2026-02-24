@@ -29,3 +29,4 @@ root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$
 "$root_dir/tools/test_go_toolchain_readiness.sh"
 "$root_dir/tools/test_observer_cycle_policy.sh"
 "$root_dir/tools/test_observer_cycle_memory_integration.sh"
+"$root_dir/tools/test_run_stage_tests_scope.sh"

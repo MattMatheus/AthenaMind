@@ -5,12 +5,26 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 cd "$root_dir"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
-memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
 repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 
 cycle_id=""
 story_path=""
 out_path=""
+resume_context_path="$root_dir/operating-system/observer/RESUME_CONTEXT.md"
+
+default_memory_root() {
+  if [ -n "${ATHENA_MEMORY_ROOT:-}" ]; then
+    printf '%s\n' "$ATHENA_MEMORY_ROOT"
+    return 0
+  fi
+  if [ "${ATHENA_MEMORY_IN_REPO:-0}" = "1" ]; then
+    printf '%s\n' "$root_dir/memory"
+    return 0
+  fi
+  printf '%s\n' "${HOME}/.athena/memory/$repo_id"
+}
+
+memory_root="$(default_memory_root)"
 
 infer_policy_stage() {
   local cycle_value="$1"
@@ -68,6 +82,31 @@ emit_episode_writeback() {
   fi
 
   echo "memory episode write-back: recorded for cycle '$cycle_id'"
+}
+
+write_resume_context() {
+  local report_rel="$1"
+  local policy_stage="$2"
+  {
+    echo "# Resume Context"
+    echo
+    echo "- generated_at_utc: $generated_at"
+    echo "- branch: $branch"
+    echo "- cycle_id: $cycle_id"
+    echo "- stage_hint: $policy_stage"
+    if [[ -n "$story_path" ]]; then
+      echo "- story_path: ${story_path#"$root_dir/"}"
+    else
+      echo "- story_path: none"
+    fi
+    echo "- observer_report: $report_rel"
+    echo
+    echo "## Resume Checklist"
+    echo "1. Open the observer report and read Diff Inventory."
+    echo "2. Confirm active backlog ordering before launching a stage."
+    echo "3. Confirm unresolved risks/questions from prior handoff."
+    echo "4. Launch next stage with tools/launch_stage.sh <stage>."
+  } > "$resume_context_path"
 }
 
 usage() {
@@ -221,5 +260,6 @@ EOF
 
 policy_stage="$(infer_policy_stage "$cycle_id" "$story_label")"
 emit_episode_writeback "$files_changed_csv" "$story_id" "$tmp_summary" "$tmp_decisions" "$policy_stage"
+write_resume_context "${out_path#"$root_dir/"}" "$policy_stage"
 
 printf '%s\n' "wrote: ${out_path#"$root_dir/"}"

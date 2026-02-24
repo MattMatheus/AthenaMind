@@ -30,10 +30,13 @@ All must pass:
 
 ## Engineering Exit Gate
 All must pass:
+0. Pre-code gate passed via launcher:
+   - story includes `## Metadata`, `idea_id`, `phase`, `adr_refs`, and `## Acceptance Criteria`.
+   - resume context exists when prior observer artifacts exist (`operating-system/observer/RESUME_CONTEXT.md`).
 1. Story acceptance criteria are implemented.
 2. Tests updated for touched behavior.
-3. `tools/run_doc_tests.sh` and story-specific tests pass.
-4. `go test ./...` passes locally and is eligible for CI enforcement in Azure DevOps.
+3. `tools/run_doc_tests.sh` and targeted story-specific tests pass.
+4. Full suite `go test ./...` is required for pull-request validation.
 5. Handoff package is complete and includes risks/questions.
 6. New gaps are recorded as intake artifacts before handoff.
 7. Story transitions `active -> qa`.

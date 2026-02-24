@@ -21,5 +21,13 @@ steps:
   - script: go version
     displayName: 'Go version'
 
+  - script: ./tools/run_doc_tests.sh
+    displayName: 'Run docs tests'
+
+  - script: go test ./internal/governance ./internal/episode ./cmd/memory-cli
+    displayName: 'Run targeted tests (push/non-PR)'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+
   - script: go test ./...
-    displayName: 'Run unit tests'
+    displayName: 'Run full test suite (PR only)'
+    condition: eq(variables['Build.Reason'], 'PullRequest')

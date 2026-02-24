@@ -23,9 +23,25 @@ trap restore_readme EXIT
 cp "$active_readme" "$tmp_dir/README.md.orig"
 cat >"$story_a" <<'EOF'
 # Temporary test story A
+
+## Metadata
+- `idea_id`: test
+- `phase`: v0.1
+- `adr_refs`: [ADR-TEST]
+
+## Acceptance Criteria
+1. Test story.
 EOF
 cat >"$story_b" <<'EOF'
 # Temporary test story B
+
+## Metadata
+- `idea_id`: test
+- `phase`: v0.1
+- `adr_refs`: [ADR-TEST]
+
+## Acceptance Criteria
+1. Test story.
 EOF
 
 cat >"$active_readme" <<'EOF'

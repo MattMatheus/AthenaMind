@@ -50,12 +50,14 @@ Use this section as the unified "humans area." It points only to canonical docs 
 
 ## 60-Second Start
 1. Ensure branch matches `ATHENA_REQUIRED_BRANCH` (default `dev`).
-2. Run `./tools/launch_stage.sh engineering`.
-3. Follow the returned story and checklist.
-4. Move completed work to QA (`delivery-backlog/engineering/qa/`), then run QA stage.
-5. Run Observer (`tools/run_observer_cycle.sh --cycle-id <story-id>`).
-6. Commit once for the cycle (`cycle-<cycle-id>`).
-7. Repeat until engineering returns `no stories`.
+2. Confirm resume context exists at `operating-system/observer/RESUME_CONTEXT.md` when prior cycles exist.
+3. Ensure memory root is configured (default: `~/.athena/memory/<repo-id>`; optional in-repo mode via `ATHENA_MEMORY_IN_REPO=1`).
+4. Run `./tools/launch_stage.sh engineering`.
+5. Follow the returned story and checklist.
+6. Move completed work to QA (`delivery-backlog/engineering/qa/`), then run QA stage.
+7. Run Observer (`tools/run_observer_cycle.sh --cycle-id <story-id>`).
+8. Commit once for the cycle (`cycle-<cycle-id>`).
+9. Repeat until engineering returns `no stories`.
 
 ## PM Intake Validation
 - Before moving items from intake to active, run:
@@ -84,13 +86,21 @@ Use this section as the unified "humans area." It points only to canonical docs 
 - PM: `./tools/launch_stage.sh pm`
 - Continuous loop: `./tools/launch_stage.sh cycle`
 - Observer: `./tools/run_observer_cycle.sh --cycle-id <cycle-id>`
+- Stage test helper (auto-selects push vs PR scope): `./tools/run_stage_tests.sh`
 - Build docs site locally: `./tools/build_docs_site.sh`
-- CI enforcement (Azure DevOps): `go test ./...` on push and PR (`azure-pipelines.yml`).
+- CI enforcement (Azure DevOps):
+  - push/non-PR: docs tests + targeted tests
+  - PR: docs tests + full suite `go test ./...`
 - CI docs publish (GitHub Actions): `.github/workflows/docs-publish.yml` deploys docs to `athena.teamorchestrator.com/docs/`.
 
 ### Memory Integration (Soft Dependency)
 - `launch_stage.sh` attempts `memory-cli bootstrap` and appends returned context to stage output.
 - `run_observer_cycle.sh` attempts `memory-cli episode write` after report generation.
+- Default memory storage is outside git at `~/.athena/memory/<repo-id>`.
+- For Codex sandbox users: add `~/.athena` to writable roots in Codex config for long-term retention without escalation prompts.
+- If you cannot add a writable root, set `ATHENA_MEMORY_ROOT` to a workspace path (example: `<repo>/.athena/memory/<repo-id>`).
+- Override memory path with `ATHENA_MEMORY_ROOT=<path>`.
+- Use `ATHENA_MEMORY_IN_REPO=1` only when repo-local memory is explicitly needed.
 - If `memory-cli` is unavailable or returns an error, workflows continue with warning-only behavior.
 
 ## Backlog State Model

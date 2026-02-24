@@ -21,6 +21,11 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
    - `delivery-backlog/engineering/active/README.md`
 6. Confirm program board context:
    - `product-research/roadmap/PROGRAM_STATE_BOARD.md`
+7. Confirm resume context exists when prior observer reports exist:
+   - `operating-system/observer/RESUME_CONTEXT.md`
+8. Confirm memory storage location:
+   - default `~/.athena/memory/<repo-id>`
+   - optional override `ATHENA_MEMORY_ROOT`
 
 ## Planning Stage Loop (As Needed)
 1. Launch:
@@ -42,9 +47,11 @@ Single-operator daily script for running AthenaMind delivery cycles in v0.1.
 2. Follow returned seed prompt:
    - `stage-prompts/active/next-agent-seed-prompt.md`
 3. Execute top active story:
+   - launcher preflight must pass metadata + acceptance criteria checks before coding starts
    - implement required artifacts
    - update tests
-   - run `tools/run_doc_tests.sh` plus any story-specific tests
+   - run `tools/run_stage_tests.sh` (auto-selects docs + targeted vs docs + full suite for PR)
+   - add any extra story-specific tests not covered by default targeted suite
    - move story from `delivery-backlog/engineering/active/` to `delivery-backlog/engineering/qa/` with handoff package
    - do not commit yet
 4. Launch QA:

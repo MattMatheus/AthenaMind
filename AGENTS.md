@@ -47,14 +47,16 @@ Compatibility links are kept at repo root for existing commands.
 - Run observer after each completed cycle using `tools/run_observer_cycle.sh --cycle-id <cycle-id>`.
 - Commit once per cycle with format `cycle-<cycle-id>`.
 - Include observer report artifact in the cycle commit (`operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`).
+- Keep resume handoff context current in `operating-system/observer/RESUME_CONTEXT.md` (updated by observer script).
 - Apply stage exits from `knowledge-base/process/STAGE_EXIT_GATES.md`.
 - Respect product-first backlog weighting (`knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`).
 - Keep `product-research/roadmap/PROGRAM_STATE_BOARD.md` in sync during PM refinement.
 - Treat `done` as QA-complete, not automatically shipped; use release checkpoint bundles.
 - Do not add time estimates; prioritize by value/risk/dependency sequence.
-- Keep Azure DevOps CI gate green (`go test ./...` on push/PR via `azure-pipelines.yml`).
+- Keep Azure DevOps CI gate green (targeted tests on push/non-PR; full `go test ./...` on PR via `azure-pipelines.yml`).
 - Treat repository markdown as the documentation source of truth; do not edit published docs directly.
 - Ensure docs changes remain publishable through `.github/workflows/docs-publish.yml`.
+- Default memory storage is external (`~/.athena/memory/<repo-id>`); do not rely on in-repo memory unless explicitly configured.
 
 ## Documentation Sync Rule
 When work-system behavior changes (stage flow, handoff rules, commit conventions, state transitions, launch commands):
