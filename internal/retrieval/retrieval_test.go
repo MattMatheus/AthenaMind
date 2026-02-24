@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -421,6 +423,66 @@ func TestRetrieveHybridReturnsCandidates(t *testing.T) {
 	}
 	if got.Candidates[0].ID == "" || got.Candidates[0].FusedScore <= 0 {
 		t.Fatalf("expected fused candidate scores, got %+v", got.Candidates[0])
+	}
+}
+
+func TestRetrieveSkipsCorruptEntryAndReturnsWarning(t *testing.T) {
+	root := t.TempDir()
+	policy := types.WritePolicyDecision{
+		Decision: "approved",
+		Reviewer: "qa",
+		Notes:    "ok",
+		Reason:   "test",
+		Risk:     "low",
+	}
+	if err := index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "healthy",
+		Title:  "Healthy Entry",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "healthy retrieval target",
+		Stage:  "pm",
+	}, policy); err != nil {
+		t.Fatalf("seed healthy entry failed: %v", err)
+	}
+	if err := index.UpsertEntry(root, types.UpsertEntryInput{
+		ID:     "broken",
+		Title:  "Broken Entry",
+		Type:   "prompt",
+		Domain: "ops",
+		Body:   "broken retrieval target",
+		Stage:  "pm",
+	}, policy); err != nil {
+		t.Fatalf("seed broken entry failed: %v", err)
+	}
+
+	idx, err := index.LoadIndex(root)
+	if err != nil {
+		t.Fatalf("load index failed: %v", err)
+	}
+	brokenMeta := ""
+	for _, entry := range idx.Entries {
+		if entry.ID == "broken" {
+			brokenMeta = filepath.Join(root, filepath.FromSlash(entry.MetadataPath))
+			break
+		}
+	}
+	if brokenMeta == "" {
+		t.Fatal("broken metadata path not found")
+	}
+	if err := os.WriteFile(brokenMeta, []byte("{"), 0o644); err != nil {
+		t.Fatalf("corrupt metadata: %v", err)
+	}
+
+	got, warning, err := RetrieveWithEmbeddingEndpoint(root, "healthy retrieval", "ops", "http://127.0.0.1:1")
+	if err != nil {
+		t.Fatalf("retrieve failed: %v", err)
+	}
+	if got.SelectedID != "healthy" {
+		t.Fatalf("expected healthy entry selected, got %+v", got)
+	}
+	if !strings.Contains(warning, "skipped 1 invalid entries") {
+		t.Fatalf("expected skipped-candidate warning, got %q", warning)
 	}
 }
 

@@ -53,6 +53,7 @@ type RetrieveOptions struct {
 
 type cachedCandidates struct {
 	candidates []candidate
+	skipped    int
 }
 
 type cachedEmbeddings struct {
@@ -177,25 +178,31 @@ func RetrieveWithOptionsAndEndpointAndSession(
 		return types.RetrieveResult{}, "", errors.New("memory index has no entries")
 	}
 
-	candidates, err := loadCandidatesCached(root, idx, domain)
+	candidates, skippedCandidates, err := loadCandidatesCached(root, idx, domain)
 	if err != nil {
 		return types.RetrieveResult{}, "", err
 	}
 	if len(candidates) == 0 {
+		if skippedCandidates > 0 {
+			return types.RetrieveResult{}, "", fmt.Errorf("no candidates found for query/domain; skipped %d invalid entries", skippedCandidates)
+		}
 		return types.RetrieveResult{}, "", errors.New("no candidates found for query/domain")
 	}
 
 	q := strings.ToLower(strings.TrimSpace(query))
-	warning := ""
+	warnings := []string{}
+	if skippedCandidates > 0 {
+		warnings = append(warnings, fmt.Sprintf("skipped %d invalid entries during candidate load", skippedCandidates))
+	}
 	embeddingScoresApplied := false
 	queryEmbedding, embedErr := getQueryEmbeddingCached(embeddingEndpoint, q)
 	if embedErr != nil {
-		warning = fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr)
+		warnings = append(warnings, fmt.Sprintf("embedding unavailable; using token-overlap scoring: %v", embedErr))
 	}
 	profile := ActiveEmbeddingProfile(embeddingEndpoint)
 	embeddings, embLoadErr := loadEmbeddingsCached(root, idx, candidates)
 	if embLoadErr != nil {
-		warning = fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr)
+		warnings = append(warnings, fmt.Sprintf("embedding store unavailable; using token-overlap scoring: %v", embLoadErr))
 	}
 
 	for i := range candidates {
@@ -218,17 +225,13 @@ func RetrieveWithOptionsAndEndpointAndSession(
 			}
 		}
 	}
-	if len(queryEmbedding) > 0 && !embeddingScoresApplied && warning == "" {
-		warning = "embedding unavailable for candidate entries; using token-overlap scoring"
+	if len(queryEmbedding) > 0 && !embeddingScoresApplied {
+		warnings = append(warnings, "embedding unavailable for candidate entries; using token-overlap scoring")
 	}
 
 	backendWarning := applyExperimentalBackendScores(&candidates, queryEmbedding, options)
 	if strings.TrimSpace(backendWarning) != "" {
-		if warning == "" {
-			warning = backendWarning
-		} else {
-			warning = warning + "; " + backendWarning
-		}
+		warnings = append(warnings, backendWarning)
 	}
 	if options.Backend != "sqlite" {
 		for i := range candidates {
@@ -262,7 +265,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 				PrecisionHint: 0,
 				Candidates:    toRetrieveCandidates(hybrid, "hybrid_rrf", options.TopK),
 			}
-			return result, warning, nil
+			return result, joinWarnings(warnings), nil
 		}
 
 		semanticHit := top.Lexical > 0 || top.Embedding > 0 || top.Backend > 0
@@ -277,7 +280,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 			PrecisionHint: map[bool]float64{true: 1, false: 0}[semanticHit],
 			Candidates:    toRetrieveCandidates(hybrid, "hybrid_rrf", options.TopK),
 		}
-		return result, warning, nil
+		return result, joinWarnings(warnings), nil
 	}
 
 	sort.SliceStable(candidates, func(i, j int) bool {
@@ -317,7 +320,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 			SemanticHit:   true,
 			PrecisionHint: 1,
 			Candidates:    toRetrieveCandidates(candidates, mode, options.TopK),
-		}, warning, nil
+		}, joinWarnings(warnings), nil
 	}
 
 	if governance.IsLatencyDegraded(time.Since(startedAt).Milliseconds()) {
@@ -332,7 +335,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 			SemanticHit:   false,
 			PrecisionHint: 0,
 			Candidates:    toRetrieveCandidates(candidates, "classic", options.TopK),
-		}, warning, nil
+		}, joinWarnings(warnings), nil
 	}
 
 	for _, c := range candidates {
@@ -347,7 +350,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 				SemanticHit:   false,
 				PrecisionHint: 0,
 				Candidates:    toRetrieveCandidates(candidates, "classic", options.TopK),
-			}, warning, nil
+			}, joinWarnings(warnings), nil
 		}
 	}
 
@@ -362,7 +365,7 @@ func RetrieveWithOptionsAndEndpointAndSession(
 		SemanticHit:   false,
 		PrecisionHint: 0,
 		Candidates:    toRetrieveCandidates(candidates, "classic", options.TopK),
-	}, warning, nil
+	}, joinWarnings(warnings), nil
 }
 
 func assignHybridFusedScores(candidates []candidate, k float64, backend string) {
@@ -855,26 +858,26 @@ func embeddingFreshnessBonus(rec types.EmbeddingRecord, sessionID string) float6
 	return bonus
 }
 
-func loadCandidatesCached(root string, idx types.IndexFile, domain string) ([]candidate, error) {
+func loadCandidatesCached(root string, idx types.IndexFile, domain string) ([]candidate, int, error) {
 	cacheKey := fmt.Sprintf("%s|%s|%s|%d", root, domain, idx.UpdatedAt, len(idx.Entries))
 	retrievalCacheState.mu.RLock()
 	if cached, ok := retrievalCacheState.candidateByKey[cacheKey]; ok {
 		retrievalCacheState.mu.RUnlock()
-		return cloneCandidateBase(cached.candidates), nil
+		return cloneCandidateBase(cached.candidates), cached.skipped, nil
 	}
 	retrievalCacheState.mu.RUnlock()
 
-	base, err := loadCandidatesBase(root, idx.Entries, domain)
+	base, skipped, err := loadCandidatesBase(root, idx.Entries, domain)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	retrievalCacheState.mu.Lock()
-	retrievalCacheState.candidateByKey[cacheKey] = cachedCandidates{candidates: base}
+	retrievalCacheState.candidateByKey[cacheKey] = cachedCandidates{candidates: base, skipped: skipped}
 	retrievalCacheState.mu.Unlock()
-	return cloneCandidateBase(base), nil
+	return cloneCandidateBase(base), skipped, nil
 }
 
-func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) ([]candidate, error) {
+func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) ([]candidate, int, error) {
 	filtered := make([]types.IndexEntry, 0, len(entries))
 	for _, e := range entries {
 		if domain != "" && e.Domain != domain {
@@ -886,7 +889,7 @@ func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) 
 		filtered = append(filtered, e)
 	}
 	if len(filtered) == 0 {
-		return []candidate{}, nil
+		return []candidate{}, 0, nil
 	}
 
 	workerCount := runtime.GOMAXPROCS(0)
@@ -896,7 +899,7 @@ func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) 
 	type loadResult struct {
 		index int
 		item  candidate
-		err   error
+		skip  bool
 	}
 	jobs := make(chan int, len(filtered))
 	results := make(chan loadResult, len(filtered))
@@ -910,12 +913,12 @@ func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) 
 				e := filtered[idxPos]
 				data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(e.Path)))
 				if err != nil {
-					results <- loadResult{index: idxPos, err: err}
+					results <- loadResult{index: idxPos, skip: true}
 					continue
 				}
 				meta, err := loadMetadata(root, e)
 				if err != nil {
-					results <- loadResult{index: idxPos, err: err}
+					results <- loadResult{index: idxPos, skip: true}
 					continue
 				}
 				body := string(data)
@@ -939,14 +942,22 @@ func loadCandidatesBase(root string, entries []types.IndexEntry, domain string) 
 	wg.Wait()
 	close(results)
 
-	ordered := make([]candidate, len(filtered))
+	ordered := make([]candidate, 0, len(filtered))
+	skipped := 0
+	orderedMap := make(map[int]candidate, len(filtered))
 	for result := range results {
-		if result.err != nil {
-			return nil, result.err
+		if result.skip {
+			skipped++
+			continue
 		}
-		ordered[result.index] = result.item
+		orderedMap[result.index] = result.item
 	}
-	return ordered, nil
+	for i := 0; i < len(filtered); i++ {
+		if c, ok := orderedMap[i]; ok {
+			ordered = append(ordered, c)
+		}
+	}
+	return ordered, skipped, nil
 }
 
 func buildCandidateHaystack(entry types.IndexEntry, meta types.MetadataFile, body string) string {
@@ -967,6 +978,23 @@ func cloneCandidateBase(base []candidate) []candidate {
 		out[i].HasVector = false
 	}
 	return out
+}
+
+func joinWarnings(warnings []string) string {
+	unique := map[string]struct{}{}
+	out := make([]string, 0, len(warnings))
+	for _, warning := range warnings {
+		trimmed := strings.TrimSpace(warning)
+		if trimmed == "" {
+			continue
+		}
+		if _, exists := unique[trimmed]; exists {
+			continue
+		}
+		unique[trimmed] = struct{}{}
+		out = append(out, trimmed)
+	}
+	return strings.Join(out, "; ")
 }
 
 func loadMetadata(root string, entry types.IndexEntry) (types.MetadataFile, error) {

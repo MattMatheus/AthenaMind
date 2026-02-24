@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "codex-onboard-check",
+  "title": "Codex onboard check",
+  "status": "approved",
+  "updated_at": "2026-02-23T12:32:22Z",
+  "review": {
+    "reviewed_by": "system",
+    "reviewed_at": "2026-02-23T12:32:22Z",
+    "decision": "approved",
+    "decision_notes": "codex onboarding"
+  }
+}
