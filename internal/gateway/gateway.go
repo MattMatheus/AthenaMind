@@ -31,7 +31,18 @@ func ReadGatewayHandler(root string) http.Handler {
 			return
 		}
 
-		result, err := retrieval.Retrieve(root, req.Query, req.Domain)
+		result, _, err := retrieval.RetrieveWithOptionsAndEndpointAndSession(
+			root,
+			req.Query,
+			req.Domain,
+			retrieval.DefaultEmbeddingEndpoint,
+			req.SessionID,
+			retrieval.RetrieveOptions{
+				Mode:    req.Mode,
+				TopK:    req.TopK,
+				Backend: req.Backend,
+			},
+		)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -44,6 +55,7 @@ func ReadGatewayHandler(root string) http.Handler {
 			SourcePath:    result.SourcePath,
 			Confidence:    result.Confidence,
 			Reason:        result.Reason,
+			Candidates:    result.Candidates,
 			TraceID:       traceID,
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -55,10 +67,22 @@ func APIRetrieveWithFallback(root, gatewayURL string, req types.APIRetrieveReque
 	if strings.TrimSpace(gatewayURL) != "" {
 		resp, err := GatewayRetrieve(gatewayURL, req, client)
 		if err == nil {
-			local, localErr := retrieval.Retrieve(root, req.Query, req.Domain)
+			local, localWarn, localErr := retrieval.RetrieveWithOptionsAndEndpointAndSession(
+				root,
+				req.Query,
+				req.Domain,
+				retrieval.DefaultEmbeddingEndpoint,
+				req.SessionID,
+				retrieval.RetrieveOptions{
+					Mode:    req.Mode,
+					TopK:    req.TopK,
+					Backend: req.Backend,
+				},
+			)
 			if localErr != nil {
 				return types.APIRetrieveResponse{}, localErr
 			}
+			_ = localWarn
 			if resp.SelectedID != local.SelectedID || resp.SelectionMode != local.SelectionMode || resp.SourcePath != local.SourcePath {
 				return types.APIRetrieveResponse{}, errors.New("ERR_API_CLI_PARITY_MISMATCH: gateway response diverged from CLI retrieve contract")
 			}
@@ -68,16 +92,29 @@ func APIRetrieveWithFallback(root, gatewayURL string, req types.APIRetrieveReque
 			resp.GatewayEndpoint = gatewayURL
 			return resp, nil
 		}
-		local, localErr := retrieval.Retrieve(root, req.Query, req.Domain)
+		local, localWarn, localErr := retrieval.RetrieveWithOptionsAndEndpointAndSession(
+			root,
+			req.Query,
+			req.Domain,
+			retrieval.DefaultEmbeddingEndpoint,
+			req.SessionID,
+			retrieval.RetrieveOptions{
+				Mode:    req.Mode,
+				TopK:    req.TopK,
+				Backend: req.Backend,
+			},
+		)
 		if localErr != nil {
 			return types.APIRetrieveResponse{}, localErr
 		}
+		_ = localWarn
 		return types.APIRetrieveResponse{
 			SelectedID:      local.SelectedID,
 			SelectionMode:   local.SelectionMode,
 			SourcePath:      local.SourcePath,
 			Confidence:      local.Confidence,
 			Reason:          local.Reason,
+			Candidates:      local.Candidates,
 			TraceID:         traceID,
 			FallbackUsed:    true,
 			FallbackCode:    "ERR_API_WRAPPER_UNAVAILABLE",
@@ -86,16 +123,29 @@ func APIRetrieveWithFallback(root, gatewayURL string, req types.APIRetrieveReque
 		}, nil
 	}
 
-	local, err := retrieval.Retrieve(root, req.Query, req.Domain)
+	local, localWarn, err := retrieval.RetrieveWithOptionsAndEndpointAndSession(
+		root,
+		req.Query,
+		req.Domain,
+		retrieval.DefaultEmbeddingEndpoint,
+		req.SessionID,
+		retrieval.RetrieveOptions{
+			Mode:    req.Mode,
+			TopK:    req.TopK,
+			Backend: req.Backend,
+		},
+	)
 	if err != nil {
 		return types.APIRetrieveResponse{}, err
 	}
+	_ = localWarn
 	return types.APIRetrieveResponse{
 		SelectedID:    local.SelectedID,
 		SelectionMode: local.SelectionMode,
 		SourcePath:    local.SourcePath,
 		Confidence:    local.Confidence,
 		Reason:        local.Reason,
+		Candidates:    local.Candidates,
 		TraceID:       traceID,
 	}, nil
 }

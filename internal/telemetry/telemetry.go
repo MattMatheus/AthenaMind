@@ -120,7 +120,9 @@ func EmitRetrievalMetric(root string, result types.RetrieveResult) (RetrievalMet
 		_ = existing.Close()
 	}
 
-	semantic := result.SelectionMode == "semantic" || result.SelectionMode == "embedding_semantic"
+	semantic := result.SelectionMode == "semantic" ||
+		result.SelectionMode == "embedding_semantic" ||
+		result.SelectionMode == "hybrid_rrf"
 	fallback := strings.HasPrefix(result.SelectionMode, "fallback_")
 	total++
 	if semantic {
