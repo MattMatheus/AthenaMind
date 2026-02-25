@@ -1,1 +1,3 @@
-# Engineering Active Queue\n\nNo active stories.
+# Engineering Active Queue
+
+No active stories.
