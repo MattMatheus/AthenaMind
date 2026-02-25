@@ -5,15 +5,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 )
 
 const DefaultEmbeddingEndpoint = "http://localhost:11434"
+const embeddingChunkMaxBytes = 2800
 
 var (
 	embedFailureCache = struct {
@@ -56,7 +57,16 @@ type EmbeddingProfile struct {
 }
 
 func ActiveEmbeddingProfile(endpoint string) EmbeddingProfile {
-	_ = endpoint
+	if strings.TrimSpace(os.Getenv("AZURE_OPENAI_ENDPOINT")) != "" {
+		deployment := strings.TrimSpace(os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME"))
+		if deployment == "" {
+			deployment = "text-embedding-3-small"
+		}
+		return EmbeddingProfile{
+			Provider: "azure_openai",
+			ModelID:  deployment,
+		}
+	}
 	return EmbeddingProfile{
 		Provider: "ollama",
 		ModelID:  "nomic-embed-text",
@@ -88,150 +98,74 @@ func GenerateEmbeddings(endpoint string, texts []string) ([][]float64, error) {
 		return nil, fmt.Errorf("embedding endpoint temporarily unavailable: %s", endpoint)
 	}
 
-	results := make([][]float64, len(texts))
-	client := &http.Client{Timeout: 10 * time.Second}
+	results := make([][]float64, 0, len(texts))
+	for _, text := range texts {
+		chunks := chunkTextBySemanticBoundaries(text, embeddingChunkMaxBytes)
+		// Try Azure first if configured.
+		if azureEndpoint := os.Getenv("AZURE_OPENAI_ENDPOINT"); azureEndpoint != "" {
+			chunkVectors, err := generateAzureEmbeddings(azureEndpoint, chunks)
+			if err == nil {
+				avg, avgErr := averageEmbeddings(chunkVectors)
+				if avgErr != nil {
+					return nil, avgErr
+				}
+				results = append(results, avg)
+				continue
+			}
+			// Fall through to Ollama if Azure fails.
+		}
 
-	for i, text := range texts {
-		embedding, err := generateOllamaEmbeddingWithChunkFallback(client, endpoint, text)
+		chunkVectors, err := generateOllamaEmbeddings(endpoint, chunks)
 		if err != nil {
 			return nil, err
 		}
-		results[i] = embedding
+		avg, avgErr := averageEmbeddings(chunkVectors)
+		if avgErr != nil {
+			return nil, avgErr
+		}
+		results = append(results, avg)
 	}
 	return results, nil
 }
 
-func generateOllamaEmbeddingWithChunkFallback(client *http.Client, endpoint, text string) ([]float64, error) {
-	embedding, statusCode, responseBody, err := requestOllamaEmbedding(client, endpoint, text)
-	if err == nil {
-		return embedding, nil
-	}
+func generateOllamaEmbeddings(endpoint string, texts []string) ([][]float64, error) {
+	results := make([][]float64, len(texts))
+	client := &http.Client{Timeout: 10 * time.Second}
+	url := strings.TrimRight(endpoint, "/") + "/api/embeddings"
 
-	if shouldChunkForContextLimit(statusCode, responseBody) {
-		chunks := chunkTextByBytes(text, 2800)
-		if len(chunks) <= 1 {
+	for i, text := range texts {
+		body, err := json.Marshal(ollamaEmbeddingRequest{
+			Model:  "nomic-embed-text",
+			Prompt: text,
+		})
+		if err != nil {
 			return nil, err
 		}
-		parts := make([][]float64, 0, len(chunks))
-		for _, chunk := range chunks {
-			part, _, _, chunkErr := requestOllamaEmbedding(client, endpoint, chunk)
-			if chunkErr != nil {
-				markEndpointUnavailable(endpoint)
-				return nil, chunkErr
-			}
-			parts = append(parts, part)
+		req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
+		if err != nil {
+			return nil, err
 		}
-		return averageEmbeddings(parts), nil
-	}
+		req.Header.Set("Content-Type", "application/json")
 
-	if statusCode > 0 || err != nil {
-		markEndpointUnavailable(endpoint)
-	}
-	return nil, err
-}
-
-func requestOllamaEmbedding(client *http.Client, endpoint, text string) ([]float64, int, string, error) {
-	body, err := json.Marshal(ollamaEmbeddingRequest{
-		Model:  "nomic-embed-text",
-		Prompt: text,
-	})
-	if err != nil {
-		return nil, 0, "", err
-	}
-	url := strings.TrimRight(endpoint, "/") + "/api/embeddings"
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
-	if err != nil {
-		return nil, 0, "", err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, 0, "", err
-	}
-	data, readErr := io.ReadAll(resp.Body)
-	_ = resp.Body.Close()
-	if readErr != nil {
-		return nil, resp.StatusCode, "", readErr
-	}
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, resp.StatusCode, strings.TrimSpace(string(data)), fmt.Errorf("embedding endpoint returned status %d", resp.StatusCode)
-	}
-
-	var parsed ollamaEmbeddingResponse
-	if err := json.Unmarshal(data, &parsed); err != nil {
-		return nil, resp.StatusCode, "", err
-	}
-	return parsed.Embedding, resp.StatusCode, "", nil
-}
-
-func shouldChunkForContextLimit(statusCode int, responseBody string) bool {
-	if statusCode < http.StatusBadRequest {
-		return false
-	}
-	msg := strings.ToLower(strings.TrimSpace(responseBody))
-	return strings.Contains(msg, "context length") || strings.Contains(msg, "input length exceeds")
-}
-
-func chunkTextByBytes(text string, maxChunkBytes int) []string {
-	if maxChunkBytes <= 0 || len(text) <= maxChunkBytes {
-		return []string{text}
-	}
-	parts := strings.Fields(text)
-	if len(parts) == 0 {
-		return []string{text}
-	}
-	chunks := make([]string, 0, len(parts))
-	var builder strings.Builder
-	for _, part := range parts {
-		next := part
-		if builder.Len() > 0 {
-			next = " " + part
+		resp, err := client.Do(req)
+		if err != nil {
+			markEndpointUnavailable(endpoint)
+			return nil, err
 		}
-		if builder.Len()+len(next) > maxChunkBytes && builder.Len() > 0 {
-			chunks = append(chunks, builder.String())
-			builder.Reset()
-			builder.WriteString(part)
-			continue
+		defer resp.Body.Close()
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			markEndpointUnavailable(endpoint)
+			return nil, fmt.Errorf("embedding endpoint returned status %d", resp.StatusCode)
 		}
-		builder.WriteString(next)
-	}
-	if builder.Len() > 0 {
-		chunks = append(chunks, builder.String())
-	}
-	if len(chunks) == 0 {
-		return []string{text}
-	}
-	return chunks
-}
 
-func averageEmbeddings(vectors [][]float64) []float64 {
-	if len(vectors) == 0 {
-		return nil
-	}
-	dim := len(vectors[0])
-	if dim == 0 {
-		return nil
-	}
-	out := make([]float64, dim)
-	count := 0
-	for _, vector := range vectors {
-		if len(vector) != dim {
-			continue
+		var parsed ollamaEmbeddingResponse
+		if err := json.NewDecoder(resp.Body).Decode(&parsed); err != nil {
+			markEndpointUnavailable(endpoint)
+			return nil, err
 		}
-		for i := 0; i < dim; i++ {
-			out[i] += vector[i]
-		}
-		count++
+		results[i] = parsed.Embedding
 	}
-	if count == 0 {
-		return nil
-	}
-	denom := float64(count)
-	for i := range out {
-		out[i] /= denom
-	}
-	return out
+	return results, nil
 }
 
 func generateAzureEmbeddings(endpoint string, texts []string) ([][]float64, error) {
@@ -365,6 +299,180 @@ func isEndpointTemporarilyUnavailable(endpoint string) bool {
 	}
 	delete(embedFailureCache.until, endpoint)
 	return false
+}
+
+func averageEmbeddings(vectors [][]float64) ([]float64, error) {
+	if len(vectors) == 0 {
+		return nil, errors.New("no embedding returned")
+	}
+	dim := len(vectors[0])
+	if dim == 0 {
+		return nil, errors.New("no embedding returned")
+	}
+	avg := make([]float64, dim)
+	for _, vec := range vectors {
+		if len(vec) != dim {
+			return nil, errors.New("inconsistent embedding dimensions")
+		}
+		for i := 0; i < dim; i++ {
+			avg[i] += vec[i]
+		}
+	}
+	n := float64(len(vectors))
+	for i := 0; i < dim; i++ {
+		avg[i] /= n
+	}
+	return avg, nil
+}
+
+func chunkTextBySemanticBoundaries(text string, maxChunkBytes int) []string {
+	if maxChunkBytes <= 0 {
+		maxChunkBytes = embeddingChunkMaxBytes
+	}
+	normalized := strings.ReplaceAll(strings.ReplaceAll(text, "\r\n", "\n"), "\r", "\n")
+	if strings.TrimSpace(normalized) == "" {
+		return []string{text}
+	}
+
+	units := make([]string, 0, 32)
+	lines := strings.Split(normalized, "\n")
+	current := make([]string, 0, 16)
+	flushCurrent := func() {
+		if len(current) == 0 {
+			return
+		}
+		unit := strings.Trim(strings.Join(current, "\n"), "\n")
+		current = current[:0]
+		if strings.TrimSpace(unit) != "" {
+			units = append(units, unit)
+		}
+	}
+
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if isSemanticBoundaryLine(trimmed) {
+			flushCurrent()
+			current = append(current, line)
+			continue
+		}
+		if trimmed == "" {
+			flushCurrent()
+			continue
+		}
+		current = append(current, line)
+	}
+	flushCurrent()
+	if len(units) == 0 {
+		units = append(units, normalized)
+	}
+
+	chunks := make([]string, 0, len(units))
+	currentChunk := ""
+	for _, unit := range units {
+		if len([]byte(unit)) > maxChunkBytes {
+			if strings.TrimSpace(currentChunk) != "" {
+				chunks = append(chunks, currentChunk)
+				currentChunk = ""
+			}
+			chunks = append(chunks, splitTextByBytes(unit, maxChunkBytes)...)
+			continue
+		}
+
+		candidate := unit
+		if currentChunk != "" {
+			candidate = currentChunk + "\n\n" + unit
+		}
+		if len([]byte(candidate)) <= maxChunkBytes {
+			currentChunk = candidate
+			continue
+		}
+		if strings.TrimSpace(currentChunk) != "" {
+			chunks = append(chunks, currentChunk)
+		}
+		currentChunk = unit
+	}
+	if strings.TrimSpace(currentChunk) != "" {
+		chunks = append(chunks, currentChunk)
+	}
+	if len(chunks) == 0 {
+		return []string{text}
+	}
+	return chunks
+}
+
+func isSemanticBoundaryLine(trimmed string) bool {
+	if trimmed == "" {
+		return true
+	}
+	if strings.HasPrefix(trimmed, "# ") ||
+		strings.HasPrefix(trimmed, "## ") ||
+		strings.HasPrefix(trimmed, "### ") ||
+		strings.HasPrefix(trimmed, "#### ") ||
+		strings.HasPrefix(trimmed, "##### ") ||
+		strings.HasPrefix(trimmed, "###### ") {
+		return true
+	}
+	if strings.HasPrefix(trimmed, "func ") ||
+		strings.HasPrefix(trimmed, "type ") ||
+		strings.HasPrefix(trimmed, "class ") ||
+		strings.HasPrefix(trimmed, "def ") ||
+		strings.HasPrefix(trimmed, "function ") {
+		return true
+	}
+	return false
+}
+
+func splitTextByBytes(text string, maxChunkBytes int) []string {
+	if maxChunkBytes <= 0 || len([]byte(text)) <= maxChunkBytes {
+		return []string{text}
+	}
+	chunks := make([]string, 0, (len(text)/maxChunkBytes)+1)
+	rest := text
+	for len([]byte(rest)) > maxChunkBytes {
+		cut := maxPrefixByBytes(rest, maxChunkBytes)
+		if cut <= 0 {
+			break
+		}
+		chunk := strings.Trim(rest[:cut], "\n")
+		if strings.TrimSpace(chunk) != "" {
+			chunks = append(chunks, chunk)
+		}
+		rest = rest[cut:]
+	}
+	rest = strings.Trim(rest, "\n")
+	if strings.TrimSpace(rest) != "" {
+		chunks = append(chunks, rest)
+	}
+	if len(chunks) == 0 {
+		return []string{text}
+	}
+	return chunks
+}
+
+func maxPrefixByBytes(text string, maxBytes int) int {
+	if maxBytes <= 0 {
+		return 0
+	}
+	if len([]byte(text)) <= maxBytes {
+		return len(text)
+	}
+	total := 0
+	last := 0
+	for i, r := range text {
+		size := utf8.RuneLen(r)
+		if total+size > maxBytes {
+			break
+		}
+		total += size
+		last = i + size
+	}
+	if last == 0 && len(text) > 0 {
+		_, size := utf8.DecodeRuneInString(text)
+		if size > 0 {
+			return size
+		}
+	}
+	return last
 }
 
 func cosineSimilarity(a, b []float64) float64 {
