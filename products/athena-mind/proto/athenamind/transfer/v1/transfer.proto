@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package athenamind.transfer.v1;
+
+option go_package = "athenamind/internal/transfer/proto/v1;transferv1";
+
+message TransferEnvelope {
+  string schema_version = 1;      // ex: "v1"
+  string envelope_id = 2;         // unique immutable id
+  string request_id = 3;          // trace/correlation id
+  string session_id = 4;
+  string cycle_id = 5;
+  string story_id = 6;
+  string source_agent_id = 7;
+  string target_agent_id = 8;
+  string domain = 9;
+  repeated string memory_ids = 10;
+  string classification = 11;     // ex: internal|restricted|phi
+  string policy_stage = 12;
+  string decision = 13;           // allow|deny|redact
+  string decision_reason = 14;
+  string risk_level = 15;         // low|medium|high|critical
+  bool redaction_applied = 16;
+  bytes payload = 17;             // encrypted content (or opaque pointer payload)
+  string payload_sha256 = 18;
+  int64 issued_at_unix = 19;
+  int64 expires_at_unix = 20;
+  string nonce = 21;
+  string key_id = 22;             // signing key id
+  string signature_alg = 23;      // ex: ed25519
+  bytes signature = 24;
+  map<string, string> audit_attrs = 25;
+}
+
+message TransferRequest {
+  TransferEnvelope envelope = 1;
+  string route = 2;               // logical destination route
+}
+
+message TransferResult {
+  string transfer_id = 1;
+  string status = 2;              // delivered|blocked|failed
+  string decision = 3;
+  string reason = 4;
+  int64 handled_at_unix = 5;
+}
+
+service TransferService {
+  rpc Send(TransferRequest) returns (TransferResult);
+}

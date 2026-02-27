@@ -9,3 +9,4 @@ Suggested playbooks:
 - clara-documentation-program
 - blocked-item-handling
 - program-review-cycle
+- fortress-gap-assessment

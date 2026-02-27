@@ -8,3 +8,7 @@ Each experiment should include:
 - duration
 - rollback condition
 - result
+
+## Active Experiments
+- `EXP-20260225-argo-control-plane-pilot.md`
+- `EXP-20260225-pty-stream-supervisor-guardrail.md`

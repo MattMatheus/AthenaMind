@@ -42,6 +42,16 @@ Root compatibility links (`tools`, `stage-prompts`, `staff-personas`, `delivery-
 - Observer reports and resume context: `operating-system/observer/README.md`
 - User/operator docs map: `knowledge-base/INDEX.md`
 
+## Research Mode (SEDA Harness)
+
+- Use research mode when coherence and invariant preservation are primary goals over velocity.
+- For `memory-cli` research runs, pass `--research-mode --research-contract-file <contract.json>`.
+- Declare the intended cognitive mode with `--mode-id <Strategic|Adversarial|Validation|...>`.
+- Declare the abstraction boundary with `--abstraction-layer-id <layer-id>`.
+- A research contract must include: `mode_id`, `abstraction_layer_id`, `constraint_spine_version`, `constraint_spine_hash`, `session_intent_fingerprint`, `contract_hash`, and `signature` (when signing is enabled).
+- Mode or abstraction pivots require a new signed contract; do not reuse a contract across pivots.
+- If decision ledger refs are marked `invalidated` or `revoked`, stop and re-baseline before continuing.
+
 ## Mandatory Behavioral Rules
 
 - Branch must match `ATHENA_REQUIRED_BRANCH` (default `dev`; launcher enforces this).

@@ -35,6 +35,32 @@ const (
 	defaultEvaluationConfigID     = "config-v1-confidence-0.34-margin-0.15"
 )
 
+type researchContractFlags struct {
+	enabled            *bool
+	contractFile       *string
+	modeID             *string
+	abstractionLayerID *string
+}
+
+func bindResearchContractFlags(fs *flag.FlagSet) researchContractFlags {
+	return researchContractFlags{
+		enabled:            fs.Bool("research-mode", false, "enforce a signed research contract before execution"),
+		contractFile:       fs.String("research-contract-file", "", "path to research contract JSON"),
+		modeID:             fs.String("mode-id", "", "declared cognitive mode for this run (for example: Strategic|Adversarial|Validation)"),
+		abstractionLayerID: fs.String("abstraction-layer-id", "", "declared abstraction layer id for this run"),
+	}
+}
+
+func enforceResearchContractGate(flags researchContractFlags, operation string) error {
+	return governance.EnforceResearchContract(types.ResearchContractCheckInput{
+		Enabled:            *flags.enabled,
+		ContractFile:       *flags.contractFile,
+		Operation:          operation,
+		ModeID:             *flags.modeID,
+		AbstractionLayerID: *flags.abstractionLayerID,
+	})
+}
+
 func runWrite(args []string) (err error) {
 	ctx, commandSpan := telemetry.StartCommandSpan(context.Background(), "write")
 	defer func() {
@@ -66,6 +92,7 @@ func runWrite(args []string) (err error) {
 	reworkNotes := fs.String("rework-notes", "", "required when --decision=rejected")
 	reReviewedBy := fs.String("re-reviewed-by", "", "required when --decision=rejected")
 	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint for write-time indexing")
+	research := bindResearchContractFlags(fs)
 
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -112,6 +139,9 @@ func runWrite(args []string) (err error) {
 	err = governance.EnforceConstraintChecks("write", *sessionID, *scenarioID, traceID)
 	telemetry.EndSpan(enforceSpan, err)
 	if err != nil {
+		return err
+	}
+	if err := enforceResearchContractGate(research, "write"); err != nil {
 		return err
 	}
 
@@ -179,6 +209,7 @@ func runRetrieve(args []string) (err error) {
 	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
 	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
 	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
+	research := bindResearchContractFlags(fs)
 	mode := fs.String("mode", "classic", "retrieval mode: classic|hybrid")
 	topK := fs.Int("top-k", 5, "number of candidate traces to return (1-50)")
 	backend := fs.String("retrieval-backend", "sqlite", "retrieval backend: sqlite|qdrant|neo4j")
@@ -251,6 +282,9 @@ func runRetrieve(args []string) (err error) {
 	if err != nil {
 		return err
 	}
+	if err := enforceResearchContractGate(research, "retrieve"); err != nil {
+		return err
+	}
 
 	_, retrieveSpan := telemetry.StartSpan(ctx, "memory.retrieve.execute")
 	result, warning, err := retrieval.RetrieveWithOptionsAndEndpointAndSession(
@@ -296,6 +330,7 @@ func runEvaluate(args []string) (err error) {
 	querySetID := fs.String("query-set-id", defaultEvaluationQuerySetID, "pinned query set id")
 	configID := fs.String("config-id", defaultEvaluationConfigID, "retrieval configuration snapshot id")
 	embeddingEndpoint := fs.String("embedding-endpoint", retrieval.DefaultEmbeddingEndpoint, "embedding service endpoint")
+	research := bindResearchContractFlags(fs)
 	mode := fs.String("mode", "classic", "retrieval mode under evaluation: classic|hybrid")
 	topK := fs.Int("top-k", 5, "candidate trace size under evaluation (1-50)")
 	backend := fs.String("retrieval-backend", "sqlite", "retrieval backend under evaluation: sqlite|qdrant|neo4j")
@@ -343,6 +378,9 @@ func runEvaluate(args []string) (err error) {
 	err = governance.EnforceConstraintChecks("evaluate", *sessionID, *scenarioID, traceID)
 	telemetry.EndSpan(enforceSpan, err)
 	if err != nil {
+		return err
+	}
+	if err := enforceResearchContractGate(research, "evaluate"); err != nil {
 		return err
 	}
 
@@ -396,6 +434,7 @@ func runBootstrap(args []string) (err error) {
 	memoryType := fs.String("memory-type", "state", "telemetry memory type: procedural|state|semantic")
 	operatorVerdict := fs.String("operator-verdict", "not_scored", "telemetry operator verdict")
 	telemetryFile := fs.String("telemetry-file", "", "optional telemetry output file (default: <root>/telemetry/events.jsonl)")
+	research := bindResearchContractFlags(fs)
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -462,6 +501,9 @@ func runBootstrap(args []string) (err error) {
 	err = governance.EnforceConstraintChecks("retrieve", *sessionID, *scenario, traceID)
 	telemetry.EndSpan(enforceSpan, err)
 	if err != nil {
+		return err
+	}
+	if err := enforceResearchContractGate(research, "bootstrap"); err != nil {
 		return err
 	}
 

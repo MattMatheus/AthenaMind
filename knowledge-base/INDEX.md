@@ -22,6 +22,9 @@
 - [Workflows](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/workflows/README.md)
 - [Configuration Reference](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/references/configuration.md)
 - [OTel/OTLP Setup (includes local Maple OSS on Podman)](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
+- [Agent State Transfer and Observability](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/architecture/AGENT_STATE_TRANSFER_AND_OBSERVABILITY.md)
+- [AthenaMind Transfer Protocol v1](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/architecture/ATHENAMIND_TRANSFER_PROTOCOL_V1.md)
+- [Agent Secret Strategy](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/operations/AGENT_SECRET_STRATEGY.md)
 
 
 ## Public Testing

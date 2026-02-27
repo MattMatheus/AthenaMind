@@ -1205,3 +1205,28 @@ func TestRunVerifyHealthReportsPassWithSemanticAndCoverage(t *testing.T) {
 		t.Fatalf("expected embedding_semantic mode, got %s", report.SelectionMode)
 	}
 }
+
+func TestWriteResearchModeRequiresContractFile(t *testing.T) {
+	root := t.TempDir()
+	err := runWrite([]string{
+		"--root", root,
+		"--id", "research-guard",
+		"--title", "Research Guard",
+		"--type", "prompt",
+		"--domain", "research",
+		"--body", "contract required",
+		"--stage", "planning",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "guardrail",
+		"--risk", "low",
+		"--notes", "enforce contract",
+		"--research-mode",
+	})
+	if err == nil {
+		t.Fatal("expected --research-mode without contract file to fail")
+	}
+	if !strings.Contains(err.Error(), "ERR_RESEARCH_CONTRACT_REQUIRED") {
+		t.Fatalf("expected research contract error, got: %v", err)
+	}
+}

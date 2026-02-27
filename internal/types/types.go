@@ -244,6 +244,44 @@ type WritePolicyDecision struct {
 	ReReviewedBy string
 }
 
+type DecisionLedgerRef struct {
+	ID                    string `json:"id"`
+	InvalidationCondition string `json:"invalidation_condition"`
+	Status                string `json:"status"`
+}
+
+type EntropyPolicy struct {
+	PreDistillRequired bool     `json:"pre_distill_required"`
+	MaxInputEntropy    float64  `json:"max_input_entropy,omitempty"`
+	ArtifactClasses    []string `json:"artifact_classes,omitempty"`
+}
+
+type ResearchContract struct {
+	SchemaVersion            string              `json:"schema_version"`
+	ContractID               string              `json:"contract_id"`
+	AllowedOperations        []string            `json:"allowed_operations"`
+	ModeID                   string              `json:"mode_id"`
+	AllowedModeTransitions   []string            `json:"allowed_mode_transitions,omitempty"`
+	AbstractionLayerID       string              `json:"abstraction_layer_id"`
+	ConstraintSpineVersion   string              `json:"constraint_spine_version"`
+	ConstraintSpineHash      string              `json:"constraint_spine_hash"`
+	DecisionLedgerRefs       []DecisionLedgerRef `json:"decision_ledger_refs,omitempty"`
+	SessionIntentFingerprint string              `json:"session_intent_fingerprint"`
+	EntropyPolicy            EntropyPolicy       `json:"entropy_policy"`
+	IssuedAt                 string              `json:"issued_at"`
+	ExpiresAt                string              `json:"expires_at,omitempty"`
+	ContractHash             string              `json:"contract_hash"`
+	Signature                string              `json:"signature"`
+}
+
+type ResearchContractCheckInput struct {
+	Enabled            bool
+	ContractFile       string
+	Operation          string
+	ModeID             string
+	AbstractionLayerID string
+}
+
 type UpsertEntryInput struct {
 	ID       string
 	Title    string
