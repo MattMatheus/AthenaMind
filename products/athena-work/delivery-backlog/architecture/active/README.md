@@ -8,4 +8,5 @@ Ordered execution queue for architecture stories.
 - Architecture outputs move through `delivery-backlog/architecture/qa` before `done`.
 
 ## Active Sequence
-- (empty)
+1. `ARCH-20260227-shared-workspace-control-plane-contract.md`
+2. `ARCH-20260227-markdown-sync-authority-and-conflict-policy.md`
