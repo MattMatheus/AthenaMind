@@ -3,7 +3,7 @@
 ## Metadata
 - `id`: STORY-20260223-self-check-helper
 - `owner_persona`: staff-personas/SRE - Nia.md
-- `status`: active
+- `status`: qa
 - `idea_id`: direct
 - `phase`: v0.1
 - `adr_refs`: [ADR-0004, ADR-0013]

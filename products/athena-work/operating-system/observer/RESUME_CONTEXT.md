@@ -1,11 +1,11 @@
 # Resume Context
 
-- generated_at_utc: 2026-02-27T14:40:36Z
+- generated_at_utc: 2026-02-27T14:47:36Z
 - branch: fix/semantic-chunking-clean
 - cycle_id: STORY-TEST-MEMORY-MISSING
 - stage_hint: pm
 - story_path: none
-- observer_report: /var/folders/zm/1shkdj6572bcq0ys4p152p5w0000gn/T/tmp.GLe7uIuBoQ/observer-report-missing.md
+- observer_report: /var/folders/zm/1shkdj6572bcq0ys4p152p5w0000gn/T/tmp.ep02VRbORX/observer-report-missing.md
 
 ## Resume Checklist
 1. Open the observer report and read Diff Inventory.

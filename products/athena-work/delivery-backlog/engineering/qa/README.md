@@ -2,4 +2,5 @@
 
 Stories awaiting QA validation.
 
-No stories in QA.
+## QA Sequence
+1. `STORY-20260223-self-check-helper.md`

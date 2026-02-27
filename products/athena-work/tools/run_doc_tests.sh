@@ -21,6 +21,7 @@ fi
 
 always_tests=(
   "test_workspace_drift.sh"
+  "test_self_check_helper.sh"
   "test_qa_regression_rubric.sh"
   "test_state_transition_checklist.sh"
   "test_launch_stage_readme_queue.sh"

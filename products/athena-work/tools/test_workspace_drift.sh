@@ -72,7 +72,8 @@ fi
 
 dupes="$(
   {
-    for ref in "${queue_refs[@]}"; do
+    for ref in "${queue_refs[@]:-}"; do
+      [[ -z "$ref" ]] && continue
       printf '%s\n' "$ref"
     done
   } | sort | uniq -d
@@ -80,15 +81,16 @@ dupes="$(
 
 if [[ -n "$dupes" ]]; then
   while IFS= read -r dup; do
-    [[ -z "$dup" ]] && continue
-    echo "FAIL: duplicate queue reference in README: $dup"
+    [[ -z "${dup:-}" ]] && continue
+    echo "FAIL: duplicate queue reference in README: ${dup}"
     DOC_TEST_FAILURES=$((DOC_TEST_FAILURES + 1))
   done <<< "$dupes"
 else
   echo "PASS: queue references are unique"
 fi
 
-for ref in "${queue_refs[@]}"; do
+for ref in "${queue_refs[@]:-}"; do
+  [[ -z "$ref" ]] && continue
   resolved="$ref"
   if [[ "${resolved#/}" == "$resolved" ]]; then
     if [[ "$resolved" == */* ]]; then
