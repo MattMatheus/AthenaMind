@@ -4,6 +4,13 @@
 
 Your task is to drain the engineering active backlog by alternating engineering and QA cycles.
 
+## Accessibility Profile (Mandatory)
+Before step 1, select and record active profile(s) for this cycle:
+- `low-vision-default`
+- `high-variability-attention`
+- both (if needed)
+Maintain single-task visibility and concise pass/fail markers throughout the loop.
+
 ## Cycle Loop (Mandatory)
 1. Run `tools/launch_stage.sh engineering`.
 2. If output is exactly `no stories`, stop and report completion.

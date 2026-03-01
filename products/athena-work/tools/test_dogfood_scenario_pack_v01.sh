@@ -5,14 +5,18 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
 source "$root_dir/tools/lib/doc_test_harness.sh"
 pack="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_PACK_V01.md"
-run="$root_dir/operating-system/metrics/dogfood-scenario-run-2026-02-22.md"
+run="$root_dir/operating-system/metrics/DOGFOOD_SCENARIO_RUN_2026-02-22.md"
 follow_on_story_id="STORY-20260222-dogfood-semantic-retrieval-hardening-v01"
 
 doc_test_init
 
 doc_assert_exists "$pack" "Dogfood scenario pack exists"
 doc_assert_exists "$run" "Dogfood first run artifact exists"
-follow_on_path="$(rg --files "$root_dir/delivery-backlog/engineering" | rg "/${follow_on_story_id}\\.md$" || true)"
+if command -v rg >/dev/null 2>&1; then
+  follow_on_path="$(rg --files "$root_dir/delivery-backlog/engineering" | rg "/${follow_on_story_id}\\.md$" || true)"
+else
+  follow_on_path="$(find "$root_dir/delivery-backlog/engineering" -type f -name "${follow_on_story_id}.md" | head -n1 || true)"
+fi
 if [[ -z "$follow_on_path" ]]; then
   doc_assert_contains "$pack" "$follow_on_story_id" "Prioritized follow-on story is referenced in canonical artifacts"
 else

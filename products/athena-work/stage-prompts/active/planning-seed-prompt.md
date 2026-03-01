@@ -4,6 +4,13 @@
 
 Your task is to run an interactive idea-generation session with the human operator before architecture or PM execution.
 
+## Accessibility Profile (Mandatory)
+Before step 1, select and record active profile(s) for this cycle:
+- `low-vision-default`
+- `high-variability-attention`
+- both (if needed)
+Keep planning views high-clarity and keep active checklist sections to 5 items max.
+
 ## Planning Cycle (Mandatory)
 1. Start a structured conversation to capture goals, users, constraints, risks, and success metrics.
 2. Record notes in a new file under `product-research/planning/sessions/` using `product-research/planning/PLANNING_SESSION_TEMPLATE.md`.
@@ -27,6 +34,11 @@ Your task is to run an interactive idea-generation session with the human operat
 - Decision/gap list by owner lane (engineering vs architecture)
 - Concrete intake items created (paths + ids)
 - Recommended next stage and rationale
+- One-screen direction confirmation summary card:
+  - `direction`
+  - `constraints`
+  - `next_stage`
+  - `confirmed_by`
 
 ## Constraints
 - Do not implement production changes in planning mode.

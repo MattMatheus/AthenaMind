@@ -4,6 +4,13 @@
 
 Your task is to execute the top story in `delivery-backlog/engineering/active/`.
 
+## Accessibility Profile (Mandatory)
+Before step 1, select and record active profile(s) for this cycle:
+- `low-vision-default`
+- `high-variability-attention`
+- both (if needed)
+Use single-task focus and concise recovery steps in all outputs.
+
 ## Launch Rule
 - If `delivery-backlog/engineering/active/` has no story files, report exactly: `no stories`.
 - Do not fabricate work when active is empty.
@@ -14,7 +21,8 @@ Your task is to execute the top story in `delivery-backlog/engineering/active/`.
 2. Read, research, and implement. Surface questions if outcome is unclear.
    - Apply `delivery-backlog/STATE_TRANSITION_CHECKLIST.md` before moving story state.
 3. Update tests.
-4. Run `tools/run_stage_tests.sh` (auto-scoped push vs PR) plus targeted story-specific test commands. Tests must pass.
+4. Run tests with the canonical docs command (`tools/run_doc_tests.sh`) plus any story-specific test commands. Tests must pass.
+   - Include `go test ./...` before handoff.
 5. Prepare handoff package.
 6. Move the story to `delivery-backlog/engineering/qa/`.
 7. Do not commit yet; cycle commit occurs only after QA + observer.
@@ -34,4 +42,4 @@ Your task is to execute the top story in `delivery-backlog/engineering/active/`.
 - Do not move story to done directly from active.
 - Respect accepted ADRs and memory-layer scope.
 - If a gap is discovered, log a new intake story before handoff.
-- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
+- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.

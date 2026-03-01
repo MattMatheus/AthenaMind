@@ -4,6 +4,13 @@
 
 Your task is to validate the top story in `delivery-backlog/engineering/qa/`.
 
+## Accessibility Profile (Mandatory)
+Before step 1, select and record active profile(s) for this cycle:
+- `low-vision-default`
+- `high-variability-attention`
+- both (if needed)
+Use concise pass/fail signaling and explicit next-state decisions.
+
 ## QA Cycle (Mandatory)
 1. Perform code/documentation review against acceptance criteria.
 2. Validate tests and regression risk.
@@ -14,6 +21,7 @@ Your task is to validate the top story in `delivery-backlog/engineering/qa/`.
    - If quality bar is met: move story to `delivery-backlog/engineering/done/`.
    - Apply `delivery-backlog/STATE_TRANSITION_CHECKLIST.md` for transition artifact gates.
 5. For `qa -> done` transitions, include release-checkpoint readiness note in QA result.
+   - If security-backing contracts changed, verify nonce/OTP launch-gate evidence is present and CI gate passes.
 6. Run observer:
    - `tools/run_observer_cycle.sh --cycle-id <story-id> --story <path-to-story>`
 7. Commit once for the full cycle:
@@ -27,5 +35,5 @@ Your task is to validate the top story in `delivery-backlog/engineering/qa/`.
 ## Constraints
 - No silent failures.
 - No direct reprioritization; PM handles refinement/ranking.
-- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
+- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
 - Do not commit before observer report is generated.

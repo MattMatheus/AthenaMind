@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || (cd "$script_dir/.." && pwd))"
+source "$root_dir/tools/lib/doc_test_harness.sh"
+
+compose_file="$root_dir/docker-compose.local.yml"
+api_file="$root_dir/products/athena-work/ui/local_control_plane_api.py"
+state_file="$root_dir/products/athena-work/operating-system/state/backend_read_model_v1.json"
+ui_file="$root_dir/products/athena-work/ui/index.html"
+quickstart="$root_dir/knowledge-base/operations/LOCAL_CONTROL_PLANE_QUICKSTART.md"
+
+doc_test_init
+
+doc_assert_exists "$api_file" "Workspace UI read-model API exists"
+doc_assert_exists "$ui_file" "Workspace UI board page exists"
+doc_assert_contains "$compose_file" "local_control_plane_api.py" "Compose api service runs workspace read-model API"
+doc_assert_contains "$compose_file" "working_dir: /workspace/products/athena-work/ui" "Compose ui service serves workspace board directory"
+
+doc_assert_contains "$api_file" "/api/v1/read-model/board" "API serves board read model endpoint"
+doc_assert_contains "$api_file" "/api/v1/read-model/timeline" "API serves timeline read model endpoint"
+doc_assert_contains "$api_file" "/api/v1/docs/index" "API serves docs workspace index endpoint"
+doc_assert_contains "$api_file" "/api/v1/docs/view" "API serves docs workspace document endpoint"
+doc_assert_contains "$api_file" "/api/v1/artifacts/ingest" "API serves artifact ingest endpoint"
+doc_assert_contains "$api_file" "/api/v1/artifacts/migrations" "API serves artifact migration history endpoint"
+doc_assert_contains "$api_file" "/api/v1/model/respond" "API serves model response endpoint"
+doc_assert_contains "$api_file" "/api/v1/launch/package" "API serves launch package generation endpoint"
+doc_assert_contains "$api_file" "/api/v1/launch/validate" "API serves launch package validation endpoint"
+doc_assert_contains "$api_file" "/api/v1/launch/latest" "API serves latest launch package endpoint"
+doc_assert_contains "$api_file" "available_themes" "Board payload includes available theme metadata"
+doc_assert_contains "$api_file" "build_workspace_entity_model" "API defines canonical workspace entity model builder"
+doc_assert_contains "$api_file" "relationship_errors" "API emits relationship drift checks"
+doc_assert_contains "$api_file" "\"entity_model\"" "Board/timeline payload includes entity model metadata"
+doc_assert_contains "$state_file" "correlation_id" "Timeline payload includes correlation_id field"
+doc_assert_contains "$api_file" "research_comm_exception" "Board payload includes research exception marker"
+
+doc_assert_contains "$ui_file" "Current stage" "UI first screen includes current stage task"
+doc_assert_contains "$ui_file" "Next story" "UI first screen includes next story task"
+doc_assert_contains "$ui_file" "Blockers" "UI first screen includes blockers task"
+doc_assert_contains "$ui_file" "Required confirmation" "UI first screen includes required confirmation task"
+doc_assert_contains "$ui_file" "Direction confirmation marker" "UI includes direction confirmation marker"
+doc_assert_contains "$ui_file" "Research-mode communication exception marker" "UI includes research communication marker"
+doc_assert_contains "$ui_file" "Docs Workspace" "UI includes docs workspace panel"
+doc_assert_contains "$ui_file" "Model Response" "UI includes model response panel"
+doc_assert_contains "$ui_file" "Get model response" "UI includes model response action"
+doc_assert_contains "$ui_file" "Artifact Ingest" "UI includes artifact ingest panel"
+doc_assert_contains "$ui_file" "Ingest artifact bundle" "UI includes artifact ingest action"
+doc_assert_contains "$ui_file" "Migration" "UI includes migration menu item"
+doc_assert_contains "$ui_file" "Artifact Migration History" "UI includes migration history panel"
+doc_assert_contains "$ui_file" "Read only" "UI marks migration data read-only"
+doc_assert_contains "$ui_file" "Launch Authorization" "UI includes launch authorization panel"
+doc_assert_contains "$ui_file" "Generate launch package" "UI includes launch package generation action"
+doc_assert_contains "$ui_file" "Launch readiness:" "UI includes first-screen launch readiness summary"
+doc_assert_contains "$ui_file" "Launch blockers:" "UI includes first-screen launch blocker summary"
+doc_assert_contains "$ui_file" "id=\"theme-mode\"" "UI includes theme selector"
+doc_assert_contains "$ui_file" "athena_ui_theme" "UI persists theme override locally"
+doc_assert_contains "$ui_file" "font-size: 18px" "UI enforces low-vision minimum body text size"
+doc_assert_contains "$ui_file" "outline: 4px solid" "UI exposes clear focus state"
+doc_assert_contains "$ui_file" "grid-template-columns: 17rem minmax(58rem, 1fr);" "UI uses left-anchored landscape shell"
+doc_assert_contains "$ui_file" "Primary workspace navigation" "UI includes persistent left navigation rail"
+doc_assert_contains "$ui_file" "data-section-link" "UI nav supports active section state"
+doc_assert_contains "$ui_file" "background: radial-gradient" "UI has strong visual structure"
+
+doc_assert_contains "$quickstart" "/api/v1/read-model/board" "Quickstart documents board endpoint check"
+doc_assert_contains "$quickstart" "/api/v1/read-model/timeline" "Quickstart documents timeline endpoint check"
+
+doc_test_finish

@@ -4,6 +4,13 @@
 
 Your task is to execute the top architecture story in `delivery-backlog/architecture/active/`.
 
+## Accessibility Profile (Mandatory)
+Before step 1, select and record active profile(s) for this cycle:
+- `low-vision-default`
+- `high-variability-attention`
+- both (if needed)
+Record selection in handoff output and keep checklist length to max 5 actions per section.
+
 ## Launch Rule
 - If there are no architecture stories, report exactly: `no stories`.
 - Do not fabricate architecture work when architecture active is empty.
@@ -33,5 +40,5 @@ Your task is to execute the top architecture story in `delivery-backlog/architec
 - Do not implement runtime-execution ownership in v0.1 scope.
 - Do not skip tests.
 - Do not move story directly to done.
-- Apply stage exit requirements in `knowledge-base/process/stage-exit-gates.md`.
+- Apply stage exit requirements in `knowledge-base/process/STAGE_EXIT_GATES.md`.
 - Do not commit before observer report is generated.

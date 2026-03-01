@@ -68,8 +68,8 @@ assert_equal "$(extract_count architecture_active_count)" "$actual_arch_active" 
 assert_equal "$(extract_count architecture_qa_count)" "$actual_arch_qa" "Program board architecture QA count matches"
 assert_equal "$(extract_count architecture_done_story_count)" "$actual_arch_done" "Program board architecture done count matches"
 
-if rg -q '^-[[:space:]]*`GO`' "$readiness"; then
-  if rg -q 'delivery-backlog/engineering/active/' "$readiness"; then
+if grep -Eq '^-[[:space:]]*`GO`' "$readiness"; then
+  if grep -Eq 'delivery-backlog/engineering/active/' "$readiness"; then
     echo "FAIL: GO readiness decision should not reference active blocker paths"
     DOC_TEST_FAILURES=$((DOC_TEST_FAILURES + 1))
   else
@@ -77,7 +77,7 @@ if rg -q '^-[[:space:]]*`GO`' "$readiness"; then
   fi
 fi
 
-if rg -q '^-[[:space:]]*`status`:[[:space:]]*draft' "$plan_session"; then
+if grep -Eq '^-[[:space:]]*`status`:[[:space:]]*draft' "$plan_session"; then
   has_downstream_done=0
   while IFS= read -r line; do
     path="$(printf '%s' "$line" | sed -E 's/.*`([^`]+)`.*/\1/')"
@@ -86,7 +86,7 @@ if rg -q '^-[[:space:]]*`status`:[[:space:]]*draft' "$plan_session"; then
       has_downstream_done=1
       break
     fi
-  done < <(rg -n 'delivery-backlog/(engineering|architecture)/(intake|active)/[^`]+\.md' "$plan_session" | sed 's/^[0-9]*://')
+  done < <(grep -nE 'delivery-backlog/(engineering|architecture)/(intake|active)/[^`]+\.md' "$plan_session" | sed 's/^[0-9]*://')
 
   if [[ "$has_downstream_done" -eq 1 ]]; then
     echo "FAIL: planning session is draft while linked artifacts are already done"
@@ -99,7 +99,7 @@ else
 fi
 
 if [[ "$actual_eng_active" -eq 0 ]]; then
-  if rg -qi '^## Now' "$program_board" && rg -qi 'PM refinement' "$program_board"; then
+  if grep -Eqi '^## Now' "$program_board" && grep -Eqi 'PM refinement' "$program_board"; then
     echo "PASS: roadmap now section reflects empty active queue behavior"
   else
     echo "FAIL: roadmap now section missing PM refinement guidance for empty active queue"
@@ -107,7 +107,7 @@ if [[ "$actual_eng_active" -eq 0 ]]; then
   fi
 fi
 
-if rg -q '^## Next$' "$research_backlog" && rg -q 'KPI snapshot' "$research_backlog"; then
+if grep -Eq '^## Next$' "$research_backlog" && grep -Eq 'KPI snapshot' "$research_backlog"; then
   echo "PASS: research backlog next section aligned to operating-system control work"
 else
   echo "FAIL: research backlog next section missing control-plane follow-on"

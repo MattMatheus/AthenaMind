@@ -959,6 +959,65 @@ func TestBootstrapSeededReturnsProceduralMatchesAndTelemetry(t *testing.T) {
 	}
 }
 
+func TestBootstrapReturnsLatestEpisodeFromEpisodeWrite(t *testing.T) {
+	root := t.TempDir()
+	if err := runEpisodeWrite([]string{
+		"--root", root,
+		"--repo", "AthenaMind",
+		"--session-id", "sess-ep-bootstrap",
+		"--cycle-id", "CYCLE-BOOTSTRAP-1",
+		"--story-id", "STORY-BOOTSTRAP-1",
+		"--outcome", "success",
+		"--summary", "episode context for bootstrap",
+		"--files-changed", "internal/retrieval/bootstrap.go",
+		"--decisions", "capture latest episode state",
+		"--stage", "pm",
+		"--reviewer", "maya",
+		"--decision", "approved",
+		"--reason", "seed episode state",
+		"--risk", "low",
+		"--notes", "approved",
+	}); err != nil {
+		t.Fatalf("runEpisodeWrite failed: %v", err)
+	}
+
+	outPath := filepath.Join(root, "bootstrap-episode.json")
+	oldStdout := os.Stdout
+	f, err := os.Create(outPath)
+	if err != nil {
+		t.Fatalf("create capture file: %v", err)
+	}
+	os.Stdout = f
+	defer func() { os.Stdout = oldStdout }()
+
+	if err := runBootstrap([]string{
+		"--root", root,
+		"--repo", "athenamind",
+		"--session-id", "sess-bootstrap-episode",
+		"--scenario", "engineering",
+	}); err != nil {
+		t.Fatalf("runBootstrap failed: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatalf("close capture file: %v", err)
+	}
+
+	data, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read capture file: %v", err)
+	}
+	var payload bootstrapPayload
+	if err := json.Unmarshal(data, &payload); err != nil {
+		t.Fatalf("parse bootstrap payload: %v", err)
+	}
+	if payload.Episode == nil {
+		t.Fatalf("expected episode context in bootstrap payload, got %+v", payload)
+	}
+	if payload.Episode.CycleID != "CYCLE-BOOTSTRAP-1" || payload.Episode.StoryID != "STORY-BOOTSTRAP-1" {
+		t.Fatalf("unexpected episode context: %+v", payload.Episode)
+	}
+}
+
 func TestEpisodeWriteListAndRetrieveRoundTrip(t *testing.T) {
 	root := t.TempDir()
 	telemetryPath := filepath.Join(root, "events.jsonl")

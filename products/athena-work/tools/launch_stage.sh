@@ -9,69 +9,10 @@ active_readme="$active_dir/README.md"
 arch_active_dir="$root_dir/delivery-backlog/architecture/active"
 arch_active_readme="$arch_active_dir/README.md"
 required_branch="${ATHENA_REQUIRED_BRANCH:-dev}"
+memory_root="${ATHENA_MEMORY_ROOT:-$root_dir/memory}"
 repo_id="${ATHENA_REPO_ID:-$(basename "$root_dir")}"
 memory_cli_bin="${MEMORY_CLI_BIN:-memory-cli}"
-preflight_mode="${ATHENA_PREFLIGHT_MODE:-enforce}"
-resume_context_file="$root_dir/operating-system/observer/RESUME_CONTEXT.md"
-
-default_memory_root() {
-  if [ -n "${ATHENA_MEMORY_ROOT:-}" ]; then
-    printf '%s\n' "$ATHENA_MEMORY_ROOT"
-    return 0
-  fi
-  if [ "${ATHENA_MEMORY_IN_REPO:-0}" = "1" ]; then
-    printf '%s\n' "$root_dir/memory"
-    return 0
-  fi
-  printf '%s\n' "${HOME}/.athena/memory/$repo_id"
-}
-
-memory_root="$(default_memory_root)"
-
-abort_or_warn() {
-  local message="$1"
-  if [ "$preflight_mode" = "warn" ]; then
-    echo "warning: $message" >&2
-    return 0
-  fi
-  echo "abort: $message" >&2
-  exit 1
-}
-
-ensure_resume_context_if_needed() {
-  if [ "$stage" = "planning" ]; then
-    return 0
-  fi
-
-  if ! compgen -G "$root_dir/operating-system/observer/OBSERVER-REPORT-*.md" >/dev/null; then
-    return 0
-  fi
-
-  if [ ! -f "$resume_context_file" ]; then
-    abort_or_warn "resume context missing at operating-system/observer/RESUME_CONTEXT.md; run tools/run_observer_cycle.sh once to seed operator context"
-  fi
-}
-
-validate_story_readiness() {
-  local story_path="$1"
-  local lane_name="$2"
-
-  if ! grep -Eq '^## Metadata' "$story_path"; then
-    abort_or_warn "$lane_name story '$story_path' is missing '## Metadata' section"
-  fi
-  if ! grep -Eq '`idea_id`:' "$story_path"; then
-    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'idea_id'"
-  fi
-  if ! grep -Eq '`phase`:' "$story_path"; then
-    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'phase'"
-  fi
-  if ! grep -Eq '`adr_refs`:' "$story_path"; then
-    abort_or_warn "$lane_name story '$story_path' is missing metadata field 'adr_refs'"
-  fi
-  if ! grep -Eq '^## Acceptance Criteria' "$story_path"; then
-    abort_or_warn "$lane_name story '$story_path' is missing '## Acceptance Criteria' section"
-  fi
-}
+source "$root_dir/tools/lib/workspace_api_adapter.sh"
 
 if ! git -C "$root_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "abort: not a git repository at $root_dir" >&2
@@ -83,8 +24,6 @@ if [ "$current_branch" != "$required_branch" ]; then
   echo "abort: active branch is '$current_branch'; expected '$required_branch'" >&2
   exit 1
 fi
-
-ensure_resume_context_if_needed
 
 select_top_story_from_lane() {
   local lane_dir="$1"
@@ -136,6 +75,8 @@ emit_memory_bootstrap_context() {
 
 case "$stage" in
   engineering)
+    workspace_api_handle_direction_confirmation "launch-engineering" "${ATHENA_CYCLE_ID:-launch-engineering}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-engineering}"
+    workspace_api_handle_research_comm_exception "launch-engineering" "${ATHENA_CYCLE_ID:-launch-engineering}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-engineering}"
     top_story="$(select_top_story_from_lane "$active_dir" "$active_readme" || true)"
     if [ -z "${top_story:-}" ]; then
       echo "no stories"
@@ -154,7 +95,6 @@ case "$stage" in
       echo "abort: top active story not found at '$top_story'" >&2
       exit 1
     fi
-    validate_story_readiness "$top_story" "engineering"
 
     rel_story="${top_story#"$root_dir"/}"
     cat <<EOF
@@ -165,14 +105,17 @@ checklist:
   1) read story and clarify open questions
   2) implement required changes
   3) update tests
-  4) run tools/run_stage_tests.sh (must pass); add story-specific tests as needed
+  4) run tests (must pass)
   5) prepare handoff package
   6) move story to delivery-backlog/engineering/qa
   7) do not commit yet (cycle-level commit after observer step)
 EOF
+    workspace_api_emit_status "launch-engineering"
     emit_memory_bootstrap_context
     ;;
   qa)
+    workspace_api_handle_direction_confirmation "launch-qa" "${ATHENA_CYCLE_ID:-launch-qa}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-qa}"
+    workspace_api_handle_research_comm_exception "launch-qa" "${ATHENA_CYCLE_ID:-launch-qa}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-qa}"
     cat <<EOF
 launch: stage-prompts/active/qa-agent-seed-prompt.md
 cycle: qa
@@ -184,9 +127,12 @@ checklist:
   5) run observer: tools/run_observer_cycle.sh --cycle-id <story-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    workspace_api_emit_status "launch-qa"
     emit_memory_bootstrap_context
     ;;
   pm)
+    workspace_api_handle_direction_confirmation "launch-pm" "${ATHENA_CYCLE_ID:-launch-pm}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-pm}"
+    workspace_api_handle_research_comm_exception "launch-pm" "${ATHENA_CYCLE_ID:-launch-pm}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-pm}"
     cat <<EOF
 launch: stage-prompts/active/pm-refinement-seed-prompt.md
 cycle: pm
@@ -198,30 +144,36 @@ checklist:
   5) run observer: tools/run_observer_cycle.sh --cycle-id PM-<date>-<slug>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    workspace_api_emit_status "launch-pm"
     emit_memory_bootstrap_context
     ;;
   planning)
+    workspace_api_handle_direction_confirmation "launch-planning" "${ATHENA_CYCLE_ID:-launch-planning}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-planning}"
+    workspace_api_handle_research_comm_exception "launch-planning" "${ATHENA_CYCLE_ID:-launch-planning}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-planning}"
     cat <<EOF
 launch: stage-prompts/active/planning-seed-prompt.md
 cycle: planning
 checklist:
   1) run an interactive idea-generation session with the human operator
-  2) capture structured notes in operating-system/experiments or delivery-backlog intake artifacts
+  2) capture structured notes in product-research/planning/sessions using the planning template
   3) convert session output into intake stories (engineering and/or architecture) using canonical templates
   4) recommend next stage: architect (for decisions) and/or pm (for prioritization)
   5) run observer: tools/run_observer_cycle.sh --cycle-id <plan-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    workspace_api_emit_planning_direction_summary
+    workspace_api_emit_status "launch-planning"
     emit_memory_bootstrap_context
     ;;
   architect)
+    workspace_api_handle_direction_confirmation "launch-architect" "${ATHENA_CYCLE_ID:-launch-architect}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-architect}"
+    workspace_api_handle_research_comm_exception "launch-architect" "${ATHENA_CYCLE_ID:-launch-architect}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-architect}"
     top_arch_story="$(select_top_story_from_lane "$arch_active_dir" "$arch_active_readme" || true)"
     if [ -z "${top_arch_story:-}" ]; then
       echo "no stories"
       exit 0
     fi
 
-    validate_story_readiness "$top_arch_story" "architecture"
     rel_arch_story="${top_arch_story#"$root_dir"/}"
     cat <<EOF
 launch: stage-prompts/active/architect-agent-seed-prompt.md
@@ -235,9 +187,12 @@ checklist:
   5) move story to delivery-backlog/architecture/qa
   6) do not commit yet (cycle-level commit after observer step)
 EOF
+    workspace_api_emit_status "launch-architect"
     emit_memory_bootstrap_context
     ;;
   cycle)
+    workspace_api_handle_direction_confirmation "launch-cycle" "${ATHENA_CYCLE_ID:-launch-cycle}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-cycle}"
+    workspace_api_handle_research_comm_exception "launch-cycle" "${ATHENA_CYCLE_ID:-launch-cycle}" "${ATHENA_STORY_ID:-unscoped}" "${ATHENA_SESSION_ID:-launch-cycle}"
     cat <<EOF
 launch: stage-prompts/active/cycle-seed-prompt.md
 cycle: engineering+qa loop
@@ -251,6 +206,7 @@ loop:
   - commit once: cycle-<cycle-id>
   - repeat until active backlog is drained
 EOF
+    workspace_api_emit_status "launch-cycle"
     emit_memory_bootstrap_context
     ;;
   *)

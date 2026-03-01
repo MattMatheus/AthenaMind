@@ -1,67 +1,132 @@
 # Development Cycle System
 
-## Purpose
-
-Define the enforced AthenaWork loop used to execute governed delivery with AthenaMind.
+## Human Operator Entry Point
+- `HUMANS.md` is the canonical founder/operator navigation page.
+- It links to roadmap status, release checkpoints, and KPI tracking docs.
 
 ## Stage Launchers
-
 - Planning: `stage-prompts/active/planning-seed-prompt.md`
 - Engineering: `stage-prompts/active/next-agent-seed-prompt.md`
 - Architect: `stage-prompts/active/architect-agent-seed-prompt.md`
 - QA: `stage-prompts/active/qa-agent-seed-prompt.md`
-- PM: `stage-prompts/active/pm-refinement-seed-prompt.md`
-- Cycle: `stage-prompts/active/cycle-seed-prompt.md`
+- PM Refinement: `stage-prompts/active/pm-refinement-seed-prompt.md`
+- Cycle Loop: `stage-prompts/active/cycle-seed-prompt.md`
 
-Helper commands:
-- `tools/launch_stage.sh <planning|engineering|architect|qa|pm|cycle>`
+Quick launch helper:
+- `tools/launch_stage.sh planning`
+- `tools/launch_stage.sh engineering`
+- `tools/launch_stage.sh architect`
+- `tools/launch_stage.sh qa`
+- `tools/launch_stage.sh pm`
+- `tools/launch_stage.sh cycle`
 - `tools/run_observer_cycle.sh --cycle-id <cycle-id>`
-- `tools/run_stage_tests.sh`
+- `tools/build_docs_site.sh` (local docs-site build)
+- CI gate (Azure DevOps): `go test ./...` runs on push and PR via `azure-pipelines.yml`.
+- Docs publish gate (GitHub Actions): `.github/workflows/docs-publish.yml` publishes docs artifacts.
+
+Documentation source-of-truth rule:
+- Edit docs only in repository markdown; published site content is generated output.
+
+Memory integration (soft dependency):
+- `launch_stage.sh` invokes `memory-cli bootstrap` and appends bootstrap context to stage output when available.
+- `run_observer_cycle.sh` invokes `memory-cli episode write` after observer report generation when available.
+- Missing/failed `memory-cli` calls must not block stage flow; scripts emit warnings and proceed.
+
+## Doc Validation Standard
+- Canonical docs validation command: `tools/run_doc_tests.sh`
+- Story-specific doc tests live under `tools/test_*.sh`.
+- Shared assertion helpers live under `tools/lib/doc_test_harness.sh`.
+- Standard and template: `product-research/roadmap/DOC_TEST_HARNESS_STANDARD.md`.
+
+## Branch Safety Rule
+- All stage launches require the current git branch to match `ATHENA_REQUIRED_BRANCH` (default `dev`).
+- If branch does not match, launcher aborts with:
+  - `abort: active branch is '<branch>'; expected '<required-branch>'`
+- This is intentional to prevent accidental execution from the wrong branch.
+
+## Security Launch Gate (Mandatory)
+- `dev -> prod` transitions require explicit operator validation.
+- For security-backing contract changes, CI enforces nonce + dual OTP gate:
+  - `tools/check_security_nonce_gate.sh`
+- Security-backing contract list:
+  - `operating-system/contracts/SECURITY_BACKING_CONTRACT_PATHS.txt`
+- Required gate controls for protected changes:
+  - one-time nonce (`ATHENA_SECURITY_CHANGE_NONCE`)
+  - nonce timestamp (`ATHENA_SECURITY_NONCE_ISSUED_AT_UTC`)
+  - primary OTP (`ATHENA_SECURITY_CHANGE_OTP_PRIMARY`)
+  - security OTP (`ATHENA_SECURITY_CHANGE_OTP_SECURITY`)
+  - authorization phrase (`ATHENA_SECURITY_CHANGE_ACK=LAUNCH AUTHORIZED`)
+- Nonce window is tunable via:
+  - `ATHENA_SECURITY_GATE_WINDOW_MINUTES` (default `15`)
+- Helper to issue nonce for launch operations:
+  - `tools/generate_security_nonce.sh`
 
 ## Canonical Flow
+0. Planning session (optional, recommended for new/ambiguous ideas) captures interactive notes and creates intake artifacts.
+1. PM ensures ranked stories exist in `delivery-backlog/engineering/active/`.
+2. Architect executes top architecture story in `delivery-backlog/architecture/active/`.
+3. Engineering executes top story, runs tests, prepares handoff package, and moves story to `delivery-backlog/engineering/qa/`.
+4. QA validates and either:
+   - moves story to `delivery-backlog/engineering/done/`, or
+   - files prioritized bugs to `delivery-backlog/engineering/intake/` and returns story to `delivery-backlog/engineering/active/`.
+5. Observer runs at cycle boundary, captures deterministic diff/memory deltas, and writes `operating-system/observer/OBSERVER-REPORT-<cycle-id>.md`.
+6. Commit once for the full cycle using `cycle-<cycle-id>`.
+7. PM refines intake bugs/stories, re-ranks active queue, and updates control-plane artifacts.
+8. Repeat until QA + Engineering are satisfied.
+9. Shipping checkpoint (separate from `done`):
+   - PM/operator prepares release bundle and explicit ship/hold decision.
 
-1. Planning (optional): shape ambiguous requests into intake artifacts.
-2. Architect (optional): resolve architecture items from architecture lane.
-3. Engineering: execute top-ranked story from engineering active lane.
-4. QA: validate story outcome, regressions, and acceptance criteria.
-5. Observer: generate cycle evidence and resume context.
-6. PM: refine intake and reprioritize active queue.
-7. Commit once for completed cycle (`cycle-<cycle-id>`).
+PM intake validation requirement:
+- Run `tools/validate_intake_items.sh` before promoting intake items to active queues.
+- Validation failures must be fixed (metadata/status) and lane crossover must be corrected before ranking.
+- Ranking must apply product-first weighting per `knowledge-base/process/BACKLOG_WEIGHTING_POLICY.md`.
 
-## Backlog Model
+Traceability requirement:
+- New stories and bugs must include `phase`, ADR references, and metric traceability metadata.
+- Planning-originated work must include `idea_id`.
 
-- Engineering lane:
-  - `delivery-backlog/engineering/intake/`
-  - `delivery-backlog/engineering/active/`
-  - `delivery-backlog/engineering/qa/`
-  - `delivery-backlog/engineering/done/`
-  - `delivery-backlog/engineering/blocked/`
-- Architecture lane:
-  - `delivery-backlog/architecture/intake/`
-  - `delivery-backlog/architecture/ready/`
-  - `delivery-backlog/architecture/active/`
-  - `delivery-backlog/architecture/qa/`
-  - `delivery-backlog/architecture/done/`
+Program board requirement:
+- PM refinement must update `product-research/roadmap/PROGRAM_STATE_BOARD.md` with queue counts and Now/Next priorities.
 
-## Guardrails
+Stage exit gates:
+- Use `knowledge-base/process/STAGE_EXIT_GATES.md` as mandatory acceptance gate for stage transitions and cycle closure.
 
-- Branch safety enforced by launcher (`ATHENA_REQUIRED_BRANCH`, default `dev`).
-- Preflight readiness enforced before engineering/architecture execution.
-- `no stories` from engineering is a valid stop signal.
-- No intermediate commits during stage transitions.
-- `done` means QA-complete; shipping is controlled by release handoff artifacts.
+Backlog weighting policy:
+- PM ranks product stories above process stories by default.
+- Process stories may outrank product work only when a broken process is blocking delivery or stage-gate enforcement.
+- Record the override reason in queue notes when process work is elevated.
 
-## Quality Gates
+No-time-estimate rule:
+- Pipeline sequencing is value/risk/dependency based; do not require duration estimates in stage artifacts.
 
-- Run `tools/run_stage_tests.sh` before handoff.
-- Push/non-PR scope: docs + targeted Go tests.
-- PR scope: docs + `go test ./...`.
-- Apply stage exit criteria in `knowledge-base/process/stage-exit-gates.md`.
+## Architecture Item Type
+- Architecture work uses a separate lane: `delivery-backlog/architecture/`.
+- Architecture lifecycle: `delivery-backlog/architecture/intake -> ready -> active -> qa -> done`.
+- This keeps architecture standards independent from engineering story standards.
 
-## Documentation Sync Rule
+## Cycle Mode
+- `tools/launch_stage.sh cycle` emits the seed for an engineering+QA loop.
+- Loop behavior:
+  - Run engineering stage.
+  - If result is `no stories`, stop.
+  - Run QA stage for completed story.
+  - Run observer and generate cycle report.
+  - Commit once for that cycle.
+  - Repeat until active backlog is drained.
 
-If stage behavior changes (commands, state transitions, commit policy, handoff requirements), update:
-1. `HUMANS.md`
-2. `AGENTS.md`
-3. relevant `stage-prompts/active/*`
-4. `knowledge-base/process/README.md`
+## Commit Convention
+- Commit exactly once per completed cycle.
+- Commit format: `cycle-<cycle-id>`.
+- Include observer report and all cycle artifacts in the same commit.
+- Do not commit intermediate stage transitions.
+
+## Work-System Doc Sync Rule
+- If any change modifies workflow behavior (stage flow, launch commands, commit conventions, state transitions, handoff requirements), update:
+  - `HUMANS.md`
+  - `AGENTS.md`
+  - relevant prompt files under `stage-prompts/active/`
+
+## Empty Backlog Rule
+- If engineering launch is attempted with empty `delivery-backlog/engineering/active/`, agent must report:
+  - `no stories`
+- PM cycle is then responsible for creating/refining work.

@@ -84,30 +84,34 @@ func Bootstrap(root, repo, sessionID, scenario string) (types.BootstrapPayload, 
 func loadLatestEpisode(root, repo, scenario string) *types.EpisodeContext {
 	repoKey := normalizeKey(repo)
 	scenarioKey := normalizeKey(scenario)
-	candidatePaths := []string{
+	paths := []string{
 		filepath.Join(root, "episodes", repoKey, scenarioKey, "latest.json"),
 		filepath.Join(root, "episodes", repoKey, "latest.json"),
 	}
-	var data []byte
-	var err error
-	for _, path := range candidatePaths {
-		data, err = os.ReadFile(path)
-		if err == nil {
-			break
+	for _, path := range paths {
+		ep := loadEpisodeAtPath(path)
+		if ep == nil {
+			continue
 		}
+		if strings.TrimSpace(ep.Repo) == "" {
+			ep.Repo = strings.TrimSpace(repo)
+		}
+		if strings.TrimSpace(ep.Scenario) == "" {
+			ep.Scenario = strings.TrimSpace(scenario)
+		}
+		return ep
 	}
+	return nil
+}
+
+func loadEpisodeAtPath(path string) *types.EpisodeContext {
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil
 	}
 	var ep types.EpisodeContext
 	if err := json.Unmarshal(data, &ep); err != nil {
 		return nil
-	}
-	if strings.TrimSpace(ep.Repo) == "" {
-		ep.Repo = strings.TrimSpace(repo)
-	}
-	if strings.TrimSpace(ep.Scenario) == "" {
-		ep.Scenario = strings.TrimSpace(scenario)
 	}
 	return &ep
 }

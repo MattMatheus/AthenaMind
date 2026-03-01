@@ -27,7 +27,7 @@ Before coding starts, we need one explicit go/no-go checkpoint to confirm proces
 - No known regressions in touched scope
 
 ## Dependencies
-- `knowledge-base/process/pre-coding-path.md`
+- `knowledge-base/process/PRE_CODING_PATH.md`
 - Completion of pre-coding active stories
 
 ## Notes

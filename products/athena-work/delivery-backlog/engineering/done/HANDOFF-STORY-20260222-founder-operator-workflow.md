@@ -2,7 +2,7 @@
 
 ## What Changed
 - Added concise founder-operator runbook:
-  - `knowledge-base/process/operator-daily-workflow.md`
+  - `knowledge-base/process/OPERATOR_DAILY_WORKFLOW.md`
 - Runbook includes:
   - startup routine
   - engineering stage loop

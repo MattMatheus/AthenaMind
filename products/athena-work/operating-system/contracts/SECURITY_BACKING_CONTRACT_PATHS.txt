@@ -1,0 +1,5 @@
+products/athena-work/operating-system/contracts/LOCAL_FIRST_SHARED_WORKSPACE_CONTROL_PLANE_CONTRACT_V1.md
+products/athena-work/operating-system/contracts/MARKDOWN_SYNC_AUTHORITY_AND_CONFLICT_POLICY_V1.md
+products/athena-work/operating-system/contracts/WORKSPACE_API_STATE_MACHINE_V1.md
+products/athena-work/operating-system/contracts/SECURITY_CHANGE_CONTROL_POLICY_V1.md
+AGENTS.md

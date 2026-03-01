@@ -1,0 +1,1367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AthenaWork Workspace Board v1</title>
+  <style>
+    :root {
+      --bg: #080b16;
+      --bg-2: #10162d;
+      --surface: #121a33;
+      --surface-2: #1a2445;
+      --surface-3: #0f1731;
+      --text: #f3f6ff;
+      --muted: #b8c2e7;
+      --border: #27345f;
+      --control-border: #3b4d84;
+      --panel-grad-start: #131c3c;
+      --panel-grad-end: #0d1430;
+      --hero-glow: #1d2d64;
+      --topbar-start: #121a39;
+      --topbar-end: #0f1733;
+      --pill-border: #35508f;
+      --pill-bg: #162042;
+      --button-bg: #1d2c59;
+      --lane-start: #111a38;
+      --lane-end: #0d1531;
+      --card-border: #2c3d73;
+      --focus: #86d8ff;
+      --ok: #49d79f;
+      --warn: #ffc857;
+      --danger: #ff6b7a;
+      --kanban-a: #4f7cff;
+      --kanban-b: #ec8f3b;
+      --kanban-c: #8a61ff;
+      --kanban-d: #35c98e;
+      --radius: 12px;
+      --font: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+
+    body.theme-default {}
+
+    body.theme-graphite {
+      --bg: #0e1118;
+      --bg-2: #181e2a;
+      --surface: #171f2f;
+      --surface-2: #212c41;
+      --surface-3: #121a2a;
+      --text: #f2f5ff;
+      --muted: #c2cae0;
+      --border: #2d3c61;
+      --control-border: #4a5f8a;
+      --panel-grad-start: #1b2336;
+      --panel-grad-end: #141b2c;
+      --hero-glow: #2a3959;
+      --topbar-start: #1a2438;
+      --topbar-end: #111a2b;
+      --pill-border: #486597;
+      --pill-bg: #19243b;
+      --button-bg: #24365f;
+      --lane-start: #18233d;
+      --lane-end: #121b30;
+      --card-border: #3a4f7c;
+      --focus: #8ad9ff;
+      --kanban-a: #6f90ff;
+      --kanban-b: #f0a35a;
+      --kanban-c: #9a77ff;
+      --kanban-d: #57d9a3;
+    }
+
+    body.theme-ember {
+      --bg: #120d0a;
+      --bg-2: #231813;
+      --surface: #2a1d18;
+      --surface-2: #39261d;
+      --surface-3: #20140f;
+      --text: #fff6ef;
+      --muted: #f4ccb6;
+      --border: #6a3f2f;
+      --control-border: #8a533d;
+      --panel-grad-start: #321f18;
+      --panel-grad-end: #261610;
+      --hero-glow: #5f2f21;
+      --topbar-start: #362116;
+      --topbar-end: #28180f;
+      --pill-border: #8e5d42;
+      --pill-bg: #3a2419;
+      --button-bg: #5d3322;
+      --lane-start: #3b2318;
+      --lane-end: #29170f;
+      --card-border: #91593f;
+      --focus: #ffbe7a;
+      --ok: #7ff0b8;
+      --warn: #ffd570;
+      --danger: #ff867c;
+      --kanban-a: #59a6ff;
+      --kanban-b: #f2b659;
+      --kanban-c: #b589ff;
+      --kanban-d: #58d98f;
+    }
+
+    body.theme-high-contrast {
+      --bg: #000000;
+      --bg-2: #0d0d0d;
+      --surface: #000000;
+      --surface-2: #111111;
+      --surface-3: #000000;
+      --text: #ffffff;
+      --muted: #e6e6e6;
+      --border: #ffffff;
+      --control-border: #ffffff;
+      --panel-grad-start: #000000;
+      --panel-grad-end: #000000;
+      --hero-glow: #202020;
+      --topbar-start: #000000;
+      --topbar-end: #000000;
+      --pill-border: #ffffff;
+      --pill-bg: #000000;
+      --button-bg: #000000;
+      --lane-start: #000000;
+      --lane-end: #000000;
+      --card-border: #ffffff;
+      --focus: #00ffff;
+      --ok: #00ff7f;
+      --warn: #ffea00;
+      --danger: #ff4d4d;
+      --kanban-a: #4ca0ff;
+      --kanban-b: #ffb84d;
+      --kanban-c: #b38bff;
+      --kanban-d: #58e39b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 18px;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      background: radial-gradient(circle at 15% -10%, var(--hero-glow) 0%, var(--bg) 42%);
+    }
+
+    body.mode-low-vision {
+      font-size: 19px;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+    }
+
+    .app {
+      width: 100%;
+      margin: 0;
+      min-height: 100vh;
+      padding: 1rem 1rem 1rem 0.8rem;
+      display: grid;
+      grid-template-columns: 17rem minmax(58rem, 1fr);
+      gap: 1rem;
+    }
+
+    .side {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: grid;
+      align-content: start;
+      gap: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .brand h1 {
+      font-size: 1.35rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .nav-link {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      background: var(--surface-3);
+      border: 1px solid var(--control-border);
+      border-radius: 8px;
+      padding: 0.5rem 0.55rem;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-link.active {
+      border-color: var(--focus);
+      background: color-mix(in srgb, var(--button-bg) 65%, #0d1430);
+    }
+
+    .stack {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .label {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    select, input, textarea, button {
+      width: 100%;
+      background: var(--surface-3);
+      color: var(--text);
+      border: 1px solid var(--control-border);
+      border-radius: 8px;
+      padding: 0.45rem 0.55rem;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      background: var(--button-bg);
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 4px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .content {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+    }
+
+    .topbar {
+      background: linear-gradient(180deg, var(--topbar-start) 0%, var(--topbar-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .pill {
+      border: 1px solid var(--pill-border);
+      border-radius: 999px;
+      background: var(--pill-bg);
+      padding: 0.18rem 0.65rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .kanban-scroll {
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(14rem, 1fr));
+      gap: 0.75rem;
+      min-width: 58rem;
+    }
+
+    .lane {
+      background: linear-gradient(180deg, var(--lane-start) 0%, var(--lane-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: grid;
+      align-content: start;
+      min-height: 16rem;
+    }
+
+    .lane-header {
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.45rem 0.7rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lane-a .lane-header { background: color-mix(in srgb, var(--kanban-a) 35%, #111a38); }
+    .lane-b .lane-header { background: color-mix(in srgb, var(--kanban-b) 32%, #111a38); }
+    .lane-c .lane-header { background: color-mix(in srgb, var(--kanban-c) 32%, #111a38); }
+    .lane-d .lane-header { background: color-mix(in srgb, var(--kanban-d) 30%, #111a38); }
+
+    .lane-body {
+      padding: 0.65rem;
+      display: grid;
+      gap: 0.55rem;
+      align-content: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.55rem;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .card:focus-visible {
+      outline: 4px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.08rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+
+    .badge-ok { color: #031e12; background: var(--ok); }
+    .badge-warn { color: #2f2200; background: var(--warn); }
+    .badge-danger { color: #30080d; background: var(--danger); }
+
+    .planning {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .planning h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .model {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .model h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .model-output {
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      overflow: auto;
+      max-height: 18rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .docs {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .docs h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .launch {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .launch h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .ingest {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .ingest h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .migration {
+      background: linear-gradient(180deg, var(--panel-grad-start) 0%, var(--panel-grad-end) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .migration h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .migration-log {
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      overflow: auto;
+      max-height: 20rem;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: 16rem 1fr;
+      gap: 0.65rem;
+      min-height: 14rem;
+    }
+
+    .docs-list {
+      display: grid;
+      gap: 0.45rem;
+      align-content: start;
+    }
+
+    .doc-link {
+      text-align: left;
+      font-size: 0.95rem;
+      padding: 0.5rem;
+    }
+
+    .doc-summary {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+      line-height: 1.4;
+    }
+
+    .doc-preview {
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      overflow: auto;
+      max-height: 22rem;
+    }
+
+    .doc-preview pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--font);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .inline-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+        padding: 0.8rem;
+      }
+
+      .side {
+        position: static;
+      }
+
+      .nav {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.2rem;
+      }
+
+      .nav-link {
+        white-space: nowrap;
+      }
+
+      .kanban {
+        min-width: 48rem;
+      }
+
+      .inline-row,
+      .actions,
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Workspace controls">
+    <div class="brand">
+      <h1>AthenaWork 2.0</h1>
+      <p>powered by Health Catalyst Athena</p>
+    </div>
+
+    <nav class="nav" aria-label="Primary workspace navigation">
+      <a class="nav-link active" href="#overview-section" data-section-link="overview-section">Overview</a>
+      <a class="nav-link" href="#board-section" data-section-link="board-section">Board</a>
+      <a class="nav-link" href="#planning-section" data-section-link="planning-section">Planning</a>
+      <a class="nav-link" href="#model-section" data-section-link="model-section">Model</a>
+      <a class="nav-link" href="#ingest-section" data-section-link="ingest-section">Ingest</a>
+      <a class="nav-link" href="#migration-section" data-section-link="migration-section">Migration</a>
+      <a class="nav-link" href="#launch-section" data-section-link="launch-section">Launch</a>
+      <a class="nav-link" href="#docs-section" data-section-link="docs-section">Docs</a>
+    </nav>
+
+    <div class="stack">
+      <label class="label" for="accessibility-mode">Accessibility Mode</label>
+      <select id="accessibility-mode">
+        <option value="normal">normal</option>
+        <option value="low-vision">low-vision</option>
+      </select>
+    </div>
+
+    <div class="stack">
+      <label class="label" for="theme-mode">Theme</label>
+      <select id="theme-mode">
+        <option value="default">default</option>
+        <option value="graphite">graphite</option>
+        <option value="ember">ember</option>
+        <option value="high-contrast">high-contrast</option>
+      </select>
+    </div>
+
+    <div class="stack">
+      <span class="label">Current stage</span>
+      <p id="current-stage">loading...</p>
+      <span class="label">Next story</span>
+      <p id="next-story">loading...</p>
+      <span class="label">Blockers</span>
+      <p id="blockers">loading...</p>
+      <span class="label">Required confirmation</span>
+      <p id="required-confirmation">loading...</p>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="topbar" id="overview-section" aria-label="Policy markers">
+      <h2>Workspace Board</h2>
+      <div class="pill-row">
+        <span class="pill" id="direction-marker">Direction confirmation marker: loading...</span>
+        <span class="pill" id="research-marker">Research-mode communication exception marker: loading...</span>
+        <span class="pill" id="drift-alerts">Drift alerts: loading...</span>
+        <span class="pill" id="launch-readiness-strip">Launch readiness: unknown</span>
+        <span class="pill" id="launch-readiness-blockers">Launch blockers: unknown</span>
+        <span class="pill">Keyboard: Alt+1..4 jump lanes, Arrow keys move cards, N normal, L low-vision, T cycle theme</span>
+      </div>
+    </section>
+
+    <section class="kanban-scroll" id="board-section" aria-label="Lane Board">
+      <div class="kanban">
+        <article class="lane lane-a">
+          <header class="lane-header">
+            <span>Engineering Active</span>
+            <span id="engineering-count">0</span>
+          </header>
+          <div class="lane-body" id="engineering-active-cards"></div>
+          <ul id="engineering-active" hidden></ul>
+        </article>
+
+        <article class="lane lane-b">
+          <header class="lane-header">
+            <span>Architecture Active</span>
+            <span id="architecture-count">0</span>
+          </header>
+          <div class="lane-body" id="architecture-active-cards"></div>
+          <ul id="architecture-active" hidden></ul>
+        </article>
+
+        <article class="lane lane-c">
+          <header class="lane-header">
+            <span>Timeline</span>
+            <span id="timeline-count">0</span>
+          </header>
+          <div class="lane-body" id="timeline-events-cards"></div>
+          <ul id="timeline-events" hidden></ul>
+        </article>
+
+        <article class="lane lane-d">
+          <header class="lane-header">
+            <span>Policy / Alerts</span>
+            <span>live</span>
+          </header>
+          <div class="lane-body" id="policy-cards">
+            <div class="card"><p>Direction confirmation marker: loading...</p></div>
+            <div class="card"><p>Research-mode communication exception marker: loading...</p></div>
+            <div class="card"><p>Drift alerts: loading...</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="planning" id="planning-section" aria-label="Planning Workbench">
+      <h3>Planning Workbench</h3>
+      <p><span class="label">What happens next</span> Review confirmation status, run planning observer cycle, then proceed to chosen next stage.</p>
+
+      <label class="label" for="direction">Direction</label>
+      <textarea id="direction" rows="2"></textarea>
+
+      <div class="inline-row">
+        <div>
+          <label class="label" for="constraints">Constraints</label>
+          <textarea id="constraints" rows="2"></textarea>
+        </div>
+        <div>
+          <label class="label" for="risks">Risks</label>
+          <textarea id="risks" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="inline-row">
+        <div>
+          <label class="label" for="next-stage">Next stage</label>
+          <select id="next-stage">
+            <option value="architect">architect</option>
+            <option value="pm">pm</option>
+            <option value="engineering">engineering</option>
+            <option value="qa">qa</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="confirmed-by">Confirmed by</label>
+          <input id="confirmed-by" type="text" placeholder="Human operator" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="confirm-direction" type="button">Confirm direction</button>
+        <button id="export-artifact" type="button">Export to workflow artifact</button>
+      </div>
+
+      <p id="confirmation-status">Confirmation status: unconfirmed</p>
+      <p id="export-status">Export status: not started</p>
+    </section>
+
+    <section class="model" id="model-section" aria-label="Model Response">
+      <h3>Model Response</h3>
+      <p><span class="label">Live preview</span> Send a prompt through configured Azure OpenAI or OpenAI provider.</p>
+      <label class="label" for="model-prompt">Prompt</label>
+      <textarea id="model-prompt" rows="4" placeholder="Ask AthenaWork something to validate model connectivity..."></textarea>
+      <button id="model-respond" type="button">Get model response</button>
+      <p id="model-status">Model status: idle</p>
+      <pre id="model-output" class="model-output">No response yet.</pre>
+    </section>
+
+    <section class="ingest" id="ingest-section" aria-label="Artifact Ingest">
+      <h3>Artifact Ingest</h3>
+      <p><span class="label">V1 -> V2</span> Upload a zip bundle and ingest from UI.</p>
+      <label class="label" for="artifact-bundle">Artifact bundle (.zip)</label>
+      <input id="artifact-bundle" type="file" accept=".zip,application/zip" />
+      <button id="ingest-artifact" type="button">Ingest artifact bundle</button>
+      <p id="ingest-status">Ingest status: not started</p>
+      <p id="ingest-report">Ingest report: none</p>
+    </section>
+
+    <section class="migration" id="migration-section" aria-label="Artifact Migration History">
+      <h3>Artifact Migration History</h3>
+      <p><span class="label">Read only</span> Review what happened after ingestion, including V1 -> V2 migration outcomes.</p>
+      <p id="migration-summary">Migration events: loading...</p>
+      <pre id="migration-log" class="migration-log">Loading migration history...</pre>
+    </section>
+
+    <section class="launch" id="launch-section" aria-label="Launch Authorization">
+      <h3>Launch Authorization</h3>
+      <p><span class="label">Flight Director</span> Generate a launch package and inspect blockers before `dev -> prod`.</p>
+      <div class="actions">
+        <button id="generate-launch-package" type="button">Generate launch package</button>
+        <button id="validate-launch-package" type="button">Validate latest package</button>
+      </div>
+      <p id="launch-package-status">Launch package status: not started</p>
+      <p id="launch-package-path">Launch package path: none</p>
+      <p id="launch-package-blockers">Launch package blockers: unknown</p>
+    </section>
+
+    <section class="docs" id="docs-section" aria-label="Docs Workspace">
+      <h3>Docs Workspace</h3>
+      <p><span class="label">Quick jump</span> Open core process docs in one interaction from the board.</p>
+      <div class="docs-grid">
+        <div class="docs-list" id="docs-links"></div>
+        <article class="doc-preview" aria-live="polite">
+          <p class="label" id="docs-preview-title">Select a document</p>
+          <p id="docs-preview-path" class="doc-summary"></p>
+          <pre id="docs-preview-body">Choose a docs card to preview content.</pre>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+function resolveApiRoot() {
+  const params = new URLSearchParams(window.location.search);
+  const explicitOrigin = (params.get("api_origin") || "").trim();
+  if (explicitOrigin) {
+    return explicitOrigin.replace(/\/+$/, "");
+  }
+  const explicitPort = (params.get("api_port") || "").trim();
+  if (explicitPort) {
+    return `http://${window.location.hostname}:${explicitPort}`;
+  }
+  const storedPort = (localStorage.getItem("athena_ui_api_port") || "").trim();
+  if (storedPort) {
+    return `http://${window.location.hostname}:${storedPort}`;
+  }
+  return `http://${window.location.hostname}:8787`;
+}
+
+async function fetchJson(path) {
+  const apiRoot = resolveApiRoot();
+  const res = await fetch(`${apiRoot}${path}`);
+  if (!res.ok) throw new Error(`request failed: ${path}`);
+  return res.json();
+}
+
+function setText(id, value) {
+  document.getElementById(id).textContent = value;
+}
+
+function setList(id, items) {
+  const node = document.getElementById(id);
+  node.innerHTML = "";
+  (items || []).forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    node.appendChild(li);
+  });
+}
+
+function statusBadge(status) {
+  const cls = status === "confirmed" ? "badge-ok" : "badge-warn";
+  return `<span class="badge ${cls}">${status}</span>`;
+}
+
+function applyAccessibilityMode(mode) {
+  const safe = mode === "low-vision" ? "low-vision" : "normal";
+  document.body.classList.remove("mode-normal", "mode-low-vision");
+  document.body.classList.add(safe === "low-vision" ? "mode-low-vision" : "mode-normal");
+  const selector = document.getElementById("accessibility-mode");
+  if (selector) selector.value = safe;
+  localStorage.setItem("athena_ui_accessibility_mode", safe);
+}
+
+function normalizeTheme(theme) {
+  const allowed = new Set(["default", "graphite", "ember", "high-contrast"]);
+  return allowed.has(theme) ? theme : "default";
+}
+
+function applyTheme(theme, persist = true) {
+  const safe = normalizeTheme(theme);
+  document.body.classList.remove("theme-default", "theme-graphite", "theme-ember", "theme-high-contrast");
+  document.body.classList.add(`theme-${safe}`);
+  const selector = document.getElementById("theme-mode");
+  if (selector) selector.value = safe;
+  if (persist) {
+    localStorage.setItem("athena_ui_theme", safe);
+  }
+}
+
+function makeCardsFocusable() {
+  document.querySelectorAll(".lane-body .card").forEach((card) => {
+    card.setAttribute("tabindex", "0");
+  });
+}
+
+function focusCardByOffset(offset) {
+  const cards = Array.from(document.querySelectorAll(".lane-body .card"));
+  if (cards.length === 0) return;
+  const current = document.activeElement;
+  const index = Math.max(0, cards.indexOf(current));
+  const next = (index + offset + cards.length) % cards.length;
+  cards[next].focus();
+}
+
+function focusFirstCardInLane(laneBodyId) {
+  const lane = document.getElementById(laneBodyId);
+  if (!lane) return;
+  const firstCard = lane.querySelector(".card");
+  if (firstCard) firstCard.focus();
+}
+
+function renderCardList(containerId, items, emptyLabel) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  const rows = Array.isArray(items) ? items : [];
+  if (rows.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "card";
+    empty.textContent = emptyLabel;
+    container.appendChild(empty);
+    return;
+  }
+  rows.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const p = document.createElement("p");
+    p.textContent = item;
+    card.appendChild(p);
+    container.appendChild(card);
+  });
+}
+
+function renderTimelineCards(events) {
+  const container = document.getElementById("timeline-events-cards");
+  container.innerHTML = "";
+  const rows = Array.isArray(events) ? events : [];
+  if (rows.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "card";
+    empty.textContent = "No timeline events yet.";
+    container.appendChild(empty);
+    return;
+  }
+  rows.slice(0, 8).forEach((ev) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<p><strong>${ev.label || "event"}</strong></p><p>${ev.timestamp || "unknown"}</p><p>${ev.story_id || "no-story"}</p>`;
+    container.appendChild(card);
+  });
+}
+
+function renderPolicyCards(directionStatus, researchState, driftText) {
+  const node = document.getElementById("policy-cards");
+  const directionBadge = statusBadge(directionStatus);
+  const researchClass = researchState === "active" ? "badge-danger" : "badge-ok";
+  node.innerHTML = `
+    <div class="card"><p>Direction confirmation marker: ${directionBadge}</p></div>
+    <div class="card"><p>Research-mode communication exception marker: <span class="badge ${researchClass}">${researchState}</span></p></div>
+    <div class="card"><p>${driftText}</p></div>
+  `;
+}
+
+function renderLaunchReadinessSummary(payload) {
+  const statusNode = document.getElementById("launch-readiness-strip");
+  const blockersNode = document.getElementById("launch-readiness-blockers");
+  if (!payload || payload.code !== "OK") {
+    statusNode.textContent = "Launch readiness: no package generated";
+    blockersNode.textContent = "Launch blockers: generate launch package first";
+    return;
+  }
+  const status = payload.status || "unknown";
+  const blockerCount = Number(payload.blocker_count || (payload.blockers || []).length || 0);
+  statusNode.textContent = `Launch readiness: ${status}`;
+  if (blockerCount > 0) {
+    const firstBlocker = (payload.blockers || [])[0] || "unknown blocker";
+    blockersNode.textContent = `Launch blockers: ${blockerCount} (${firstBlocker})`;
+  } else {
+    blockersNode.textContent = "Launch blockers: 0 (clear)";
+  }
+}
+
+async function loadLaunchReadinessSummary() {
+  try {
+    const payload = await fetchJson("/api/v1/launch/latest");
+    renderLaunchReadinessSummary(payload);
+  } catch (err) {
+    renderLaunchReadinessSummary(null);
+  }
+}
+
+async function loadDocsWorkspace() {
+  const payload = await fetchJson("/api/v1/docs/index");
+  const docs = payload.docs || [];
+  const node = document.getElementById("docs-links");
+  node.innerHTML = "";
+  docs.forEach((doc, index) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "doc-link";
+    btn.innerHTML = `<strong>${doc.title}</strong><div class="doc-summary">${doc.summary}</div>`;
+    btn.addEventListener("click", () => openDoc(doc.id));
+    node.appendChild(btn);
+    if (index === 0) {
+      openDoc(doc.id);
+    }
+  });
+}
+
+async function openDoc(docId) {
+  try {
+    const payload = await fetchJson(`/api/v1/docs/view?id=${encodeURIComponent(docId)}`);
+    setText("docs-preview-title", payload.title || "Document");
+    setText("docs-preview-path", payload.path || "");
+    setText("docs-preview-body", payload.content || "No content.");
+  } catch (err) {
+    setText("docs-preview-title", "Document load failed");
+    setText("docs-preview-path", "");
+    setText("docs-preview-body", `Unable to load document: ${err.message}`);
+  }
+}
+
+function renderMigrationHistory(payload) {
+  const summaryNode = document.getElementById("migration-summary");
+  const logNode = document.getElementById("migration-log");
+  if (!payload || payload.code !== "OK") {
+    summaryNode.textContent = "Migration events: unavailable";
+    logNode.textContent = "Unable to load migration history.";
+    return;
+  }
+
+  const events = Array.isArray(payload.events) ? payload.events : [];
+  const readOnly = payload.read_only ? "read-only" : "mutable";
+  summaryNode.textContent = `Migration events: ${events.length} (${readOnly})`;
+  if (events.length === 0) {
+    logNode.textContent = "No migration events recorded yet.";
+    return;
+  }
+
+  const lines = events.slice(0, 20).map((event, index) => {
+    const code = event.code || "unknown";
+    const reason = event.reason || "no reason";
+    const path = event.migration_path || "unknown";
+    const source = event.source_object || "unknown";
+    const output = event.output_state_file || "unknown";
+    const accepted = Number(event.accepted_objects || 0);
+    const rejected = Number(event.rejected_objects || 0);
+    const migrated = Number(event.migrated_objects || 0);
+    const ts = event.ingested_at || "unknown-time";
+    const file = event.filename || "unknown-file";
+    return `${index + 1}. ${ts} | file=${file} | ${path} | code=${code} | accepted=${accepted} rejected=${rejected} migrated=${migrated}\n   source=${source}\n   output=${output}\n   reason=${reason}`;
+  });
+  logNode.textContent = lines.join("\n\n");
+}
+
+async function loadMigrationHistory() {
+  try {
+    const payload = await fetchJson("/api/v1/artifacts/migrations");
+    renderMigrationHistory(payload);
+  } catch (err) {
+    renderMigrationHistory(null);
+  }
+}
+
+async function loadBoard() {
+  const board = await fetchJson("/api/v1/read-model/board");
+  const timeline = await fetchJson("/api/v1/read-model/timeline");
+  const localMode = localStorage.getItem("athena_ui_accessibility_mode");
+  const defaultMode = board.ui_defaults?.accessibility_mode || "normal";
+  applyAccessibilityMode(localMode || defaultMode);
+  const localTheme = localStorage.getItem("athena_ui_theme");
+  const defaultTheme = board.ui_defaults?.theme || "default";
+  applyTheme(localTheme || defaultTheme);
+  setText("current-stage", board.current_stage || "unknown");
+  setText("next-story", board.next_story || "none");
+  setText("blockers", (board.blockers || []).join(", "));
+  setText("required-confirmation", board.required_confirmation?.reason || "none");
+
+  setList("engineering-active", board.engineering?.active || []);
+  setList("architecture-active", board.architecture?.active || []);
+  setList("timeline-events", (timeline.events || []).map((ev) => `${ev.timestamp} | ${ev.label} | ${ev.story_id} | correlation_id=${ev.correlation_id}`));
+
+  const engineeringItems = board.engineering?.active || [];
+  const architectureItems = board.architecture?.active || [];
+  const timelineItems = timeline.events || [];
+
+  setText("engineering-count", String(engineeringItems.length));
+  setText("architecture-count", String(architectureItems.length));
+  setText("timeline-count", String(timelineItems.length));
+
+  renderCardList("engineering-active-cards", engineeringItems, "No engineering active items.");
+  renderCardList("architecture-active-cards", architectureItems, "No architecture active items.");
+  renderTimelineCards(timelineItems);
+  makeCardsFocusable();
+
+  const driftText = `Drift alerts: ${(board.drift_alerts || []).join(", ")}`;
+  setText("drift-alerts", driftText);
+
+  const directionStatus = board.required_confirmation?.status || "unconfirmed";
+  document.getElementById("direction-marker").innerHTML =
+    `Direction confirmation marker: ${statusBadge(directionStatus)}`;
+
+  const researchActive = board.research_comm_exception?.active ? "active" : "inactive";
+  const researchClass = board.research_comm_exception?.active ? "badge-danger" : "badge-ok";
+  document.getElementById("research-marker").innerHTML =
+    `Research-mode communication exception marker: <span class="badge ${researchClass}">${researchActive}</span>`;
+
+  renderPolicyCards(directionStatus, researchActive, driftText);
+}
+
+function wirePlanningWorkbench() {
+  const confirmationStatus = document.getElementById("confirmation-status");
+  const exportStatus = document.getElementById("export-status");
+
+  document.getElementById("confirm-direction").addEventListener("click", () => {
+    const confirmedBy = document.getElementById("confirmed-by").value.trim();
+    const label = confirmedBy || "unconfirmed";
+    confirmationStatus.textContent = `Confirmation status: confirmed by ${label}`;
+  });
+
+  document.getElementById("export-artifact").addEventListener("click", async () => {
+    const direction = document.getElementById("direction").value.trim();
+    const constraints = document.getElementById("constraints").value.trim();
+    const risks = document.getElementById("risks").value.trim();
+    const nextStage = document.getElementById("next-stage").value.trim();
+    const confirmedBy = document.getElementById("confirmed-by").value.trim();
+    try {
+      const apiRoot = resolveApiRoot();
+      const res = await fetch(`${apiRoot}/api/v1/planning/export`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          direction,
+          constraints,
+          risks,
+          next_stage: nextStage,
+          confirmed_by: confirmedBy
+        })
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        exportStatus.textContent = `Export status: ${payload.reason || "failed"}`;
+        return;
+      }
+      exportStatus.textContent = `Export status: exported to ${payload.path}`;
+    } catch (err) {
+      exportStatus.textContent = `Export status: error (${err.message})`;
+    }
+  });
+}
+
+function wireArtifactIngest() {
+  const statusNode = document.getElementById("ingest-status");
+  const reportNode = document.getElementById("ingest-report");
+  const fileInput = document.getElementById("artifact-bundle");
+  const button = document.getElementById("ingest-artifact");
+
+  button.addEventListener("click", async () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) {
+      statusNode.textContent = "Ingest status: select a .zip file first";
+      return;
+    }
+    if (!file.name.toLowerCase().endsWith(".zip")) {
+      statusNode.textContent = "Ingest status: only .zip bundles are allowed";
+      return;
+    }
+
+    try {
+      statusNode.textContent = "Ingest status: uploading and ingesting...";
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("unable to read selected file"));
+        reader.readAsDataURL(file);
+      });
+      const b64 = dataUrl.split(",")[1] || "";
+      const apiRoot = resolveApiRoot();
+      const res = await fetch(`${apiRoot}/api/v1/artifacts/ingest`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          filename: file.name,
+          bundle_base64: b64
+        })
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        statusNode.textContent = `Ingest status: failed (${payload.reason || "unknown"})`;
+        reportNode.textContent = "Ingest report: accepted=0 rejected=1 migrated=0";
+        await loadMigrationHistory();
+        return;
+      }
+
+      statusNode.textContent = "Ingest status: complete";
+      reportNode.textContent =
+        `Ingest report: accepted=${payload.accepted_objects || 0} rejected=${payload.rejected_objects || 0} migrated=${payload.migrated_objects || 0}`;
+      await loadBoard();
+      await loadMigrationHistory();
+    } catch (err) {
+      statusNode.textContent = `Ingest status: error (${err.message})`;
+      reportNode.textContent = "Ingest report: accepted=0 rejected=1 migrated=0";
+      await loadMigrationHistory();
+    }
+  });
+}
+
+function wireModelResponder() {
+  const promptNode = document.getElementById("model-prompt");
+  const statusNode = document.getElementById("model-status");
+  const outputNode = document.getElementById("model-output");
+  const button = document.getElementById("model-respond");
+
+  button.addEventListener("click", async () => {
+    const prompt = (promptNode.value || "").trim();
+    if (!prompt) {
+      statusNode.textContent = "Model status: prompt is required";
+      return;
+    }
+    try {
+      statusNode.textContent = "Model status: requesting response...";
+      const apiRoot = resolveApiRoot();
+      const res = await fetch(`${apiRoot}/api/v1/model/respond`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        statusNode.textContent = `Model status: failed (${payload.reason || "unknown"})`;
+        outputNode.textContent = "No response.";
+        return;
+      }
+      const provider = payload.provider || "unknown";
+      const model = payload.model_or_deployment || "unknown";
+      statusNode.textContent = `Model status: complete (${provider}/${model})`;
+      outputNode.textContent = payload.response_text || "No response.";
+    } catch (err) {
+      statusNode.textContent = `Model status: error (${err.message})`;
+      outputNode.textContent = "No response.";
+    }
+  });
+}
+
+function wireLaunchAuthorization() {
+  const statusNode = document.getElementById("launch-package-status");
+  const pathNode = document.getElementById("launch-package-path");
+  const blockersNode = document.getElementById("launch-package-blockers");
+  const generateButton = document.getElementById("generate-launch-package");
+  const validateButton = document.getElementById("validate-launch-package");
+  let latestPackagePath = "";
+
+  generateButton.addEventListener("click", async () => {
+    try {
+      statusNode.textContent = "Launch package status: generating...";
+      const apiRoot = resolveApiRoot();
+      const res = await fetch(`${apiRoot}/api/v1/launch/package`, { method: "POST" });
+      const payload = await res.json();
+      if (!res.ok) {
+        statusNode.textContent = `Launch package status: failed (${payload.reason || "unknown"})`;
+        return;
+      }
+      latestPackagePath = String(payload.path || "");
+      statusNode.textContent = `Launch package status: ${payload.status || "unknown"}`;
+      pathNode.textContent = `Launch package path: ${latestPackagePath || "none"}`;
+      const blockers = payload.blockers || [];
+      blockersNode.textContent = blockers.length
+        ? `Launch package blockers: ${blockers.join("; ")}`
+        : "Launch package blockers: none";
+      renderLaunchReadinessSummary(payload);
+    } catch (err) {
+      statusNode.textContent = `Launch package status: error (${err.message})`;
+    }
+  });
+
+  validateButton.addEventListener("click", async () => {
+    if (!latestPackagePath) {
+      statusNode.textContent = "Launch package status: generate a package first";
+      return;
+    }
+    try {
+      const apiRoot = resolveApiRoot();
+      const res = await fetch(`${apiRoot}/api/v1/launch/validate`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ package_path: latestPackagePath.replace("/workspace/", "") })
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        statusNode.textContent = `Launch package status: invalid (${payload.reason || "unknown"})`;
+        return;
+      }
+      statusNode.textContent = "Launch package status: validated";
+    } catch (err) {
+      statusNode.textContent = `Launch package status: error (${err.message})`;
+    }
+  });
+}
+
+function wireAccessibilityModeSelector() {
+  const selector = document.getElementById("accessibility-mode");
+  selector.addEventListener("change", (ev) => {
+    applyAccessibilityMode(ev.target.value);
+  });
+}
+
+function wireThemeSelector() {
+  const selector = document.getElementById("theme-mode");
+  selector.addEventListener("change", (ev) => {
+    applyTheme(ev.target.value);
+  });
+}
+
+function wireSectionNavigation() {
+  const links = Array.from(document.querySelectorAll("[data-section-link]"));
+  const sectionIds = links.map((link) => link.getAttribute("data-section-link"));
+  const sections = sectionIds
+    .map((id) => document.getElementById(id))
+    .filter((section) => section);
+
+  function setActive(sectionId) {
+    links.forEach((link) => {
+      const isActive = link.getAttribute("data-section-link") === sectionId;
+      link.classList.toggle("active", isActive);
+      link.setAttribute("aria-current", isActive ? "page" : "false");
+    });
+  }
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => {
+      const id = link.getAttribute("data-section-link");
+      if (id) setActive(id);
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0.2, 0.4, 0.6],
+      }
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+}
+
+function wireKeyboardShortcuts() {
+  document.addEventListener("keydown", (ev) => {
+    if (ev.altKey && ev.key === "1") {
+      ev.preventDefault();
+      focusFirstCardInLane("engineering-active-cards");
+      return;
+    }
+    if (ev.altKey && ev.key === "2") {
+      ev.preventDefault();
+      focusFirstCardInLane("architecture-active-cards");
+      return;
+    }
+    if (ev.altKey && ev.key === "3") {
+      ev.preventDefault();
+      focusFirstCardInLane("timeline-events-cards");
+      return;
+    }
+    if (ev.altKey && ev.key === "4") {
+      ev.preventDefault();
+      focusFirstCardInLane("policy-cards");
+      return;
+    }
+    if (ev.key === "ArrowRight" || ev.key === "ArrowDown") {
+      ev.preventDefault();
+      focusCardByOffset(1);
+      return;
+    }
+    if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") {
+      ev.preventDefault();
+      focusCardByOffset(-1);
+      return;
+    }
+    if (ev.key === "n" || ev.key === "N") {
+      applyAccessibilityMode("normal");
+      return;
+    }
+    if (ev.key === "l" || ev.key === "L") {
+      applyAccessibilityMode("low-vision");
+      return;
+    }
+    if (ev.key === "t" || ev.key === "T") {
+      const selector = document.getElementById("theme-mode");
+      const options = Array.from(selector.options).map((opt) => opt.value);
+      const current = normalizeTheme(selector.value);
+      const idx = options.indexOf(current);
+      const next = options[(idx + 1) % options.length] || "default";
+      applyTheme(next);
+    }
+  });
+}
+
+wireAccessibilityModeSelector();
+wireThemeSelector();
+wireSectionNavigation();
+wireKeyboardShortcuts();
+wirePlanningWorkbench();
+wireModelResponder();
+wireArtifactIngest();
+wireLaunchAuthorization();
+loadLaunchReadinessSummary();
+loadMigrationHistory();
+loadDocsWorkspace().catch((err) => {
+  setText("docs-preview-body", `Unable to load docs index: ${err.message}`);
+});
+loadBoard().catch((err) => {
+  setText("current-stage", `error: ${err.message}`);
+});
+</script>
+</body>
+</html>
