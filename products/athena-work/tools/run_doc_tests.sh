@@ -30,6 +30,7 @@ always_tests=(
   "test_dogfood_semantic_hardening_v01.sh"
   "test_kpi_snapshot_delta_post_hardening_v01.sh"
   "test_humans_agents_sync.sh"
+  "test_stop_resume_guardrail.sh"
   "test_intake_validation.sh"
   "test_validate_intake_duplicate_ids.sh"
   "test_go_toolchain_readiness.sh"

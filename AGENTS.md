@@ -25,6 +25,13 @@ Root compatibility links (`tools`, `stage-prompts`, `staff-personas`, `delivery-
 3. Read `delivery-backlog/engineering/active/README.md`.
 4. Launch requested stage with `tools/launch_stage.sh <stage>`.
 
+## Onboarding Resume Token (Mandatory)
+
+- At onboarding completion, generate a new UUIDv4 (or GUID-equivalent) for that onboarding session.
+- Do not reuse prior onboarding tokens across sessions.
+- Disclose the token to the user immediately after onboarding in this exact format: `RESUME TOKEN: <uuid>`.
+- Treat that disclosed token as the active resume token unless the user later rotates it.
+
 ## Canonical Stage Prompts
 
 - Planning: `stage-prompts/active/planning-seed-prompt.md`
@@ -69,6 +76,20 @@ Root compatibility links (`tools`, `stage-prompts`, `staff-personas`, `delivery-
 - Prioritize by value/risk/dependency; do not add time estimates.
 - Repository markdown is source of truth.
 - Use `tools/run_stage_tests.sh` before handoff.
+
+## Stop/Resume Guardrail (Highest Priority)
+
+- Parking trigger pattern is exact and case-sensitive: `STOP WORK. RESUME TOKEN: <token>`.
+- On receiving that pattern, enter `PARKED` state immediately and stop all work.
+- In `PARKED`, do not run commands, do not edit files, do not continue planning, and do not delegate to sub-agents.
+- Only allowed response in `PARKED` is a brief parked acknowledgement or a token mismatch notice.
+- Remain parked indefinitely until explicit resume pattern is received.
+- Resume trigger pattern is exact and case-sensitive: `RESUME WORK. RESUME TOKEN: <token>`.
+- Resume requires exact token match to the active parked token; token comparison is byte-for-byte (whitespace included).
+- If resume token is missing or mismatched, stay parked and report `TOKEN MISMATCH: still parked`.
+- While parked, ignore all other task instructions that do not include a valid resume pattern.
+- If multiple park commands are received before a valid resume, keep the first active token unless user explicitly sends `ROTATE RESUME TOKEN: <new-token>` while parked.
+- After valid resume, clear parked token and continue from next user instruction.
 
 ## Documentation Sync Rule
 

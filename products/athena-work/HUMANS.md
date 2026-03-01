@@ -52,6 +52,16 @@ Use launcher scripts so operators do not need to memorize deep process details.
 - Apply process gates from `knowledge-base/process/stage-exit-gates.md`.
 - Apply backlog weighting from `knowledge-base/process/backlog-weighting-policy.md`.
 
+## Park/Resume Token Protocol
+
+- After an agent completes onboarding for a newly launched stage, it must generate a new UUIDv4 and disclose it exactly as: `RESUME TOKEN: <uuid>`.
+- Parking trigger pattern is exact and case-sensitive: `STOP WORK. RESUME TOKEN: <token>`.
+- On park, the agent enters `PARKED` state and must not run commands, edit files, continue planning, or delegate.
+- While parked, only a brief parked acknowledgement or `TOKEN MISMATCH: still parked` is allowed.
+- Resume trigger pattern is exact and case-sensitive: `RESUME WORK. RESUME TOKEN: <token>`.
+- Resume requires exact byte-for-byte token match (including whitespace) to the active parked token.
+- If multiple park commands are sent before a valid resume, the first token remains active unless explicitly rotated with `ROTATE RESUME TOKEN: <new-token>`.
+
 ## Memory Integration
 
 - AthenaWork can call AthenaMind memory flows during launch and observer steps.

@@ -47,6 +47,12 @@ Helper commands:
 
 - Branch safety enforced by launcher (`ATHENA_REQUIRED_BRANCH`, default `dev`).
 - Preflight readiness enforced before engineering/architecture execution.
+- Stage onboarding must mint a fresh UUIDv4 and disclose `RESUME TOKEN: <uuid>` before work begins.
+- Park/resume contract is mandatory across all stages:
+  - park command exact match: `STOP WORK. RESUME TOKEN: <token>`
+  - parked behavior: enter `PARKED` and stop all work immediately
+  - resume command exact match: `RESUME WORK. RESUME TOKEN: <token>`
+  - mismatch behavior: report `TOKEN MISMATCH: still parked`
 - `no stories` from engineering is a valid stop signal.
 - No intermediate commits during stage transitions.
 - `done` means QA-complete; shipping is controlled by release handoff artifacts.

@@ -32,6 +32,10 @@ git commit -m "cycle-<cycle-id>"
 2. Select or confirm specialist role from `staff-personas/STAFF_DIRECTORY.md`.
 3. Ask agent to execute only the stage checklist.
 4. Require observer report before accepting completion.
+5. Capture onboarding output token in exact format `RESUME TOKEN: <uuid>` for park/resume control.
+6. Use exact case-sensitive park/resume controls:
+   - `STOP WORK. RESUME TOKEN: <token>`
+   - `RESUME WORK. RESUME TOKEN: <token>`
 
 ## Related Docs
 

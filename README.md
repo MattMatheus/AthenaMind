@@ -13,7 +13,7 @@ This repository is a **slim product distribution** focused on user-facing runtim
 - Technical operators tuning retrieval quality, governance controls, and telemetry export.
 - Teams evaluating local-first memory workflows before broader deployment.
 
-## What You Can Do Today
+## What v0.1 Delivers Today
 
 - Write and retrieve governed memory entries.
 - Evaluate retrieval quality with deterministic fallback checks.
@@ -21,7 +21,7 @@ This repository is a **slim product distribution** focused on user-facing runtim
 - Capture episodes for cross-session continuity.
 - Run local read gateway and API retrieval fallback.
 - Export telemetry events and OpenTelemetry traces (including OTLP collectors).
-- Monitor local OTLP telemetry with Maple OSS (recommended for Podman-based testing).
+- Monitor local OTLP telemetry with Maple OSS.
 
 ## Quick Start
 
@@ -29,13 +29,15 @@ This repository is a **slim product distribution** focused on user-facing runtim
 2. Download precompiled binaries: [Precompiled Binaries](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/binaries.md)
 3. Run first end-to-end flow: [Quickstart](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/getting-started/quickstart.md)
 4. Learn command surface: [CLI Commands](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/cli/commands.md)
-5. Configure observability (including local Maple on Podman): [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
+5. Configure observability with local Maple: [OTel/OTLP Setup](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/how-to/memory-cli-otel-setup.md)
 
 ## Documentation Map
 
 - Full docs index: [knowledge-base/INDEX.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/INDEX.md)
 - AthenaMind product docs: [knowledge-base/product/athenamind.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenamind.md)
 - AthenaWork product docs: [knowledge-base/product/athenawork.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/athenawork.md)
+- Long-term vision: [knowledge-base/product/VISION.md](https://github.com/MattMatheus/AthenaMind/blob/main/knowledge-base/product/VISION.md)
+- Phased plan: [product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md](https://github.com/MattMatheus/AthenaMind/blob/main/product-research/roadmap/PHASED_IMPLEMENTATION_PLAN_V01_V03.md)
 
 ## AthenaWork Operator Paths
 
@@ -71,6 +73,13 @@ This repository is a **slim product distribution** focused on user-facing runtim
 - `serve-read-gateway`
 - `api-retrieve`
 - `telemetry tail`
+
+## CLI Examples
+
+```bash
+go run ./cmd/memory-cli write --help
+go run ./cmd/memory-cli retrieve --help
+```
 
 ## Current Validation Status
 

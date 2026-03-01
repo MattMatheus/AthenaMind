@@ -38,6 +38,11 @@ Observer:
 - Run observer after completed cycles.
 - Commit exactly once per cycle (`cycle-<cycle-id>`).
 - Treat `done` as QA-complete, not auto-shipped.
+- Require launched agents to disclose a fresh onboarding token exactly as `RESUME TOKEN: <uuid>`.
+- Use exact case-sensitive commands to control parked state:
+  - park: `STOP WORK. RESUME TOKEN: <token>`
+  - resume: `RESUME WORK. RESUME TOKEN: <token>`
+  - mismatch handling: `TOKEN MISMATCH: still parked`
 
 ## Human/Non-Technical Steering Model
 

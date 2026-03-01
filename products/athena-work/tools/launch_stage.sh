@@ -134,6 +134,17 @@ emit_memory_bootstrap_context() {
   done <<< "$bootstrap_output"
 }
 
+emit_stop_resume_guardrail() {
+  cat <<'EOF'
+park_resume_guardrail:
+  - park command must match exactly: STOP WORK. RESUME TOKEN: <token>
+  - on park, enter PARKED and stop all work immediately
+  - while parked: no commands, no edits, no planning, no delegation
+  - resume command must match exactly: RESUME WORK. RESUME TOKEN: <token>
+  - on mismatch: TOKEN MISMATCH: still parked
+EOF
+}
+
 case "$stage" in
   engineering)
     top_story="$(select_top_story_from_lane "$active_dir" "$active_readme" || true)"
@@ -170,6 +181,7 @@ checklist:
   6) move story to delivery-backlog/engineering/qa
   7) do not commit yet (cycle-level commit after observer step)
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   qa)
@@ -184,6 +196,7 @@ checklist:
   5) run observer: tools/run_observer_cycle.sh --cycle-id <story-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   pm)
@@ -198,6 +211,7 @@ checklist:
   5) run observer: tools/run_observer_cycle.sh --cycle-id PM-<date>-<slug>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   planning)
@@ -212,6 +226,7 @@ checklist:
   5) run observer: tools/run_observer_cycle.sh --cycle-id <plan-id>
   6) commit once for the full cycle with message: cycle-<cycle-id>
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   architect)
@@ -235,6 +250,7 @@ checklist:
   5) move story to delivery-backlog/architecture/qa
   6) do not commit yet (cycle-level commit after observer step)
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   cycle)
@@ -251,6 +267,7 @@ loop:
   - commit once: cycle-<cycle-id>
   - repeat until active backlog is drained
 EOF
+    emit_stop_resume_guardrail
     emit_memory_bootstrap_context
     ;;
   *)

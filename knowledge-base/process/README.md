@@ -12,6 +12,15 @@ AthenaWork process assets are in-repo and are part of the supported operator wor
 - `tools/run_observer_cycle.sh`
 - `tools/run_stage_tests.sh`
 
+## Onboarding Token Contract
+
+- Every newly launched stage agent must finish onboarding by generating a new UUIDv4.
+- The agent must disclose it to the operator exactly as: `RESUME TOKEN: <uuid>`.
+- The disclosed token is used with the park/resume guardrail in `AGENTS.md`:
+  - `STOP WORK. RESUME TOKEN: <token>`
+  - `RESUME WORK. RESUME TOKEN: <token>`
+  - if token mismatches, remain parked and report `TOKEN MISMATCH: still parked`
+
 ## Work-System Assets
 
 - Stage prompts: `stage-prompts/active/`
